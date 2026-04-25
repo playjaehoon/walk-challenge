@@ -4,11 +4,13 @@
 
 let scanUser = null;
 let scanLocationId = null;
+let locName = "";
 let scanRevealed = false;
 
 async function initScanPage() {
   const params = new URLSearchParams(window.location.search);
   scanLocationId = params.get("loc");
+  locName = ""; // 전역 변수 초기화
 
   // location 유효성 확인
   const locObj = CAMPAIGN_CONFIG.locations[scanLocationId];
@@ -17,7 +19,7 @@ async function initScanPage() {
     return;
   }
 
-  const locName = locObj.name;
+  locName = locObj.name;
   document.getElementById("scan-location-name").textContent = locName;
 
   // 로그인 확인
