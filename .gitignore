@@ -1,0 +1,15 @@
+# 운영체제
+.DS_Store
+Thumbs.db
+
+# 에디터
+.vscode/
+*.swp
+
+# 임시 파일
+*.zip
+*.log
+
+# Firebase CLI 바이너리
+firebase.exe
+*.exe

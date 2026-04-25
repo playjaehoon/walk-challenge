@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 — Walk & Point 챌린지</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚶</div>
+    <span>Walk &amp; Point 관리자</span>
+  </a>
+  <div class="nav-actions" style="margin-left:auto">
+    <div id="nav-guest" class="hidden"></div>
+    <div id="nav-user" style="display:flex;align-items:center;gap:0.75rem">
+      <span style="font-size:0.875rem;color:var(--text-secondary)" id="nav-name"></span>
+      <button onclick="logout()" class="btn btn-secondary btn-sm">로그아웃</button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    <div class="page-header">
+      <h1>⚙️ 관리자 대시보드</h1>
+      <p>걷기 인증 승인, 점수 관리, QR코드 생성을 이 페이지에서 관리합니다.</p>
+    </div>
+
+    <!-- 로딩 -->
+    <div id="admin-loading" class="loading-page">
+      <div class="loading-spinner"></div>
+      <p>권한 확인 중...</p>
+    </div>
+
+    <!-- 컨텐츠 -->
+    <div id="admin-content" class="hidden">
+
+      <!-- 통계 -->
+      <div class="stats-grid" style="margin-bottom:2rem">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-total">-</div>
+          <div class="stat-label">총 참가자</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-avg">-</div>
+          <div class="stat-label">평균 점수</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-gold" style="color:#ffd700">-</div>
+          <div class="stat-label">🏆 골드</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-silver" style="color:#c0c0c0">-</div>
+          <div class="stat-label">🥈 실버</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-bronze" style="color:#cd7f32">-</div>
+          <div class="stat-label">🥉 브론즈</div>
+        </div>
+      </div>
+
+      <!-- 탭 -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-target="tab-proofs">📸 인증 대기 (<span id="proof-count">-</span>)</button>
+        <button class="admin-tab" data-target="tab-users">👥 참가자 관리</button>
+        <button class="admin-tab" data-target="tab-qr">📱 QR 코드</button>
+      </div>
+
+      <!-- 탭: 인증 대기 및 이력 -->
+      <div id="tab-proofs" class="admin-content active">
+        <h3 style="margin-bottom:1.25rem">걷기 인증 검토 대기</h3>
+        <div id="proof-queue"></div>
+
+        <h3 style="margin-top:3rem;margin-bottom:1.25rem;border-top:1px solid var(--border);padding-top:2rem">✅ 처리 완료 내역</h3>
+        <div id="proof-history-queue"></div>
+      </div>
+
+      <!-- 탭: 참가자 관리 -->
+      <div id="tab-users" class="admin-content">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem">
+          <h3>전체 참가자</h3>
+          <button onclick="loadUsers()" class="btn btn-secondary btn-sm">🔄 새로고침</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>순위</th>
+                <th>이름</th>
+                <th>학번</th>
+                <th>학과</th>
+                <th>점수</th>
+                <th>티어</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr><td colspan="7" style="text-align:center;color:var(--text-secondary)">로딩 중...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 탭: QR 코드 -->
+      <div id="tab-qr" class="admin-content">
+        <div style="margin-bottom:1.5rem">
+          <h3 style="margin-bottom:0.5rem">QR 코드 관리</h3>
+          <p style="font-size:0.875rem">각 위치의 QR코드를 다운로드 후 출력해서 부착하세요. 모바일 카메라로 스캔하면 자동으로 해당 위치 스캔 결과 페이지로 이동합니다.</p>
+          <div class="alert alert-warning" style="margin-top:1rem">
+            <span>⚠️</span>
+            <span>QR코드의 URL은 <strong>배포된 실제 도메인</strong>을 기준으로 생성됩니다. 로컬에서 확인할 때는 배포 후 다시 생성·출력하세요.</span>
+          </div>
+        </div>
+        <div class="qr-grid" id="qr-grid"></div>
+      </div>
+
+    </div><!-- /admin-content -->
+  </div>
+</div>
+
+<!-- QRCode.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/admin.js"></script>
+<script>
+// 인증 대기 개수 업데이트
+const origLoad = window.loadPendingProofs;
+document.addEventListener("DOMContentLoaded", () => {
+  const origLoadProofs = window.loadPendingProofs;
+  if (origLoadProofs) {
+    const wrapped = async () => {
+      await origLoadProofs();
+      const q = document.querySelectorAll("[id^='proof-card-']").length;
+      const countEl = document.getElementById("proof-count");
+      if (countEl) countEl.textContent = document.getElementById("proof-queue").querySelectorAll(".card").length;
+    };
+  }
+});
+</script>
+<div id="image-modal" class="modal hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s">
+  <div style="position:relative;max-width:90%;max-height:90%">
+    <img id="modal-img" style="max-width:100%;max-height:90vh;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,0.5)">
+    <button onclick="closeModal()" style="position:absolute;top:-40px;right:-10px;background:none;border:none;color:white;font-size:2rem;cursor:pointer">×</button>
+  </div>
+</div>
+</body>
+</html>
+
+

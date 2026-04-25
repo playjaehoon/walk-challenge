@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>달성 현황 — Walk & Point 챌린지</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚶</div>
+    <span>Walk &amp; Point</span>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">홈</a></li>
+    <li><a href="dashboard.html">내 기록</a></li>
+    <li><a href="proof.html">걷기 인증</a></li>
+    <li><a href="participants.html">달성 현황</a></li>
+    <li><a href="about.html">학부 소개</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div id="nav-guest"><a href="register.html" class="btn btn-primary btn-sm">참가 신청</a></div>
+    <div id="nav-user" class="hidden" style="display:flex;align-items:center;gap:0.75rem">
+      <span class="nav-score-badge" id="nav-score">0pt</span>
+      <span style="font-size:0.875rem;color:var(--text-secondary)" id="nav-name"></span>
+      <button onclick="logout()" class="btn btn-secondary btn-sm">로그아웃</button>
+    </div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle">☰</button>
+</nav>
+
+<div class="page-wrapper">
+  <div class="container">
+    <div class="page-header">
+      <h1>🏅 달성 현황</h1>
+      <p>티어를 달성한 참가자들을 확인하세요. 우리 모두 함께 나아가요!</p>
+    </div>
+
+    <!-- 로딩 -->
+    <div id="participants-loading" class="loading-page">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <div id="participants-content" class="hidden">
+
+      <!-- 전체 통계 -->
+      <div class="stats-grid" style="margin-bottom:2rem" id="overall-stats">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-participants">-</div>
+          <div class="stat-label">총 참가자</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-gold-count" style="color:#ffd700">-</div>
+          <div class="stat-label">🏆 골드 달성</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-silver-count" style="color:#c0c0c0">-</div>
+          <div class="stat-label">🥈 실버 달성</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-bronze-count" style="color:#cd7f32">-</div>
+          <div class="stat-label">🥉 브론즈 달성</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="stat-legendary-count" style="color:var(--legendary)">-</div>
+          <div class="stat-label">🟨 전설 획득자</div>
+        </div>
+      </div>
+
+      <!-- 🏅 Top 10 리더보드 -->
+      <div class="card" style="margin-bottom:2rem;border-color:rgba(57,211,83,0.2)">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+          <span style="font-size:1.5rem">🏅</span>
+          <div>
+            <h3 style="margin:0">TOP 10 리더보드</h3>
+            <p style="margin:0;font-size:0.8rem">포인트 기준 상위 10명</p>
+          </div>
+        </div>
+        <div class="leaderboard-list" id="leaderboard-list">
+          <p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">로딩 중...</p>
+        </div>
+      </div>
+
+      <!-- 달성자 보드 -->
+      <div class="achievement-grid">
+
+        <!-- 골드 -->
+        <div class="achievement-card">
+          <div class="achievement-header ah-gold">
+            <span style="font-size:2rem">🏆</span>
+            <div>
+              <h3 style="color:#ffd700;margin-bottom:0.15rem">골드 달성</h3>
+              <p>800점 이상</p>
+            </div>
+          </div>
+          <div class="achievement-body" id="gold-list">
+            <p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">달성자를 기다리는 중... 🚀</p>
+          </div>
+        </div>
+
+        <!-- 실버 -->
+        <div class="achievement-card">
+          <div class="achievement-header ah-silver">
+            <span style="font-size:2rem">🥈</span>
+            <div>
+              <h3 style="color:#c0c0c0;margin-bottom:0.15rem">실버 달성</h3>
+              <p>450점 이상</p>
+            </div>
+          </div>
+          <div class="achievement-body" id="silver-list">
+            <p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">달성자를 기다리는 중... ✨</p>
+          </div>
+        </div>
+
+        <!-- 브론즈 -->
+        <div class="achievement-card">
+          <div class="achievement-header ah-bronze">
+            <span style="font-size:2rem">🥉</span>
+            <div>
+              <h3 style="color:#cd7f32;margin-bottom:0.15rem">브론즈 달성</h3>
+              <p>200점 이상</p>
+            </div>
+          </div>
+          <div class="achievement-body" id="bronze-list">
+            <p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">달성자를 기다리는 중... 💪</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 전설 획득자 특별 섹션 -->
+      <div class="card" style="margin-top:2rem;border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.04)">
+        <h3 style="margin-bottom:0.75rem;color:var(--legendary)">🟨 전설 등급 획득자</h3>
+        <p style="font-size:0.875rem;margin-bottom:1rem">전설(5% 확률)을 하나라도 획득한 행운의 참가자들!</p>
+        <div id="legendary-list">
+          <p style="color:var(--text-secondary);font-size:0.85rem">전설을 획득한 참가자가 아직 없습니다. 도전해보세요!</p>
+        </div>
+      </div>
+
+      <!-- 응원 메시지 -->
+      <div style="text-align:center;padding:3rem 0">
+        <p style="font-size:1.1rem;color:var(--text-secondary);margin-bottom:1rem">아직 달성하지 못했다면?</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+          <a href="dashboard.html" class="btn btn-primary">내 점수 확인하기</a>
+          <a href="proof.html" class="btn btn-outline">걷기 인증 제출</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>© 2026 한국외국어대학교 글로벌스포츠산업학부 · Walk &amp; Point 챌린지</p>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script>
+async function initParticipants() {
+  const snap  = await db.collection("users").orderBy("totalScore", "desc").get();
+  const users = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+  const gold = [], silver = [], bronze = [];
+  let legendaryCount = 0;
+  const legendaryUsers = [];
+
+  users.forEach((u) => {
+    const tier = getTier(u.totalScore || 0);
+    if (tier.cls === "gold")        gold.push(u);
+    else if (tier.cls === "silver") silver.push(u);
+    else if (tier.cls === "bronze") bronze.push(u);
+    if ((u.collection?.legendary || 0) > 0) { legendaryCount++; legendaryUsers.push(u); }
+  });
+
+  // 통계
+  document.getElementById("stat-participants").textContent  = users.length;
+  document.getElementById("stat-gold-count").textContent    = gold.length;
+  document.getElementById("stat-silver-count").textContent  = silver.length;
+  document.getElementById("stat-bronze-count").textContent  = bronze.length;
+  document.getElementById("stat-legendary-count").textContent = legendaryCount;
+
+  // TOP 10 리더보드
+  const top10 = users.slice(0, 10);
+  const rankEmoji = ['🥇','🥈','🥉'];
+  const rankClass = ['top1','top2','top3'];
+  const lbEl = document.getElementById("leaderboard-list");
+  if (top10.length === 0) {
+    lbEl.innerHTML = `<p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">아직 참가자가 없습니다.</p>`;
+  } else {
+    lbEl.innerHTML = top10.map((u, i) => {
+      const rank = i + 1;
+      const tier = getTier(u.totalScore || 0);
+      const rankLabel = rank <= 3 ? rankEmoji[i] : rank;
+      const rankCls   = rank <= 3 ? rankClass[i] : '';
+      const rowCls    = rank <= 3 ? `rank-${rank}` : '';
+      return `
+        <div class="leaderboard-row ${rowCls}">
+          <span class="lb-rank ${rankCls}">${rankLabel}</span>
+          <span class="lb-name">${u.name || '익명'}</span>
+          <span class="lb-tier">${tier.emoji} ${tier.name}</span>
+          <span class="lb-score">${u.totalScore || 0}pt</span>
+        </div>`;
+    }).join('');
+  }
+
+  // 달성자 칩
+  const makeChips = (list) => list.length === 0
+    ? `<p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:0.75rem 0">아직 달성자가 없어요</p>`
+    : list.map((u) => `<span class="participant-chip">👤 ${u.name}</span>`).join("");
+
+  document.getElementById("gold-list").innerHTML   = makeChips(gold);
+  document.getElementById("silver-list").innerHTML = makeChips(silver);
+  document.getElementById("bronze-list").innerHTML = makeChips(bronze);
+
+  document.getElementById("legendary-list").innerHTML = legendaryUsers.length === 0
+    ? `<p style="color:var(--text-secondary);font-size:0.85rem">전설을 획득한 참가자가 아직 없습니다. 도전해보세요!</p>`
+    : legendaryUsers.map((u) => `<span class="participant-chip" style="border-color:rgba(251,191,36,0.4);color:var(--legendary)">🟨 ${u.name} (${u.collection?.legendary || 0}개)</span>`).join("");
+
+  document.getElementById("participants-loading").classList.add("hidden");
+  document.getElementById("participants-content").classList.remove("hidden");
+}
+
+document.addEventListener("DOMContentLoaded", initParticipants);
+</script>
+</body>
+</html>
+
+

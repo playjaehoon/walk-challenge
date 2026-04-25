@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 — Walk & Point 챌린지</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚶</div>
+    <span>Walk &amp; Point</span>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">홈</a></li>
+    <li><a href="dashboard.html">내 기록</a></li>
+    <li><a href="proof.html">걷기 인증</a></li>
+    <li><a href="participants.html">달성 현황</a></li>
+    <li><a href="about.html">학부 소개</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div id="nav-guest"><a href="register.html" class="btn btn-primary btn-sm">참가 신청</a></div>
+    <div id="nav-user" class="hidden" style="display:flex;align-items:center;gap:0.75rem">
+      <span class="nav-score-badge" id="nav-score">0pt</span>
+      <span style="font-size:0.875rem;color:var(--text-secondary)" id="nav-name"></span>
+      <button onclick="logout()" class="btn btn-secondary btn-sm">로그아웃</button>
+    </div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle">☰</button>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🔑</div>
+      <h1>로그인</h1>
+      <p>Walk &amp; Point 챌린지</p>
+    </div>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="email">이메일</label>
+        <input class="form-input" type="email" id="email" placeholder="등록한 이메일 주소" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="password">비밀번호</label>
+        <input class="form-input" type="password" id="password" placeholder="비밀번호" required autocomplete="current-password">
+      </div>
+      <button type="submit" id="login-btn" class="btn btn-primary w-full btn-lg" style="margin-top:0.5rem">로그인</button>
+    </form>
+
+    <div class="auth-footer">
+      아직 신청하지 않으셨나요? <a href="register.html">참가 신청하기</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
+
+

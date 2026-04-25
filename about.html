@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학부 소개 — Walk & Point 챌린지</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚶</div>
+    <span>Walk &amp; Point</span>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">홈</a></li>
+    <li><a href="dashboard.html">내 기록</a></li>
+    <li><a href="proof.html">걷기 인증</a></li>
+    <li><a href="participants.html">달성 현황</a></li>
+    <li><a href="about.html">학부 소개</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div id="nav-guest"><a href="register.html" class="btn btn-primary btn-sm">참가 신청</a></div>
+    <div id="nav-user" class="hidden" style="display:flex;align-items:center;gap:0.75rem">
+      <span class="nav-score-badge" id="nav-score">0pt</span>
+      <span style="font-size:0.875rem;color:var(--text-secondary)" id="nav-name"></span>
+      <button onclick="logout()" class="btn btn-secondary btn-sm">로그아웃</button>
+    </div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle">☰</button>
+</nav>
+
+<div class="page-wrapper">
+  <!-- 학부 히어로 -->
+  <section style="background:linear-gradient(135deg,rgba(29,78,216,0.12),rgba(57,211,83,0.06));border-bottom:1px solid var(--border);padding:4rem 0">
+    <div class="container" style="text-align:center">
+      <div style="width:80px;height:80px;background:linear-gradient(135deg,#003366,#1d4ed8);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1.5rem">🏫</div>
+      <h1 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:0.75rem">한국외국어대학교<br>글로벌스포츠산업학부</h1>
+      <p style="max-width:560px;margin:0 auto;font-size:1rem">스포츠 비즈니스와 이벤트 기획의 글로벌 전문가를 양성합니다.</p>
+    </div>
+  </section>
+
+  <div class="container" style="padding-top:3rem;padding-bottom:4rem">
+
+    <!-- 학부 소개 -->
+    <div style="max-width:760px;margin:0 auto">
+      <div class="section-header">
+        <div class="section-tag">🎓 학부 소개</div>
+        <h2>글로벌스포츠산업학부란?</h2>
+        <p>
+          글로벌스포츠산업학부는 스포츠를 산업적 관점에서 분석하고, 비즈니스·마케팅·이벤트 기획 역량을 갖춘 전문 인재를 양성하는 학부입니다.
+          국내외 스포츠 시장의 빠른 성장에 발맞추어 실무 중심의 커리큘럼을 운영하고 있습니다.
+        </p>
+      </div>
+
+      <!-- 키 포인트 -->
+      <div class="how-grid" style="margin-top:2rem">
+        <div class="how-card">
+          <div class="how-icon">🌍</div>
+          <h3>글로벌 시각</h3>
+          <p>국제 스포츠 비즈니스 환경에 대한 이해와 글로벌 역량을 키웁니다.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-icon">📊</div>
+          <h3>비즈니스 기획</h3>
+          <p>스포츠 이벤트 기획, 마케팅, 스폰서십 등 실무 역량을 중심으로 학습합니다.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-icon">🤝</div>
+          <h3>산학 협력</h3>
+          <p>스포츠 산업 현장과의 긴밀한 연계를 통한 실습 기회를 제공합니다.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-icon">🏃</div>
+          <h3>신체활동 증진</h3>
+          <p>스포츠의 가치를 실제로 실천하며, 건강한 캠퍼스 문화를 선도합니다.</p>
+        </div>
+      </div>
+
+      <!-- 캠페인 연계 -->
+      <div class="card" style="margin-top:2.5rem;border-color:var(--border-active);background:rgba(57,211,83,0.04)">
+        <h3 style="margin-bottom:0.875rem;color:var(--green)">🚶 Walk &amp; Point과의 연결</h3>
+        <p>
+          이번 <strong style="color:var(--text-primary)">Walk &amp; Point 챌린지</strong>는 스포츠비즈니스기획운영 수업의 일환으로,
+          학생들이 직접 캠페인을 기획하고 운영하는 실습 프로젝트입니다.
+          <br><br>
+          신체활동 증진을 핵심 목표로, 게이미피케이션(Gamification)을 활용해
+          참가자들이 자발적으로 걷기 습관을 형성할 수 있도록 설계했습니다.
+        </p>
+      </div>
+
+      <!-- 진로 -->
+      <div style="margin-top:2.5rem">
+        <h3 style="margin-bottom:1.25rem">🏢 졸업 후 진로</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:0.6rem">
+          <span class="participant-chip" style="font-size:0.875rem">프로스포츠구단</span>
+          <span class="participant-chip" style="font-size:0.875rem">스포츠 마케팅사</span>
+          <span class="participant-chip" style="font-size:0.875rem">이벤트·대회 기획</span>
+          <span class="participant-chip" style="font-size:0.875rem">스포츠 미디어</span>
+          <span class="participant-chip" style="font-size:0.875rem">스포츠용품 기업</span>
+          <span class="participant-chip" style="font-size:0.875rem">공공체육기관</span>
+          <span class="participant-chip" style="font-size:0.875rem">스포츠 에이전시</span>
+          <span class="participant-chip" style="font-size:0.875rem">글로벌 스포츠 단체</span>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div style="margin-top:3rem;text-align:center;padding:2.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl)">
+        <h3 style="margin-bottom:0.75rem">Walk &amp; Point 챌린지에 참여하세요!</h3>
+        <p style="margin-bottom:1.5rem">글로벌스포츠산업학부가 기획한 2주간의 걷기 챌린지,<br>5월 18일부터 시작합니다.</p>
+        <a href="register.html" class="btn btn-primary btn-lg">참가 신청하기 →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>© 2026 한국외국어대학교 글로벌스포츠산업학부 · Walk &amp; Point 챌린지</p>
+    <p style="margin-top:0.375rem">스포츠비즈니스기획운영 수업 기획</p>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
+
+

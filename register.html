@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>참가 신청 — Walk & Point 챌린지</title>
+  <meta name="description" content="Walk & Point 챌린지 사전 등록">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚶</div>
+    <span>Walk &amp; Point</span>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">홈</a></li>
+    <li><a href="dashboard.html">내 기록</a></li>
+    <li><a href="proof.html">걷기 인증</a></li>
+    <li><a href="participants.html">달성 현황</a></li>
+    <li><a href="about.html">학부 소개</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div id="nav-guest"><a href="register.html" class="btn btn-primary btn-sm active">참가 신청</a></div>
+    <div id="nav-user" class="hidden" style="display:flex;align-items:center;gap:0.75rem">
+      <span class="nav-score-badge" id="nav-score">0pt</span>
+      <span style="font-size:0.875rem;color:var(--text-secondary)" id="nav-name"></span>
+      <button onclick="logout()" class="btn btn-secondary btn-sm">로그아웃</button>
+    </div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle">☰</button>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-card" style="max-width:520px">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🚶</div>
+      <h1>Walk &amp; Point 참가 신청</h1>
+      <p>글로벌스포츠산업학부 걷기 챌린지</p>
+    </div>
+
+    <div class="alert alert-info" style="margin-bottom:1.25rem">
+      <span>📅</span>
+      <span>챌린지 기간: <strong>2026년 5월 18일 ~ 31일</strong></span>
+    </div>
+
+    <form id="register-form" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="name">이름 *</label>
+          <input class="form-input" type="text" id="name" placeholder="홍길동" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="student-id">학번 *</label>
+          <input class="form-input" type="text" id="student-id" placeholder="2024012345" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="department">학과 *</label>
+        <input class="form-input" type="text" id="department" placeholder="글로벌스포츠산업학부" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="phone">연락처 *</label>
+        <input class="form-input" type="tel" id="phone" placeholder="010-1234-5678" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">이메일 (로그인 ID) *</label>
+        <input class="form-input" type="email" id="email" placeholder="example@hufs.ac.kr" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="password">비밀번호 *</label>
+          <input class="form-input" type="password" id="password" placeholder="6자 이상" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password2">비밀번호 확인 *</label>
+          <input class="form-input" type="password" id="password2" placeholder="비밀번호 재입력" required>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.25rem;font-size:0.8rem;color:var(--text-secondary)">
+        <p style="margin:0">✅ 등록 후 5월 18일 기준으로 QR 스캔 및 걷기 인증 기능이 활성화됩니다.</p>
+      </div>
+
+      <button type="submit" id="register-btn" class="btn btn-primary w-full btn-lg">참가 신청하기</button>
+    </form>
+
+    <div class="auth-footer">
+      이미 등록하셨나요? <a href="login.html">로그인하기</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
+
+
