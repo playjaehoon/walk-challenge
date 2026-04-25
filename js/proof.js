@@ -54,8 +54,14 @@ function setupRadioHighlight() {
 }
 
 function getCurrentWeek() {
-  const now   = new Date();
-  const start = CAMPAIGN_CONFIG.startDate;
+  const now = new Date();
+  const preTestEnd = new Date("2026-05-18T00:00:00+09:00");
+
+  if (now >= CAMPAIGN_CONFIG.startDate && now < preTestEnd) {
+    return "사전 테스트";
+  }
+
+  const start = preTestEnd;
   const diff  = Math.floor((now - start) / (1000 * 60 * 60 * 24));
   if (diff >= 0 && diff < 7)  return 1;
   if (diff >= 7 && diff < 14) return 2;
@@ -152,7 +158,7 @@ async function submitProof() {
 
   const walkCount = parseInt(selectedCount.value); // 3 또는 5
   const score     = walkCount === 5 ? 150 : 100;
-  const stepsLabel = walkCount === 5 ? "주 5회 1만보 완료" : "주 3회 1만보 완료";
+  const stepsLabel = walkCount === 5 ? "주 5회 1만보 이상 달성" : "주 3회 1만보 이상 달성";
   const stepsKey   = walkCount === 5 ? "10k_5times" : "10k_3times";
 
   const week = getCurrentWeek();
