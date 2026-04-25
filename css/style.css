@@ -843,7 +843,10 @@ tr:hover td {
   .hero {
     min-height: auto;
     align-items: flex-start;
-    padding-top: 100px;
+    padding-top: 120px;
+  }
+  .hero-content {
+    margin-top: 1.5rem;
   }
 }
 

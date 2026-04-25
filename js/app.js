@@ -104,6 +104,13 @@ async function updateNavState() {
       if (nameEl)  nameEl.textContent  = data.name;
       if (scoreEl) scoreEl.textContent = `${data.totalScore || 0}pt`;
     }
+    
+    // 메인 페이지 자동 로그인 UX (CTA 버튼 변경)
+    const heroBtn = document.getElementById("hero-cta-btn");
+    if (heroBtn) {
+      heroBtn.textContent = "내 대시보드로 가기 →";
+      heroBtn.href = "dashboard.html";
+    }
   } else {
     guestEl.classList.remove("hidden");
     userEl.classList.add("hidden");

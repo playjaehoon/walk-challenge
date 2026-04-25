@@ -24,6 +24,12 @@ async function initScanPage() {
   scanUser = await requireAuth();
   if (!scanUser) return;
 
+  // 마스터키 처리 (날짜 및 위치 무시)
+  if (locObj.isMaster) {
+    await validateAndShowCard(locName);
+    return;
+  }
+
   // 캠페인 기간 확인
   const now = new Date();
   if (now < CAMPAIGN_CONFIG.startDate) {
@@ -32,12 +38,6 @@ async function initScanPage() {
   }
   if (now > CAMPAIGN_CONFIG.endDate) {
     showScanMessage("🏁", "챌린지 종료", "2주간의 Walk & Point이 마무리되었습니다. 수고하셨어요! 🎉", "info");
-    return;
-  }
-
-  // 마스터키 처리
-  if (locObj.isMaster) {
-    await validateAndShowCard(locName);
     return;
   }
 
