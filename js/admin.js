@@ -10,7 +10,7 @@ async function initAdmin() {
   document.getElementById("admin-content").classList.remove("hidden");
 
   setupTabs();
-  await Promise.all([loadStats(), loadUsers(), loadPendingProofs(), loadCompletedProofs()]);
+  await Promise.all([loadStats(), loadUsers(), loadPendingProofs(), loadCompletedProofs(), loadNotices(), loadEvents()]);
   generateQRCodes();
 }
 
@@ -273,6 +273,136 @@ function closeModal() {
   const modal = document.getElementById("image-modal");
   modal.style.opacity = "0"; modal.style.pointerEvents = "none";
   setTimeout(() => modal.classList.add("hidden"), 200);
+}
+
+// ===== 학부 소식 (Notice) 관리 =====
+async function loadNotices() {
+  const tbody = document.getElementById("notices-tbody");
+  if (!tbody) return;
+  try {
+    const snap = await db.collection("notices").orderBy("createdAt", "desc").get();
+    if (snap.empty) {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-secondary)">등록된 소식이 없습니다.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = snap.docs.map(doc => {
+      const data = doc.data();
+      return `<tr>
+        <td><span style="display:inline-block;padding:0.2rem 0.5rem;background:rgba(57,211,83,0.1);color:var(--green);font-size:0.75rem;border-radius:4px;font-weight:600">${data.type || '공지'}</span></td>
+        <td>${data.title}</td>
+        <td>${data.date}</td>
+        <td><button onclick="deleteNotice('${doc.id}')" class="btn btn-danger btn-sm">삭제</button></td>
+      </tr>`;
+    }).join("");
+  } catch (e) {
+    console.error("Error loading notices:", e);
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:red">소식을 불러오는 중 오류가 발생했습니다.</td></tr>`;
+  }
+}
+
+async function addNotice() {
+  const type = document.getElementById("notice-type").value.trim();
+  const title = document.getElementById("notice-title").value.trim();
+  const date = document.getElementById("notice-date").value.trim();
+  if (!title || !date) return alert("제목과 날짜를 입력해주세요.");
+
+  try {
+    await db.collection("notices").add({
+      type: type || "공지",
+      title: title,
+      date: date,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    document.getElementById("modal-notice-add").classList.add("hidden");
+    document.getElementById("notice-title").value = "";
+    document.getElementById("notice-date").value = "";
+    showToast("소식이 등록되었습니다.", "success");
+    loadNotices();
+  } catch (e) {
+    console.error("Error adding notice:", e);
+    showToast("오류가 발생했습니다.", "error");
+  }
+}
+
+async function deleteNotice(id) {
+  if (!confirm("이 소식을 정말 삭제하시겠습니까?")) return;
+  try {
+    await db.collection("notices").doc(id).delete();
+    showToast("삭제되었습니다.", "info");
+    loadNotices();
+  } catch (e) {
+    console.error("Error deleting notice:", e);
+    showToast("오류가 발생했습니다.", "error");
+  }
+}
+
+// ===== 학부 일정 (Event) 관리 =====
+async function loadEvents() {
+  const tbody = document.getElementById("events-tbody");
+  if (!tbody) return;
+  try {
+    const snap = await db.collection("events").orderBy("startDate", "desc").get();
+    if (snap.empty) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-secondary)">등록된 일정이 없습니다.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = snap.docs.map(doc => {
+      const data = doc.data();
+      return `<tr>
+        <td style="font-weight:500"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${data.color || 'var(--green)'};margin-right:6px"></span>${data.title}</td>
+        <td>${data.startDate}</td>
+        <td>${data.endDate || '-'}</td>
+        <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${data.description || ''}</td>
+        <td><button onclick="deleteEvent('${doc.id}')" class="btn btn-danger btn-sm">삭제</button></td>
+      </tr>`;
+    }).join("");
+  } catch (e) {
+    console.error("Error loading events:", e);
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:red">일정을 불러오는 중 오류가 발생했습니다.</td></tr>`;
+  }
+}
+
+async function addEvent() {
+  const title = document.getElementById("event-title").value.trim();
+  const start = document.getElementById("event-start").value;
+  const end = document.getElementById("event-end").value;
+  const desc = document.getElementById("event-desc").value.trim();
+  const color = document.getElementById("event-color").value;
+  
+  if (!title || !start) return alert("일정명과 시작일은 필수입니다.");
+
+  try {
+    await db.collection("events").add({
+      title: title,
+      startDate: start,
+      endDate: end || null,
+      description: desc,
+      color: color || "var(--green)",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    document.getElementById("modal-event-add").classList.add("hidden");
+    document.getElementById("event-title").value = "";
+    document.getElementById("event-start").value = "";
+    document.getElementById("event-end").value = "";
+    document.getElementById("event-desc").value = "";
+    showToast("일정이 등록되었습니다.", "success");
+    loadEvents();
+  } catch (e) {
+    console.error("Error adding event:", e);
+    showToast("오류가 발생했습니다.", "error");
+  }
+}
+
+async function deleteEvent(id) {
+  if (!confirm("이 일정을 정말 삭제하시겠습니까?")) return;
+  try {
+    await db.collection("events").doc(id).delete();
+    showToast("삭제되었습니다.", "info");
+    loadEvents();
+  } catch (e) {
+    console.error("Error deleting event:", e);
+    showToast("오류가 발생했습니다.", "error");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", initAdmin);

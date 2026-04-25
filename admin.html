@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -69,6 +69,8 @@
         <button class="admin-tab active" data-target="tab-proofs">📸 인증 대기 (<span id="proof-count">-</span>)</button>
         <button class="admin-tab" data-target="tab-users">👥 참가자 관리</button>
         <button class="admin-tab" data-target="tab-qr">📱 QR 코드</button>
+        <button class="admin-tab" data-target="tab-notices">📢 학부 소식 관리</button>
+        <button class="admin-tab" data-target="tab-events">📅 일정 관리</button>
       </div>
 
       <!-- 탭: 인증 대기 및 이력 -->
@@ -119,6 +121,53 @@
         <div class="qr-grid" id="qr-grid"></div>
       </div>
 
+      <!-- 탭: 게시판 관리 -->
+      <div id="tab-notices" class="admin-content">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+          <h3>📢 학부 소식 관리</h3>
+          <button onclick="document.getElementById('modal-notice-add').classList.remove('hidden')" class="btn btn-primary btn-sm">➕ 새 소식 등록</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>분류</th>
+                <th>제목</th>
+                <th>날짜</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody id="notices-tbody">
+              <tr><td colspan="4" style="text-align:center;color:var(--text-secondary)">로딩 중...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 탭: 일정 관리 -->
+      <div id="tab-events" class="admin-content">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+          <h3>📅 달력 일정 관리</h3>
+          <button onclick="document.getElementById('modal-event-add').classList.remove('hidden')" class="btn btn-primary btn-sm">➕ 새 일정 등록</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>행사명</th>
+                <th>시작일</th>
+                <th>종료일</th>
+                <th>설명</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody id="events-tbody">
+              <tr><td colspan="5" style="text-align:center;color:var(--text-secondary)">로딩 중...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div><!-- /admin-content -->
   </div>
 </div>
@@ -153,6 +202,68 @@ document.addEventListener("DOMContentLoaded", () => {
     <button onclick="closeModal()" style="position:absolute;top:-40px;right:-10px;background:none;border:none;color:white;font-size:2rem;cursor:pointer">×</button>
   </div>
 </div>
+
+<!-- 게시판 추가 모달 -->
+<div id="modal-notice-add" class="modal hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div class="card" style="width:100%;max-width:400px;background:#fff;padding:2rem">
+    <h3 style="margin-bottom:1.5rem">새 소식 등록</h3>
+    <div style="margin-bottom:1rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">분류 (공지, 특강, 안내 등)</label>
+      <input type="text" id="notice-type" class="form-input" style="width:100%" placeholder="예: 공지" value="공지">
+    </div>
+    <div style="margin-bottom:1rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">제목</label>
+      <input type="text" id="notice-title" class="form-input" style="width:100%" placeholder="게시글 제목">
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">날짜 (YYYY.MM.DD)</label>
+      <input type="text" id="notice-date" class="form-input" style="width:100%" placeholder="예: 2026.05.01">
+    </div>
+    <div style="display:flex;gap:0.5rem;justify-content:flex-end">
+      <button onclick="document.getElementById('modal-notice-add').classList.add('hidden')" class="btn btn-secondary">취소</button>
+      <button onclick="addNotice()" class="btn btn-primary">등록하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 일정 추가 모달 -->
+<div id="modal-event-add" class="modal hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div class="card" style="width:100%;max-width:400px;background:#fff;padding:2rem">
+    <h3 style="margin-bottom:1.5rem">새 일정 등록</h3>
+    <div style="margin-bottom:1rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">일정명</label>
+      <input type="text" id="event-title" class="form-input" style="width:100%" placeholder="예: Walk & Point 챌린지">
+    </div>
+    <div style="display:flex;gap:1rem;margin-bottom:1rem">
+      <div style="flex:1">
+        <label class="form-label" style="display:block;margin-bottom:0.5rem">시작일</label>
+        <input type="date" id="event-start" class="form-input" style="width:100%">
+      </div>
+      <div style="flex:1">
+        <label class="form-label" style="display:block;margin-bottom:0.5rem">종료일</label>
+        <input type="date" id="event-end" class="form-input" style="width:100%">
+      </div>
+    </div>
+    <div style="margin-bottom:1rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">상세 설명</label>
+      <textarea id="event-desc" class="form-input" style="width:100%;resize:vertical" placeholder="일정에 대한 설명을 적어주세요"></textarea>
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">색상 분류</label>
+      <select id="event-color" class="form-input" style="width:100%">
+        <option value="var(--green)">초록색 (기본)</option>
+        <option value="#f59e0b">주황색 (시험/중요)</option>
+        <option value="#3b82f6">파란색 (기타)</option>
+        <option value="#ef4444">빨간색 (휴일)</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:0.5rem;justify-content:flex-end">
+      <button onclick="document.getElementById('modal-event-add').classList.add('hidden')" class="btn btn-secondary">취소</button>
+      <button onclick="addEvent()" class="btn btn-primary">등록하기</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
 
