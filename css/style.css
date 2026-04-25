@@ -496,7 +496,6 @@ footer { border-top: 1px solid var(--border); padding: 2rem 0; text-align: cente
 
 /* === Responsive === */
 @media (max-width: 768px) {
-  .hero { padding: 2rem 0; }
   .hero-actions { flex-direction: column; }
   .hero-actions .btn { width: 100%; }
   .faculty-banner { flex-direction: column; text-align: center; }
