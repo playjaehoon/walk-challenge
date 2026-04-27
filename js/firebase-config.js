@@ -37,6 +37,7 @@ const CAMPAIGN_CONFIG = {
   startDate: new Date("2026-04-24T00:00:00+09:00"),
   endDate: new Date("2026-05-31T23:59:59+09:00"),
   maxScansPerDay: 3,
+  scanCooldownMinutes: 5,
   totalLocations: 15,
 
   // 달성 기준 점수

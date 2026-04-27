@@ -108,6 +108,24 @@ async function validateAndShowCard(locName) {
     return;
   }
 
+  // 5분 쿨다운 체크
+  if (todayScans.length > 0) {
+    const lastScan = todayScans.reduce((latest, scan) => {
+      if (!scan.createdAt) return latest;
+      const scanTime = scan.createdAt.toDate ? scan.createdAt.toDate().getTime() : new Date(scan.createdAt).getTime();
+      return scanTime > latest ? scanTime : latest;
+    }, 0);
+    
+    const nowMs = Date.now();
+    const cooldownMs = (CAMPAIGN_CONFIG.scanCooldownMinutes || 5) * 60 * 1000;
+    
+    if (nowMs - lastScan < cooldownMs) {
+      const remainingMin = Math.ceil((cooldownMs - (nowMs - lastScan)) / 60000);
+      showScanMessage("⏳", "잠시 쉬어가세요!", `다음 스캔까지 약 ${remainingMin}분 남았습니다.`, "warning");
+      return;
+    }
+  }
+
   // 유효 — 카드 표시
   document.getElementById("scan-loading").classList.add("hidden");
   document.getElementById("scan-count-display").textContent = `오늘 ${todayScans.length + 1}/${CAMPAIGN_CONFIG.maxScansPerDay}번째 스캔`;
