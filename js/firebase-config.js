@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // firebase-config.js — Firebase 설정 및 캠페인 상수
 // ============================================================
 // ⚠️  아래 firebaseConfig 값들을 Firebase Console에서 복사해 교체하세요.
@@ -52,7 +52,7 @@ const CAMPAIGN_CONFIG = {
   rarityConfig: [
     { name: "일반", nameEn: "common", emoji: "⬜", probability: 55, score: 10, color: "#9ca3af" },
     { name: "레어", nameEn: "rare", emoji: "🟩", probability: 30, score: 15, color: "#22c55e" },
-    { name: "에픽", nameEn: "epic", emoji: "🟪", probability: 10, score: 20, color: "#c084fc" },
+    { name: "에픽", nameEn: "epic", emoji: "🟪", probability: 10, score: 25, color: "#c084fc" },
     { name: "전설", nameEn: "legendary", emoji: "🟨", probability: 5, score: 50, color: "#fbbf24" },
   ],
 
