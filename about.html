@@ -124,9 +124,15 @@
             </div>
 
             <!-- 가로 스크롤 카드 뉴스 컨테이너 -->
+            <style>
+              .snap-carousel > div { scroll-snap-align: center; }
+              @media (max-width: 768px) {
+                .snap-carousel > div { min-width: 100% !important; flex: 0 0 100% !important; }
+              }
+            </style>
             <div
               style="display:flex; gap:1.25rem; overflow-x:auto; padding-bottom:1.5rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;"
-              class="hide-scrollbar">
+              class="hide-scrollbar snap-carousel">
 
               <!-- Card 1: Overview -->
               <div
@@ -134,10 +140,9 @@
                 <div style="position:absolute; right:-20px; bottom:-20px; font-size:8rem; opacity:0.05">🚀</div>
                 <div style="font-size:2.5rem; margin-bottom:1.25rem;">🚀</div>
                 <h3 style="color:var(--green); font-size:1.3rem; margin-bottom:1rem; font-weight:700">마이크로디그리란?</h3>
-              <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; margin:0">
-                이중/부전공보다 적은 학점(12학점)으로 핵심 역량을 압축 이수하는 실무형 과정입니다. 마케팅 등 단편적 실무를 넘어 <strong>산업 이해, 조직관리, 재무회계, 전략기획</strong>을
-                통합하여 실제 비즈니스를 설계하고 실행하는 능력을 배양합니다.
-              </p>
+                <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; margin:0">
+                  분야별 전문 지식을 집중적으로 학습할 수 있는 소단위 교육과정입니다. 이중/부전공보다 적은 학점으로 특정 분야의 핵심 역량을 단기간에 이수하여, 급변하는 산업 수요에 유연하게 대처할 수 있는 실무형 인재로 성장하는 것을 목표로 합니다.
+                </p>
               </div>
 
               <!-- Card 2: Course 1 -->
@@ -192,15 +197,15 @@
                 </p>
               </div>
 
-              <!-- Card 6: Necessity -->
+              <!-- Card 6: Benefits -->
               <div
                 style="min-width:300px; flex:1; background:linear-gradient(145deg, rgba(155,89,255,0.1), transparent); border:1px solid #c084fc; border-radius:16px; padding:2rem; scroll-snap-align: start; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
-                <div style="position:absolute; right:-20px; bottom:-20px; font-size:8rem; opacity:0.05">💡</div>
-                <div style="font-size:2.5rem; margin-bottom:1.25rem;">💡</div>
-                <h3 style="color:var(--text-primary); font-size:1.3rem; margin-bottom:1rem; font-weight:700">도입 배경 및 필요성
+                <div style="position:absolute; right:-20px; bottom:-20px; font-size:8rem; opacity:0.05">🎓</div>
+                <div style="font-size:2.5rem; margin-bottom:1.25rem;">🎓</div>
+                <h3 style="color:var(--text-primary); font-size:1.3rem; margin-bottom:1rem; font-weight:700">이수 혜택 및 증명
                 </h3>
                 <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; margin:0;">
-                  현대 스포츠 산업은 단편적인 마케팅 실무를 넘어, <strong>조직과 자원을 거시적으로 통합 운영하는 기획형 인재</strong>를 강력히 요구하고 있습니다. 본 과정은 이러한 산업의 최신 수요에 부응하여, 비즈니스 구조를 이해하고 능동적으로 문제를 해결하는 예비 전문가를 양성하기 위해 신설되었습니다.
+                  본 과정에서 요구하는 최소 학점을 이수하면 <strong>성적증명서에 마이크로디그리 이수 내역이 공식적으로 표기</strong>되며, 총장 명의의 이수증서가 발급됩니다. 이는 향후 취업 및 진로 설계 시 실무 전문성을 증명하는 확실한 스펙으로 활용됩니다.
                 </p>
               </div>
 
@@ -210,8 +215,8 @@
           <!-- 진로 -->
           <div style="margin-top:3.5rem">
             <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1.25rem">
-              <h3 style="margin:0; font-size:1.4rem">🚀 마이크로디그리 연계 특화 진로</h3>
-              <span style="font-size:0.875rem; color:var(--text-secondary);">전략기획 및 운영 역량 기반</span>
+              <h3 style="margin:0; font-size:1.4rem">🚀 향후 진로 분야</h3>
+              <span style="font-size:0.875rem; color:var(--text-secondary);">스포츠 기획·운영 전문 역량 기반</span>
             </div>
             <div style="display:flex;flex-wrap:wrap;gap:0.6rem">
               <span class="participant-chip" style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">스포츠구단 기획·운영관리</span>
