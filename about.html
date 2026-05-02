@@ -112,196 +112,227 @@
         </div>
 
         <!-- 마이크로디그리 소개 (카드뉴스 형식) -->
-          <div style="margin-top:4.5rem">
-            <div class="section-header text-center" style="margin-bottom:2rem">
-              <div class="section-tag"
-                style="background:rgba(155,89,255,0.2);color:#c084fc;border:1px solid rgba(155,89,255,0.3)">📚 실무형 특화
-                교육과정
-              </div>
-              <h2 style="font-size:1.8rem">스포츠비즈니스 전략기획 및 운영 마이크로디그리</h2>
-              <p style="margin-top:0.5rem">스포츠산업을 거시적 관점에서 기획하고 운영할 수 있는 통합형 핵심 인재 양성 과정 (주관: 글로벌스포츠산업학부 / 담당: 이예훈 교수)
+        <div style="margin-top:4.5rem">
+          <div class="section-header text-center" style="margin-bottom:2rem">
+            <div class="section-tag"
+              style="background:rgba(155,89,255,0.2);color:#c084fc;border:1px solid rgba(155,89,255,0.3)">📚 실무형 특화
+              교육과정
+            </div>
+            <h2 style="font-size:1.8rem">스포츠비즈니스 전략기획 및 운영 마이크로디그리</h2>
+            <p style="margin-top:0.5rem">스포츠산업을 거시적 관점에서 기획하고 운영할 수 있는 통합형 핵심 인재 양성 과정 (주관: 글로벌스포츠산업학부 / 담당: 이예훈 교수)
+            </p>
+          </div>
+
+          <!-- 가로 스크롤 카드 뉴스 컨테이너 -->
+          <style>
+            .snap-carousel>div {
+              scroll-snap-align: center;
+            }
+
+            @media (max-width: 768px) {
+              .snap-carousel>div {
+                min-width: 100% !important;
+                flex: 0 0 100% !important;
+              }
+            }
+          </style>
+          <div
+            style="display:flex; gap:1.25rem; overflow-x:auto; padding-bottom:1.5rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;"
+            class="hide-scrollbar snap-carousel">
+
+            <!-- Card 1: Overview -->
+            <div
+              style="min-width:300px; flex:1; background:linear-gradient(145deg, #1f2937, #111827); border:1px solid rgba(57,211,83,0.4); border-radius:16px; padding:2rem; scroll-snap-align: start; box-shadow:0 10px 25px rgba(0,0,0,0.2); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
+              <div style="position:absolute; right:-20px; bottom:-20px; font-size:8rem; opacity:0.05">🚀</div>
+              <div style="font-size:2.5rem; margin-bottom:1.25rem;">🚀</div>
+              <h3 style="color:var(--green); font-size:1.3rem; margin-bottom:1rem; font-weight:700">마이크로디그리란?</h3>
+              <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; margin:0">
+                각 분야별 전문 지식을 집중적으로 학습할 수 있는 소단위 교육과정입니다. 이중/부전공보다 적은 학점(12~15학점)으로 특정 분야의 핵심 역량을 단기간에 이수하여, 급변하는 산업 수요에
+                유연하게 대처할 수 있는 실무형 인재로 성장하는 것을 목표로 합니다.
               </p>
             </div>
 
-            <!-- 가로 스크롤 카드 뉴스 컨테이너 -->
-            <style>
-              .snap-carousel > div { scroll-snap-align: center; }
-              @media (max-width: 768px) {
-                .snap-carousel > div { min-width: 100% !important; flex: 0 0 100% !important; }
-              }
-            </style>
+            <!-- Card 2: Necessity -->
             <div
-              style="display:flex; gap:1.25rem; overflow-x:auto; padding-bottom:1.5rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;"
-              class="hide-scrollbar snap-carousel">
+              style="min-width:300px; flex:1; background:linear-gradient(145deg, rgba(57,211,83,0.05), transparent); border:1px solid rgba(57,211,83,0.3); border-radius:16px; padding:2rem; scroll-snap-align: start; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
+              <div style="position:absolute; right:-20px; bottom:-20px; font-size:8rem; opacity:0.05">💡</div>
+              <div style="font-size:2.5rem; margin-bottom:1.25rem;">💡</div>
+              <h3 style="color:var(--green); font-size:1.3rem; margin-bottom:1rem; font-weight:700">도입 배경 및 필요성</h3>
+              <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; margin:0;">
+                현대 스포츠 산업은 단편적인 마케팅 실무를 넘어, <strong>조직과 자원을 거시적으로 통합 운영하는 기획형 인재</strong>를 요구하고 있습니다. 본 과정은 이러한 산업 수요에 부응하여 비즈니스 구조를 폭넓게 이해하는 예비 전문가를 양성하고자 신설되었습니다.
+              </p>
+            </div>
 
-              <!-- Card 1: Overview -->
+            <!-- Card 2: Course 1 -->
+            <div
+              style="min-width:300px; flex:1; background:var(--bg-secondary); border:1px solid var(--border); border-radius:16px; padding:2rem; scroll-snap-align: start; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-size:2.5rem; margin-bottom:1rem;">🌐</div>
+              <h4 style="color:var(--text-primary); font-size:1.15rem; margin-bottom:0.75rem;">1. 국제스포츠산업론</h4>
+              <p style="color:var(--green); font-size:0.85rem; font-weight:600; margin-bottom:1rem;">#산업구조파악 #비즈니스모델
+                #사례분석</p>
+              <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.5; margin:0;">
+                글로벌 스포츠산업의 거시적 흐름과 다양한 조직(구단, 이벤트, 테크 등)의 비즈니스 환경을 파악합니다. 이론 강의와 실제 산업 사례 분석을 통해 비즈니스 모델을 깊이 있게 탐구합니다.
+              </p>
+            </div>
+
+            <!-- Card 3: Course 2 -->
+            <div
+              style="min-width:300px; flex:1; background:var(--bg-secondary); border:1px solid var(--border); border-radius:16px; padding:2rem; scroll-snap-align: start; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-size:2.5rem; margin-bottom:1rem;">💰</div>
+              <h4 style="color:var(--text-primary); font-size:1.15rem; margin-bottom:0.75rem;">2. 스포츠재무관리와 회계</h4>
+              <p style="color:var(--green); font-size:0.85rem; font-weight:600; margin-bottom:1rem;">#수익구조 #현금흐름
+                #재무제표실습
+              </p>
+              <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.5; margin:0;">
+                스포츠 비즈니스 환경에서 요구되는 수익 및 비용 구조, 예산 편성, 현금흐름을 학습합니다. 실제 기업의 재무제표를 분석하며 숫자에 기반한 객관적인 재무적 의사결정 역량을 기릅니다.
+              </p>
+            </div>
+
+            <!-- Card 4: Course 3 -->
+            <div
+              style="min-width:300px; flex:1; background:var(--bg-secondary); border:1px solid var(--border); border-radius:16px; padding:2rem; scroll-snap-align: start; display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-size:2.5rem; margin-bottom:1rem;">🤝</div>
+              <h4 style="color:var(--text-primary); font-size:1.15rem; margin-bottom:0.75rem;">3. 스포츠조직관리와 리더십</h4>
+              <p style="color:var(--green); font-size:0.85rem; font-weight:600; margin-bottom:1rem;">#동기부여 #팀운영 #갈등관리
+              </p>
+              <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.5; margin:0;">
+                조직행동론의 관점에서 스포츠조직 내 개인, 집단, 구조의 상호작용을 연구합니다. 리더십, 조직문화, 갈등 관리 등 사람과 팀을 효과적으로 관리하고 이끌기 위한 핵심 이론과 사례를
+                탐구합니다.
+              </p>
+            </div>
+
+            <!-- Card 5: Course 4 -->
+            <div
+              style="min-width:300px; flex:1; background:rgba(57,211,83,0.05); border:1px solid var(--border-active); border-radius:16px; padding:2rem; scroll-snap-align: start; display:flex; flex-direction:column; justify-content:center; position:relative;">
+              <div style="font-size:2.5rem; margin-bottom:1rem;">🎯</div>
+              <h4 style="color:var(--green); font-size:1.15rem; margin-bottom:0.25rem;">4. 스포츠비즈니스 프로젝트<br>전략기획 및 운영
+              </h4>
               <div
-                style="min-width:300px; flex:1; background:linear-gradient(145deg, #1f2937, #111827); border:1px solid rgba(57,211,83,0.4); border-radius:16px; padding:2rem; scroll-snap-align: start; box-shadow:0 10px 25px rgba(0,0,0,0.2); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
-                <div style="position:absolute; right:-20px; bottom:-20px; font-size:8rem; opacity:0.05">🚀</div>
-                <div style="font-size:2.5rem; margin-bottom:1.25rem;">🚀</div>
-                <h3 style="color:var(--green); font-size:1.3rem; margin-bottom:1rem; font-weight:700">마이크로디그리란?</h3>
-                <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; margin:0">
-                  분야별 전문 지식을 집중적으로 학습할 수 있는 소단위 교육과정입니다. 이중/부전공보다 적은 학점으로 특정 분야의 핵심 역량을 단기간에 이수하여, 급변하는 산업 수요에 유연하게 대처할 수 있는 실무형 인재로 성장하는 것을 목표로 합니다.
-                </p>
-              </div>
+                style="font-size:0.75rem; color:var(--text-secondary); background:var(--bg-card); display:inline-block; padding:0.1rem 0.4rem; border-radius:4px; border:1px solid var(--border); margin-bottom:1rem; align-self:flex-start;">
+                (※ 차학기 과목명 개편 예정)</div>
+              <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.5; margin:0;">
+                앞선 3과목(산업·재무·조직)의 지식을 총망라하는 캡스톤 수업입니다. 타깃 분석부터 기획, 운영 및 성과 평가까지 <strong>실제 프로젝트(Walk&Point 등)를 주도적으로
+                  실행</strong>합니다.
+              </p>
+            </div>
 
-              <!-- Card 2: Course 1 -->
-              <div
-                style="min-width:300px; flex:1; background:var(--bg-secondary); border:1px solid var(--border); border-radius:16px; padding:2rem; scroll-snap-align: start; display:flex; flex-direction:column; justify-content:center;">
-                <div style="font-size:2.5rem; margin-bottom:1rem;">🌐</div>
-                <h4 style="color:var(--text-primary); font-size:1.15rem; margin-bottom:0.75rem;">1. 국제스포츠산업론</h4>
-                <p style="color:var(--green); font-size:0.85rem; font-weight:600; margin-bottom:1rem;">#산업구조파악 #비즈니스모델
-                  #사례분석</p>
-                <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.5; margin:0;">
-                  글로벌 스포츠산업의 거시적 흐름과 다양한 조직(구단, 이벤트, 테크 등)의 비즈니스 환경을 파악합니다. 이론 강의와 실제 산업 사례 분석을 통해 비즈니스 모델을 깊이 있게 탐구합니다.
-                </p>
-              </div>
+            <!-- Card 7: Benefits -->
+            <div
+              style="min-width:300px; flex:1; background:linear-gradient(145deg, rgba(155,89,255,0.1), transparent); border:1px solid #c084fc; border-radius:16px; padding:2rem; scroll-snap-align: start; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
+              <div style="position:absolute; right:-20px; bottom:-20px; font-size:8rem; opacity:0.05">🎓</div>
+              <div style="font-size:2.5rem; margin-bottom:1.25rem;">🎓</div>
+              <h3 style="color:var(--text-primary); font-size:1.3rem; margin-bottom:1rem; font-weight:700">이수 혜택
+              </h3>
+              <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; margin:0;">
+                본 과정에서 요구하는 학점을 이수하면 <strong>성적증명서에 마이크로디그리 이수 내역이 공식적으로 표기</strong>됩니다. 이는 향후 취업 및 진로 설계 시 실무 전문성을 증명하는 확실한 스펙으로 활용됩니다.
+              </p>
+            </div>
 
-              <!-- Card 3: Course 2 -->
-              <div
-                style="min-width:300px; flex:1; background:var(--bg-secondary); border:1px solid var(--border); border-radius:16px; padding:2rem; scroll-snap-align: start; display:flex; flex-direction:column; justify-content:center;">
-                <div style="font-size:2.5rem; margin-bottom:1rem;">💰</div>
-                <h4 style="color:var(--text-primary); font-size:1.15rem; margin-bottom:0.75rem;">2. 스포츠재무관리와 회계</h4>
-                <p style="color:var(--green); font-size:0.85rem; font-weight:600; margin-bottom:1rem;">#수익구조 #현금흐름
-                  #재무제표실습
-                </p>
-                <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.5; margin:0;">
-                  스포츠 비즈니스 환경에서 요구되는 수익 및 비용 구조, 예산 편성, 현금흐름을 학습합니다. 실제 기업의 재무제표를 분석하며 숫자에 기반한 객관적인 재무적 의사결정 역량을 기릅니다.
-                </p>
-              </div>
+          </div>
+        </div>
 
-              <!-- Card 4: Course 3 -->
-              <div
-                style="min-width:300px; flex:1; background:var(--bg-secondary); border:1px solid var(--border); border-radius:16px; padding:2rem; scroll-snap-align: start; display:flex; flex-direction:column; justify-content:center;">
-                <div style="font-size:2.5rem; margin-bottom:1rem;">🤝</div>
-                <h4 style="color:var(--text-primary); font-size:1.15rem; margin-bottom:0.75rem;">3. 스포츠조직관리와 리더십</h4>
-                <p style="color:var(--green); font-size:0.85rem; font-weight:600; margin-bottom:1rem;">#동기부여 #팀운영 #갈등관리
-                </p>
-                <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.5; margin:0;">
-                  조직행동론의 관점에서 스포츠조직 내 개인, 집단, 구조의 상호작용을 연구합니다. 리더십, 조직문화, 갈등 관리 등 사람과 팀을 효과적으로 관리하고 이끌기 위한 핵심 이론과 사례를 탐구합니다.
-                </p>
-              </div>
+        <!-- 진로 -->
+        <div style="margin-top:3.5rem">
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1.25rem">
+            <h3 style="margin:0; font-size:1.4rem">🚀 향후 진로 분야</h3>
+            <span style="font-size:0.875rem; color:var(--text-secondary);">스포츠 기획·운영 전문 역량 기반</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.6rem">
+            <span class="participant-chip"
+              style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">스포츠구단
+              기획·운영관리</span>
+            <span class="participant-chip"
+              style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">스포츠기업
+              신규사업 기획</span>
+            <span class="participant-chip"
+              style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">스포츠
+              스타트업 창업</span>
+            <span class="participant-chip"
+              style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">공공체육기관
+              전략기획</span>
+            <span class="participant-chip"
+              style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">마케팅
+              에이전시 기획자</span>
+            <span class="participant-chip"
+              style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">이벤트·대회
+              총괄 운영</span>
+          </div>
+        </div>
 
-              <!-- Card 5: Course 4 -->
-              <div
-                style="min-width:300px; flex:1; background:rgba(57,211,83,0.05); border:1px solid var(--border-active); border-radius:16px; padding:2rem; scroll-snap-align: start; display:flex; flex-direction:column; justify-content:center; position:relative;">
-                <div style="font-size:2.5rem; margin-bottom:1rem;">🎯</div>
-                <h4 style="color:var(--green); font-size:1.15rem; margin-bottom:0.25rem;">4. 스포츠비즈니스 프로젝트<br>전략기획 및 운영
-                </h4>
-                <div
-                  style="font-size:0.75rem; color:var(--text-secondary); background:var(--bg-card); display:inline-block; padding:0.1rem 0.4rem; border-radius:4px; border:1px solid var(--border); margin-bottom:1rem; align-self:flex-start;">
-                  (※ 차학기 과목명 개편 예정)</div>
-                <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.5; margin:0;">
-                  앞선 3과목(산업·재무·조직)의 지식을 총망라하는 캡스톤 수업입니다. 타깃 분석부터 기획, 운영 및 성과 평가까지 <strong>실제 프로젝트(Walk&Point 등)를 주도적으로
-                    실행</strong>합니다.
-                </p>
-              </div>
+        <!-- 학부 소식 안내 (게시판) -->
+        <div style="margin-top:4.5rem">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.25rem">
+            <h3 style="margin:0;font-size:1.5rem">📢 학부 소식 안내</h3>
+            <a href="https://sport.hufs.ac.kr/sport/2262/subview.do" target="_blank"
+              style="font-size:0.875rem;color:var(--green);font-weight:600">공지사항 더보기 →</a>
+          </div>
+          <div id="dynamic-notices"
+            style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+            <div style="padding:1.5rem;text-align:center;color:var(--text-secondary)">로딩 중...</div>
+          </div>
+        </div>
 
-              <!-- Card 6: Benefits -->
-              <div
-                style="min-width:300px; flex:1; background:linear-gradient(145deg, rgba(155,89,255,0.1), transparent); border:1px solid #c084fc; border-radius:16px; padding:2rem; scroll-snap-align: start; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
-                <div style="position:absolute; right:-20px; bottom:-20px; font-size:8rem; opacity:0.05">🎓</div>
-                <div style="font-size:2.5rem; margin-bottom:1.25rem;">🎓</div>
-                <h3 style="color:var(--text-primary); font-size:1.3rem; margin-bottom:1rem; font-weight:700">이수 혜택 및 증명
-                </h3>
-                <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; margin:0;">
-                  본 과정에서 요구하는 최소 학점을 이수하면 <strong>성적증명서에 마이크로디그리 이수 내역이 공식적으로 표기</strong>되며, 총장 명의의 이수증서가 발급됩니다. 이는 향후 취업 및 진로 설계 시 실무 전문성을 증명하는 확실한 스펙으로 활용됩니다.
-                </p>
-              </div>
+        <!-- 학부 일정 (동적 캘린더) -->
+        <div style="margin-top:4.5rem;margin-bottom:1rem">
+          <h3 style="margin-bottom:1.25rem;font-size:1.5rem">📅 학부 주요 일정</h3>
 
+          <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+              <button id="cal-prev" class="btn btn-secondary btn-sm" style="padding:0.4rem 0.8rem">◀</button>
+              <h4 id="cal-month-title"
+                style="margin:0;font-size:1.25rem;font-family:'Outfit',sans-serif;font-weight:700">2026. 05</h4>
+              <button id="cal-next" class="btn btn-secondary btn-sm" style="padding:0.4rem 0.8rem">▶</button>
+            </div>
+
+            <div
+              style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:4px;font-size:0.875rem;color:var(--text-secondary);margin-bottom:0.75rem;font-weight:600">
+              <div style="color:#ef4444">일</div>
+              <div>월</div>
+              <div>화</div>
+              <div>수</div>
+              <div>목</div>
+              <div>금</div>
+              <div style="color:#3b82f6">토</div>
+            </div>
+
+            <div id="cal-grid"
+              style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:4px;font-size:1rem">
+              <!-- 달력 렌더링 영역 -->
             </div>
           </div>
 
-          <!-- 진로 -->
-          <div style="margin-top:3.5rem">
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:1.25rem">
-              <h3 style="margin:0; font-size:1.4rem">🚀 향후 진로 분야</h3>
-              <span style="font-size:0.875rem; color:var(--text-secondary);">스포츠 기획·운영 전문 역량 기반</span>
-            </div>
-            <div style="display:flex;flex-wrap:wrap;gap:0.6rem">
-              <span class="participant-chip" style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">스포츠구단 기획·운영관리</span>
-              <span class="participant-chip" style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">스포츠기업 신규사업 기획</span>
-              <span class="participant-chip" style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">스포츠 스타트업 창업</span>
-              <span class="participant-chip" style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">공공체육기관 전략기획</span>
-              <span class="participant-chip" style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">마케팅 에이전시 기획자</span>
-              <span class="participant-chip" style="font-size:0.875rem; border-color:rgba(192,132,252,0.5); color:#d8b4fe; background:rgba(192,132,252,0.05)">이벤트·대회 총괄 운영</span>
-            </div>
+          <div id="cal-events-list" style="margin-top:1.5rem;display:flex;flex-direction:column;gap:0.75rem">
+            <div style="text-align:center;color:var(--text-secondary);padding:1.5rem">달력에서 날짜를 클릭하면 일정이 표시됩니다.</div>
           </div>
+        </div>
 
-          <!-- 학부 소식 안내 (게시판) -->
-          <div style="margin-top:4.5rem">
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.25rem">
-              <h3 style="margin:0;font-size:1.5rem">📢 학부 소식 안내</h3>
-              <a href="https://sport.hufs.ac.kr/sport/2262/subview.do" target="_blank"
-                style="font-size:0.875rem;color:var(--green);font-weight:600">공지사항 더보기 →</a>
-            </div>
-            <div id="dynamic-notices"
-              style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden">
-              <div style="padding:1.5rem;text-align:center;color:var(--text-secondary)">로딩 중...</div>
-            </div>
-          </div>
-
-          <!-- 학부 일정 (동적 캘린더) -->
-          <div style="margin-top:4.5rem;margin-bottom:1rem">
-            <h3 style="margin-bottom:1.25rem;font-size:1.5rem">📅 학부 주요 일정</h3>
-
-            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
-                <button id="cal-prev" class="btn btn-secondary btn-sm" style="padding:0.4rem 0.8rem">◀</button>
-                <h4 id="cal-month-title"
-                  style="margin:0;font-size:1.25rem;font-family:'Outfit',sans-serif;font-weight:700">2026. 05</h4>
-                <button id="cal-next" class="btn btn-secondary btn-sm" style="padding:0.4rem 0.8rem">▶</button>
-              </div>
-
-              <div
-                style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:4px;font-size:0.875rem;color:var(--text-secondary);margin-bottom:0.75rem;font-weight:600">
-                <div style="color:#ef4444">일</div>
-                <div>월</div>
-                <div>화</div>
-                <div>수</div>
-                <div>목</div>
-                <div>금</div>
-                <div style="color:#3b82f6">토</div>
-              </div>
-
-              <div id="cal-grid"
-                style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:4px;font-size:1rem">
-                <!-- 달력 렌더링 영역 -->
-              </div>
-            </div>
-
-            <div id="cal-events-list" style="margin-top:1.5rem;display:flex;flex-direction:column;gap:0.75rem">
-              <div style="text-align:center;color:var(--text-secondary);padding:1.5rem">달력에서 날짜를 클릭하면 일정이 표시됩니다.</div>
-            </div>
-          </div>
-
-          <!-- CTA -->
-          <div
-            style="margin-top:3rem;text-align:center;padding:2.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl)">
-            <h3 style="margin-bottom:0.75rem">Walk &amp; Point 챌린지에 참여하세요!</h3>
-            <p style="margin-bottom:1.5rem">글로벌스포츠산업학부가 기획한 2주간의 걷기 챌린지,<br>5월 18일부터 시작합니다.</p>
-            <a href="register.html" class="btn btn-primary btn-lg">참가 신청하기 →</a>
-          </div>
+        <!-- CTA -->
+        <div
+          style="margin-top:3rem;text-align:center;padding:2.5rem;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl)">
+          <h3 style="margin-bottom:0.75rem">Walk &amp; Point 챌린지에 참여하세요!</h3>
+          <p style="margin-bottom:1.5rem">글로벌스포츠산업학부가 기획한 2주간의 걷기 챌린지,<br>5월 18일부터 시작합니다.</p>
+          <a href="register.html" class="btn btn-primary btn-lg">참가 신청하기 →</a>
         </div>
       </div>
     </div>
+  </div>
 
-    <footer>
-      <div class="container">
-        <p>Copyright © 2026 한국외국어대학교 글로벌스포츠산업학부 · Walk &amp; Point 챌린지</p>
-        <p style="margin-top:0.375rem">지도교수: 이예훈 교수</p>
-        <p style="margin-top:0.25rem">기획: 스포츠비즈니스기획운영(캡스톤디자인) 수강생</p>
-        <p style="margin-top:0.25rem;font-size:0.75rem;color:var(--text-secondary)">제작자: 글로벌스포츠산업전공 23학번 최재훈</p>
-      </div>
-    </footer>
+  <footer>
+    <div class="container">
+      <p>Copyright © 2026 한국외국어대학교 글로벌스포츠산업학부 · Walk &amp; Point 챌린지</p>
+      <p style="margin-top:0.375rem">지도교수: 이예훈 교수</p>
+      <p style="margin-top:0.25rem">기획: 스포츠비즈니스기획운영(캡스톤디자인) 수강생</p>
+      <p style="margin-top:0.25rem;font-size:0.75rem;color:var(--text-secondary)">제작자: 글로벌스포츠산업전공 23학번 최재훈</p>
+    </div>
+  </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-    <script src="js/firebase-config.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/about.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/about.js"></script>
 </body>
 
 </html>
