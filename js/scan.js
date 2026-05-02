@@ -207,6 +207,16 @@ function animateCardReveal(rarity) {
       document.getElementById("result-rarity-badge").className = `rarity-badge rarity-${rarity.nameEn}`;
       document.getElementById("result-rarity-badge").textContent = rarity.name;
       document.getElementById("result-score").textContent = `+${rarity.score}pt`;
+      
+      // 랜덤 캐릭터 표시
+      const booContainer = document.getElementById("boo-character-container");
+      const booImg = document.getElementById("boo-character-img");
+      if (booContainer && booImg) {
+        const randomNum = Math.floor(Math.random() * 18) + 1;
+        const formattedNum = randomNum < 10 ? "0" + randomNum : randomNum.toString();
+        booImg.src = `assets/boo_png/${formattedNum}.png`;
+        booContainer.classList.remove("hidden");
+      }
     }, 950);
   }, 200);
 }
