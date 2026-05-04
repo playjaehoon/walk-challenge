@@ -236,7 +236,52 @@ function checkEasterEgg(userData) {
           });
         });
         
-        showToast("🎉 숨겨진 캐릭터를 찾았어요! 특별 포인트 +20pt", "success", 4000);
+        // 중앙 팝업 모달 생성
+        const modal = document.createElement("div");
+        modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;";
+        modal.innerHTML = `
+          <div style="background: var(--bg-card); border: 2px solid #ffd700; border-radius: 16px; padding: 2rem; text-align: center; max-width: 320px; width: 90%; transform: scale(0.8); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 40px rgba(255,215,0,0.2);">
+            <h2 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.5rem;">야생의 부를 잡았다!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">숨겨진 캐릭터를 성공적으로 포획했습니다.</p>
+            
+            <div style="width: 140px; height: 140px; margin: 0 auto 1.5rem auto; animation: easter-egg-float 3s infinite;">
+              <img src="${imgSrc}" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));">
+            </div>
+            
+            <div style="background: rgba(57,211,83,0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+              <span style="font-size: 0.85rem; color: var(--green); font-weight: 600;">특별 획득 포인트</span>
+              <div style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--green); margin-top: 0.25rem;">+20pt</div>
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%;" onclick="this.closest('[style*=\\'position: fixed\\']').style.opacity='0'; setTimeout(()=>this.closest('[style*=\\'position: fixed\\']').remove(), 300);">확인</button>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        
+        requestAnimationFrame(() => {
+          modal.style.opacity = "1";
+          modal.firstElementChild.style.transform = "scale(1)";
+        });
+
+        // 폭죽 파티클
+        const emojis = ["🎉", "✨", "🌟", "💫", "🎁"];
+        for (let i = 0; i < 20; i++) {
+          const p = document.createElement("div");
+          p.style.cssText = `position:fixed;top:50%;left:50%;font-size:${1+Math.random()*1.5}rem;animation:egg-p ${1+Math.random()}s ease-out forwards;pointer-events:none;z-index:10001;transform:translate(-50%,-50%);`;
+          p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          const angle = Math.random() * Math.PI * 2;
+          const dist = 50 + Math.random() * 150;
+          p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+          p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+          document.body.appendChild(p);
+          setTimeout(() => p.remove(), 2000);
+        }
+        if(!document.getElementById("egg-p-style")){
+          const s = document.createElement("style");
+          s.id = "egg-p-style";
+          s.innerHTML = `@keyframes egg-p{0%{transform:translate(-50%,-50%) scale(0);opacity:1}100%{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(1);opacity:0}}`;
+          document.head.appendChild(s);
+        }
         
         const scoreEl = document.getElementById("nav-score");
         if (scoreEl) {
@@ -262,4 +307,12 @@ document.addEventListener("DOMContentLoaded", () => {
   initMobileNav();
   auth.onAuthStateChanged(() => updateNavState());
 });
+
+// 테스트용: 이스터에그 쿨타임 초기화
+window.resetEgg = async () => {
+  const user = auth.currentUser;
+  if (!user) return alert("로그인이 필요합니다.");
+  await db.collection("users").doc(user.uid).update({ lastEasterEggTime: null });
+  alert("이스터에그 쿨타임이 초기화되었습니다! 새로고침 후 다시 잡아보세요.");
+};
 
