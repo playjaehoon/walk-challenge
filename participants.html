@@ -47,42 +47,45 @@
 
     <div id="participants-content" class="hidden">
 
-      <!-- 전체 통계 -->
-      <div class="stats-grid" style="margin-bottom:2rem" id="overall-stats">
-        <div class="stat-card">
-          <div class="stat-number" id="stat-participants">-</div>
-          <div class="stat-label">총 참가자</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="stat-gold-count" style="color:#ffd700">-</div>
-          <div class="stat-label">🏆 골드 달성</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="stat-silver-count" style="color:#c0c0c0">-</div>
-          <div class="stat-label">🥈 실버 달성</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="stat-bronze-count" style="color:#cd7f32">-</div>
-          <div class="stat-label">🥉 브론즈 달성</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="stat-legendary-count" style="color:var(--legendary)">-</div>
-          <div class="stat-label">🟨 전설 획득자</div>
+      <!-- 전체 통계 (총 참가자만 유지) -->
+      <div style="display:flex; justify-content:center; margin-bottom:2.5rem;" id="overall-stats">
+        <div class="stat-card" style="width: 100%; max-width: 400px; padding: 2rem;">
+          <div class="stat-number" id="stat-participants" style="font-size: 3.5rem; color: var(--green);">-</div>
+          <div class="stat-label" style="font-size: 1.1rem; margin-top:0.5rem;">🏃‍♂️ Walk & Point 챌린지 총 참가자</div>
         </div>
       </div>
 
-      <!-- 🏅 Top 10 리더보드 -->
-      <div class="card" style="margin-bottom:2rem;border-color:rgba(57,211,83,0.2)">
-        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
-          <span style="font-size:1.5rem">🏅</span>
-          <div>
-            <h3 style="margin:0">TOP 10 리더보드</h3>
-            <p style="margin:0;font-size:0.8rem">포인트 기준 상위 10명</p>
+      <!-- 리더보드 영역 -->
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+        
+        <!-- 🔥 금일의 TOP 10 리더보드 -->
+        <div class="card" style="border-color:rgba(255,165,0,0.3); background:rgba(255,165,0,0.02)">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+            <span style="font-size:1.5rem">🔥</span>
+            <div>
+              <h3 style="margin:0; color: #f59e0b;">금일의 TOP 10</h3>
+              <p style="margin:0;font-size:0.8rem">오늘 하루 획득 포인트 기준</p>
+            </div>
+          </div>
+          <div class="leaderboard-list" id="today-leaderboard-list">
+            <p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">로딩 중...</p>
           </div>
         </div>
-        <div class="leaderboard-list" id="leaderboard-list">
-          <p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">로딩 중...</p>
+
+        <!-- 🏅 전체 TOP 10 리더보드 -->
+        <div class="card" style="border-color:rgba(57,211,83,0.2)">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem">
+            <span style="font-size:1.5rem">🏅</span>
+            <div>
+              <h3 style="margin:0">전체 TOP 10</h3>
+              <p style="margin:0;font-size:0.8rem">누적 포인트 기준</p>
+            </div>
+          </div>
+          <div class="leaderboard-list" id="leaderboard-list">
+            <p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">로딩 중...</p>
+          </div>
         </div>
+
       </div>
 
       <!-- 달성자 보드 -->
@@ -188,34 +191,59 @@ async function initParticipants() {
 
   // 통계
   document.getElementById("stat-participants").textContent  = users.length;
-  document.getElementById("stat-gold-count").textContent    = gold.length;
-  document.getElementById("stat-silver-count").textContent  = silver.length;
-  document.getElementById("stat-bronze-count").textContent  = bronze.length;
-  document.getElementById("stat-legendary-count").textContent = legendaryCount;
+
+  // 금일 스캔 데이터 가져오기 (컬렉션 그룹 인덱스 에러 방지를 위해 개별 조회)
+  const todayStr = getKSTDateString();
+  let todayScores = {};
+  try {
+    const promises = users.map(async (u) => {
+      const scansSnap = await db.collection("users").doc(u.id).collection("scans").where("dateStr", "==", todayStr).get();
+      let dailySum = 0;
+      scansSnap.forEach(doc => { dailySum += (doc.data().score || 0); });
+      todayScores[u.id] = dailySum;
+    });
+    await Promise.all(promises);
+  } catch (e) {
+    console.error("금일 스캔 데이터를 불러오는 중 오류:", e);
+  }
+
+  const todayTop10 = users
+    .map(u => ({ ...u, todayScore: todayScores[u.id] || 0 }))
+    .filter(u => u.todayScore > 0)
+    .sort((a, b) => b.todayScore - a.todayScore)
+    .slice(0, 10);
 
   // TOP 10 리더보드
   const top10 = users.slice(0, 10);
-  const rankEmoji = ['🥇','🥈','🥉'];
-  const rankClass = ['top1','top2','top3'];
-  const lbEl = document.getElementById("leaderboard-list");
-  if (top10.length === 0) {
-    lbEl.innerHTML = `<p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">아직 참가자가 없습니다.</p>`;
-  } else {
-    lbEl.innerHTML = top10.map((u, i) => {
+
+  function buildLeaderboardHTML(list, scoreField) {
+    if (list.length === 0) {
+      return `<p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">순위 기록이 없습니다.</p>`;
+    }
+    const rankEmoji = ['👑 1위','✨ 2위','⭐ 3위'];
+    return list.map((u, i) => {
       const rank = i + 1;
       const tier = getTier(u.totalScore || 0);
-      const rankLabel = rank <= 3 ? rankEmoji[i] : rank;
-      const rankCls   = rank <= 3 ? rankClass[i] : '';
-      const rowCls    = rank <= 3 ? `rank-${rank}` : '';
+      const rankLabel = rank <= 3 ? rankEmoji[i] : `<span style="opacity:0.6">${rank}위</span>`;
+      
+      let extraStyle = '';
+      let rankColor = 'var(--text-secondary)';
+      if (rank === 1) { extraStyle = 'background: linear-gradient(90deg, rgba(255,215,0,0.15), transparent); border-left: 4px solid #ffd700; transform: scale(1.02); margin-bottom: 0.5rem;'; rankColor = '#ffd700'; }
+      else if (rank === 2) { extraStyle = 'background: linear-gradient(90deg, rgba(192,192,192,0.15), transparent); border-left: 4px solid #c0c0c0; transform: scale(1.01); margin-bottom: 0.5rem;'; rankColor = '#c0c0c0'; }
+      else if (rank === 3) { extraStyle = 'background: linear-gradient(90deg, rgba(205,127,50,0.15), transparent); border-left: 4px solid #cd7f32; margin-bottom: 0.5rem;'; rankColor = '#cd7f32'; }
+      
       return `
-        <div class="leaderboard-row ${rowCls}">
-          <span class="lb-rank ${rankCls}">${rankLabel}</span>
-          <span class="lb-name">${u.name || '익명'}</span>
+        <div class="leaderboard-row" style="${extraStyle}">
+          <span style="font-weight:800; font-size: 1.1rem; color:${rankColor}; width:70px;">${rankLabel}</span>
+          <span class="lb-name" style="${rank <= 3 ? 'font-weight:700;' : ''}">${u.name || '익명'}</span>
           <span class="lb-tier">${tier.emoji} ${tier.name}</span>
-          <span class="lb-score">${u.totalScore || 0}pt</span>
+          <span class="lb-score" style="font-weight:700; color:var(--green)">${u[scoreField]}pt</span>
         </div>`;
     }).join('');
   }
+
+  document.getElementById("leaderboard-list").innerHTML = buildLeaderboardHTML(top10, "totalScore");
+  document.getElementById("today-leaderboard-list").innerHTML = buildLeaderboardHTML(todayTop10, "todayScore");
 
   // 달성자 칩
   const makeChips = (list) => list.length === 0

@@ -14,7 +14,7 @@ service cloud.firestore {
 
     // 스캔 기록
     match /users/{userId}/scans/{scanId} {
-      allow read:   if request.auth != null && request.auth.uid == userId;
+      allow read:   if request.auth != null;
       allow create: if request.auth != null && request.auth.uid == userId;
       // 수정·삭제 불가 (부정 방지)
       allow update, delete: if false;
