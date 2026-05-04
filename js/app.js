@@ -103,6 +103,9 @@ async function updateNavState() {
       const scoreEl = document.getElementById("nav-score");
       if (nameEl)  nameEl.textContent  = data.name;
       if (scoreEl) scoreEl.textContent = `${data.totalScore || 0}pt`;
+      
+      // 이스터에그 등장 로직 체크 (서브페이지에서만)
+      setTimeout(() => checkEasterEgg(data), 1500);
     }
     
     // 메인 페이지 자동 로그인 UX (CTA 버튼 변경)
@@ -152,6 +155,104 @@ function initMobileNav() {
         links.classList.remove("mobile-open");
       }
     });
+  }
+}
+
+// ===== 숨겨진 이스터에그 (특별 포인트) =====
+function checkEasterEgg(userData) {
+  const path = window.location.pathname;
+  if (path.endsWith('/') || path.endsWith('index.html')) return;
+
+  const now = new Date();
+  if (now > CAMPAIGN_CONFIG.endDate) return;
+
+  const lastTime = userData.lastEasterEggTime?.toDate 
+    ? userData.lastEasterEggTime.toDate().getTime() 
+    : (userData.lastEasterEggTime || 0);
+
+  const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+  
+  if (!lastTime || (now.getTime() - lastTime) >= ONE_WEEK_MS) {
+    // 30% 확률로 등장
+    if (Math.random() > 0.3) return;
+
+    if (document.getElementById("easter-egg-btn")) return;
+
+    const randomNum = Math.floor(Math.random() * 18) + 1;
+    const formattedNum = randomNum < 10 ? "0" + randomNum : randomNum.toString();
+    const imgSrc = `assets/boo_png/${formattedNum}.png`;
+
+    const egg = document.createElement("div");
+    egg.id = "easter-egg-btn";
+    
+    const isTop = Math.random() > 0.5;
+    const isLeft = Math.random() > 0.5;
+    
+    egg.style.cssText = `
+      position: fixed;
+      ${isTop ? 'top: 100px;' : 'bottom: 80px;'}
+      ${isLeft ? 'left: 20px;' : 'right: 20px;'}
+      width: 75px;
+      height: 75px;
+      z-index: 9999;
+      cursor: pointer;
+      animation: easter-egg-float 3.5s ease-in-out infinite, easter-egg-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    `;
+    
+    egg.innerHTML = `<img src="${imgSrc}" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.4));">`;
+
+    if (!document.getElementById("easter-egg-styles")) {
+      const style = document.createElement("style");
+      style.id = "easter-egg-styles";
+      style.innerHTML = `
+        @keyframes easter-egg-float {
+          0% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-12px) rotate(8deg); }
+          100% { transform: translateY(0) rotate(0deg); }
+        }
+        @keyframes easter-egg-pop {
+          0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes easter-egg-hide {
+          0% { transform: scale(1); opacity: 1; }
+          100% { transform: scale(0) rotate(180deg) translateY(-50px); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    egg.onclick = async () => {
+      egg.style.pointerEvents = "none";
+      egg.style.animation = "easter-egg-hide 0.6s forwards";
+      
+      try {
+        const userRef = db.collection("users").doc(userData.id);
+        await db.runTransaction(async (tx) => {
+          const doc = await tx.get(userRef);
+          tx.update(userRef, {
+            totalScore: (doc.data().totalScore || 0) + 20,
+            lastEasterEggTime: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        });
+        
+        showToast("🎉 숨겨진 캐릭터를 찾았어요! 특별 포인트 +20pt", "success", 4000);
+        
+        const scoreEl = document.getElementById("nav-score");
+        if (scoreEl) {
+          const current = parseInt(scoreEl.textContent) || 0;
+          scoreEl.textContent = `${current + 20}pt`;
+          scoreEl.style.animation = "pulse-dot 0.5s";
+        }
+      } catch (e) {
+        console.error("이스터에그 포인트 획득 실패:", e);
+        showToast("오류가 발생했습니다.", "error");
+      }
+      
+      setTimeout(() => egg.remove(), 600);
+    };
+
+    document.body.appendChild(egg);
   }
 }
 
