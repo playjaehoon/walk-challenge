@@ -22,8 +22,10 @@ async function loadNotices() {
 
     container.innerHTML = snap.docs.map(doc => {
       const data = doc.data();
+      const safeTitle = (data.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      const encodedContent = encodeURIComponent(data.content || '내용이 없습니다.');
       return `
-        <div style="padding:1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='var(--bg-secondary)'" onmouseout="this.style.background='transparent'">
+        <div onclick="showNoticeContent('${safeTitle}', '${encodedContent}')" style="padding:1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='var(--bg-secondary)'" onmouseout="this.style.background='transparent'">
           <div>
             <span style="display:inline-block;padding:0.2rem 0.5rem;background:rgba(57,211,83,0.1);color:var(--green);font-size:0.75rem;border-radius:4px;margin-bottom:0.4rem;font-weight:600">${data.type || '공지'}</span>
             <h4 style="margin:0;font-size:1.05rem;font-weight:500">${data.title}</h4>
@@ -42,6 +44,30 @@ async function loadNotices() {
     container.innerHTML = `<div style="padding:1.5rem;text-align:center;color:red">소식을 불러오는 중 오류가 발생했습니다.</div>`;
   }
 }
+
+window.showNoticeContent = function(title, encodedContent) {
+  const content = decodeURIComponent(encodedContent);
+  let modal = document.getElementById("notice-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "notice-modal";
+    modal.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;padding:1rem;";
+    modal.innerHTML = `
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;width:100%;max-width:500px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 10px 25px rgba(0,0,0,0.2)">
+        <div style="padding:1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <h3 id="notice-modal-title" style="margin:0;font-size:1.25rem;color:var(--text-primary)"></h3>
+          <button onclick="document.getElementById('notice-modal').style.opacity='0'; setTimeout(()=>document.getElementById('notice-modal').style.display='none',200);" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-secondary)">&times;</button>
+        </div>
+        <div id="notice-modal-content" style="padding:1.5rem;overflow-y:auto;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;font-size:0.95rem"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  document.getElementById("notice-modal-title").textContent = title;
+  document.getElementById("notice-modal-content").textContent = content;
+  modal.style.display = "flex";
+  setTimeout(() => modal.style.opacity = "1", 10);
+};
 
 
 // ===== 동적 캘린더 렌더링 =====
@@ -125,25 +151,48 @@ function renderCalendar() {
     });
     
     if (dayEvents.length > 0) {
-      // 이벤트 점 컨테이너
-      const dotsDiv = document.createElement("div");
-      dotsDiv.style.display = "flex";
-      dotsDiv.style.gap = "3px";
-      dotsDiv.style.marginTop = "4px";
-      dotsDiv.style.flexWrap = "wrap";
-      dotsDiv.style.justifyContent = "center";
-      dotsDiv.style.maxWidth = "100%";
+      // 이벤트 바 컨테이너
+      const barsDiv = document.createElement("div");
+      barsDiv.style.display = "flex";
+      barsDiv.style.flexDirection = "column";
+      barsDiv.style.gap = "2px";
+      barsDiv.style.marginTop = "4px";
+      barsDiv.style.width = "100%";
+      barsDiv.style.position = "relative";
+      barsDiv.style.zIndex = "1";
       
       dayEvents.forEach(ev => {
-        const dot = document.createElement("div");
-        dot.style.width = "6px";
-        dot.style.height = "6px";
-        dot.style.borderRadius = "50%";
-        dot.style.backgroundColor = ev.color || "var(--green)";
-        dotsDiv.appendChild(dot);
+        const isMultiDay = ev.startDate !== ev.endDate && ev.endDate;
+        const bar = document.createElement("div");
+        bar.style.height = "6px";
+        bar.style.backgroundColor = ev.color || "var(--green)";
+        bar.style.opacity = "0.9";
+
+        if (isMultiDay) {
+          bar.style.width = "calc(100% + 8px)";
+          if (dateStr === ev.startDate) {
+            bar.style.marginLeft = "0";
+            bar.style.width = "calc(100% + 4px)";
+            bar.style.borderTopLeftRadius = "3px";
+            bar.style.borderBottomLeftRadius = "3px";
+          } else if (dateStr === ev.endDate) {
+            bar.style.marginLeft = "-4px";
+            bar.style.width = "calc(100% + 4px)";
+            bar.style.borderTopRightRadius = "3px";
+            bar.style.borderBottomRightRadius = "3px";
+          } else {
+            bar.style.marginLeft = "-4px";
+          }
+        } else {
+          bar.style.width = "6px";
+          bar.style.borderRadius = "50%";
+          bar.style.margin = "0 auto";
+        }
+        
+        barsDiv.appendChild(bar);
       });
       
-      div.appendChild(dotsDiv);
+      div.appendChild(barsDiv);
       
       // 클릭 시 해당 날짜의 이벤트 목록 표시
       div.onclick = () => showEventsForDate(dateStr, dayEvents);

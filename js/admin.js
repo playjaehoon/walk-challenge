@@ -304,6 +304,7 @@ async function addNotice() {
   const type = document.getElementById("notice-type").value.trim();
   const title = document.getElementById("notice-title").value.trim();
   const date = document.getElementById("notice-date").value.trim();
+  const content = document.getElementById("notice-content")?.value.trim() || "";
   if (!title || !date) return alert("제목과 날짜를 입력해주세요.");
 
   try {
@@ -311,11 +312,13 @@ async function addNotice() {
       type: type || "공지",
       title: title,
       date: date,
+      content: content,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     document.getElementById("modal-notice-add").classList.add("hidden");
     document.getElementById("notice-title").value = "";
     document.getElementById("notice-date").value = "";
+    if(document.getElementById("notice-content")) document.getElementById("notice-content").value = "";
     showToast("소식이 등록되었습니다.", "success");
     loadNotices();
   } catch (e) {

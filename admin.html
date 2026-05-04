@@ -219,6 +219,10 @@ document.addEventListener("DOMContentLoaded", () => {
       <label class="form-label" style="display:block;margin-bottom:0.5rem">날짜 (YYYY.MM.DD)</label>
       <input type="text" id="notice-date" class="form-input" style="width:100%" placeholder="예: 2026.05.01">
     </div>
+    <div style="margin-bottom:1.5rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">본문 내용</label>
+      <textarea id="notice-content" class="form-input" style="width:100%;resize:vertical;min-height:100px;" placeholder="게시글 본문 내용을 적어주세요"></textarea>
+    </div>
     <div style="display:flex;gap:0.5rem;justify-content:flex-end">
       <button onclick="document.getElementById('modal-notice-add').classList.add('hidden')" class="btn btn-secondary">취소</button>
       <button onclick="addNotice()" class="btn btn-primary">등록하기</button>
