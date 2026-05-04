@@ -64,7 +64,7 @@
             <span style="font-size:1.5rem">🔥</span>
             <div>
               <h3 style="margin:0; color: #f59e0b;">금일의 TOP 10</h3>
-              <p style="margin:0;font-size:0.8rem">오늘 하루 획득 포인트 기준</p>
+              <p style="margin:0;font-size:0.8rem">오늘 하루 QR 스캔 획득 포인트 기준</p>
             </div>
           </div>
           <div class="leaderboard-list" id="today-leaderboard-list">
@@ -216,12 +216,12 @@ async function initParticipants() {
   // TOP 10 리더보드
   const top10 = users.slice(0, 10);
 
-  function buildLeaderboardHTML(list, scoreField) {
-    if (list.length === 0) {
-      return `<p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">순위 기록이 없습니다.</p>`;
-    }
-    const rankEmoji = ['👑 1위','✨ 2위','⭐ 3위'];
-    return list.map((u, i) => {
+    function buildLeaderboardHTML(list, scoreField) {
+      if (list.length === 0) {
+        return `<p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1rem 0">순위 기록이 없습니다.</p>`;
+      }
+      const rankEmoji = ['🥇 1위','🥈 2위','🥉 3위'];
+      return list.map((u, i) => {
       const rank = i + 1;
       const tier = getTier(u.totalScore || 0);
       const rankLabel = rank <= 3 ? rankEmoji[i] : `<span style="opacity:0.6">${rank}위</span>`;
