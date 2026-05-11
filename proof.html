@@ -194,20 +194,6 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
 <script src="js/proof.js"></script>
-<script>
-// 쳨페인 시작 전이면 비관리자에게 안내화면만 표시
-auth.onAuthStateChanged(function(user) {
-  const isAdmin = user && ADMIN_EMAILS.includes(user.email);
-  const campaignStart = new Date('2026-05-18T00:00:00+09:00');
-  const now = new Date();
-  if (!isAdmin && now < campaignStart) {
-    document.getElementById('proof-page-header').classList.add('hidden');
-    document.getElementById('proof-loading').classList.add('hidden');
-    document.getElementById('proof-main').classList.add('hidden');
-    document.getElementById('pre-campaign-notice').classList.remove('hidden');
-  }
-});
-</script>
 </body>
 </html>
 

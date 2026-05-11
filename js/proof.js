@@ -13,6 +13,13 @@ async function initProofPage() {
 
   if (!isCampaignActive()) {
     const now = new Date();
+    // 캠페인 시작 전이고 관리자가 아닌 경우 → 예쁜 안내화면 표시
+    if (now < CAMPAIGN_CONFIG.startDate && !ADMIN_EMAILS.includes(proofUser.email)) {
+      document.getElementById("proof-page-header").classList.add("hidden");
+      document.getElementById("pre-campaign-notice").classList.remove("hidden");
+      return;
+    }
+    // 캠페인 종료 후 또는 관리자인 경우 → 기존 메시지
     const msg = now < CAMPAIGN_CONFIG.startDate
       ? "캠페인 기간(5월 18일~31일)에만 걷기 인증을 제출할 수 있습니다."
       : "캠페인이 종료되었습니다.";
