@@ -199,17 +199,20 @@ function checkEasterEgg(userData) {
     const randomNum = Math.floor(Math.random() * 18) + 1;
     const formattedNum = randomNum < 10 ? "0" + randomNum : randomNum.toString();
     const imgSrc = `assets/boo_png/${formattedNum}.png`;
+    const EGG_POINTS = [5, 10, 15, 20, 25];
+    const earnedPts = EGG_POINTS[Math.floor(Math.random() * EGG_POINTS.length)];
 
     const egg = document.createElement("div");
     egg.id = "easter-egg-btn";
     
-    const isTop = Math.random() > 0.5;
-    const isLeft = Math.random() > 0.5;
+    // 상단/하단/좌/우 랜덤 위치 (4 코너 모두 가능)
+    const vPos = Math.random() > 0.5 ? 'top: 100px;' : 'bottom: 80px;';
+    const hPos = Math.random() > 0.5 ? 'left: 20px;' : 'right: 20px;';
     
     egg.style.cssText = `
       position: fixed;
-      ${isTop ? 'top: 100px;' : 'bottom: 80px;'}
-      ${isLeft ? 'left: 20px;' : 'right: 20px;'}
+      ${vPos}
+      ${hPos}
       width: 75px;
       height: 75px;
       z-index: 9999;
@@ -249,7 +252,7 @@ function checkEasterEgg(userData) {
         await db.runTransaction(async (tx) => {
           const doc = await tx.get(userRef);
           tx.update(userRef, {
-            totalScore: (doc.data().totalScore || 0) + 20,
+            totalScore: (doc.data().totalScore || 0) + earnedPts,
             lastEasterEggTime: firebase.firestore.FieldValue.serverTimestamp()
           });
         });
@@ -268,7 +271,7 @@ function checkEasterEgg(userData) {
             
             <div style="background: rgba(57,211,83,0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
               <span style="font-size: 0.85rem; color: var(--green); font-weight: 600;">특별 획득 포인트</span>
-              <div style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--green); margin-top: 0.25rem;">+20pt</div>
+              <div style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--green); margin-top: 0.25rem;">+${earnedPts}pt</div>
             </div>
             
             <button class="btn btn-primary" style="width: 100%;" onclick="this.closest('[style*=\\'position: fixed\\']').style.opacity='0'; setTimeout(()=>this.closest('[style*=\\'position: fixed\\']').remove(), 300);">확인</button>
@@ -304,7 +307,7 @@ function checkEasterEgg(userData) {
         const scoreEl = document.getElementById("nav-score");
         if (scoreEl) {
           const current = parseInt(scoreEl.textContent) || 0;
-          scoreEl.textContent = `${current + 20}pt`;
+          scoreEl.textContent = `${current + earnedPts}pt`;
           scoreEl.style.animation = "pulse-dot 0.5s";
         }
       } catch (e) {
