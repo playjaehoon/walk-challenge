@@ -15,12 +15,17 @@ async function handleRegister(e) {
   const email      = form.querySelector("#email").value.trim();
   const password   = form.querySelector("#password").value;
   const password2  = form.querySelector("#password2").value;
+  const genderEl   = form.querySelector("input[name='gender']:checked");
+  const gender     = genderEl ? genderEl.value : "";
 
   const surveyConsent = form.querySelector("#survey-consent")?.checked;
 
   // 유효성 검사
   if (!name || !studentId || !department || !phone || !email || !password) {
     showToast("모든 항목을 입력해주세요.", "error"); return;
+  }
+  if (!gender) {
+    showToast("성별을 선택해주세요.", "error"); return;
   }
   if (!surveyConsent) {
     showToast("사전·사후 설문조사 참여에 동의해주세요.", "error"); return;
@@ -38,7 +43,7 @@ async function handleRegister(e) {
   try {
     const cred = await auth.createUserWithEmailAndPassword(email, password);
     await db.collection("users").doc(cred.user.uid).set({
-      name, studentId, department, phone, email,
+      name, studentId, department, phone, email, gender,
       totalScore: 0,
       scanCount: 0,
       collection: { common: 0, rare: 0, uncommon: 0, epic: 0, legendary: 0 },
