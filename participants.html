@@ -120,7 +120,8 @@
             <span style="font-size:2rem">🏆</span>
             <div>
               <h3 style="color:#ffd700;margin-bottom:0.15rem">골드 달성</h3>
-              <p>700점 이상</p>
+              <p>상위 10명</p>
+              <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.1rem">🎁 보상 5월 14일 공개 예정</p>
             </div>
           </div>
           <div class="achievement-body" id="gold-list">
@@ -134,7 +135,8 @@
             <span style="font-size:2rem">🥈</span>
             <div>
               <h3 style="color:#c0c0c0;margin-bottom:0.15rem">실버 달성</h3>
-              <p>450점 이상</p>
+              <p>상위 50% (상위 11~30명)</p>
+              <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.1rem">🎁 보상 5월 13일 공개 예정</p>
             </div>
           </div>
           <div class="achievement-body" id="silver-list">
@@ -149,6 +151,7 @@
             <div>
               <h3 style="color:#cd7f32;margin-bottom:0.15rem">브론즈 달성</h3>
               <p>200점 이상</p>
+              <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.1rem">🎁 보상 5월 12일 공개 예정</p>
             </div>
           </div>
           <div class="achievement-body" id="bronze-list">
@@ -203,9 +206,12 @@ async function initParticipants() {
   const gold = [], silver = [], bronze = [];
   let legendaryCount = 0;
   const legendaryUsers = [];
+  const total = users.length;
 
-  users.forEach((u) => {
-    const tier = getTier(u.totalScore || 0);
+  users.forEach((u, idx) => {
+    const rank = idx + 1; // 점수 내림차순으로 정렬되어 있음
+    const tier = getTierByRank(rank, total, u.totalScore || 0);
+    u._tier = tier; // 리더보드 표시용
     if (tier.cls === "gold")        gold.push(u);
     else if (tier.cls === "silver") silver.push(u);
     else if (tier.cls === "bronze") bronze.push(u);

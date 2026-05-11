@@ -67,13 +67,23 @@ async function getUserData(uid) {
   return doc.exists ? { id: doc.id, ...doc.data() } : null;
 }
 
-// ===== 달성 티어 계산 =====
+// ===== 달성 티어 계산 (점수 기준 — 브론즈만) =====
 function getTier(score) {
-  const { bronze, silver, gold } = CAMPAIGN_CONFIG.scoreThresholds;
-  if (score >= gold)   return { name: "골드",   emoji: "🏆", cls: "gold",   threshold: gold };
-  if (score >= silver) return { name: "실버",   emoji: "🥈", cls: "silver", threshold: silver };
+  const { bronze } = CAMPAIGN_CONFIG.scoreThresholds;
   if (score >= bronze) return { name: "브론즈", emoji: "🥉", cls: "bronze", threshold: bronze };
-  return                      { name: "도전 중", emoji: "🚶", cls: "none",   threshold: bronze };
+  return                     { name: "도전 중",  emoji: "🚶", cls: "none",   threshold: bronze };
+}
+
+// ===== 달성 티어 계산 (순위 기준 — 실버/골드) =====
+// rank: 1위부터 시작하는 순위, total: 전체 참가자 수
+function getTierByRank(rank, total, score) {
+  const { bronze } = CAMPAIGN_CONFIG.scoreThresholds;
+  const goldTop    = CAMPAIGN_CONFIG.goldTopN || 10;
+  const silverTop  = Math.ceil(total * (CAMPAIGN_CONFIG.silverTopPercent || 50) / 100);
+  if (rank <= goldTop)   return { name: "골드",   emoji: "🏆", cls: "gold",   threshold: 0 };
+  if (rank <= silverTop) return { name: "실버",   emoji: "🥈", cls: "silver", threshold: 0 };
+  if (score >= bronze)   return { name: "브론즈", emoji: "🥉", cls: "bronze", threshold: bronze };
+  return                        { name: "도전 중",  emoji: "🚶", cls: "none",   threshold: bronze };
 }
 
 // ===== 네비게이션 활성 표시 =====

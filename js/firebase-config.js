@@ -40,12 +40,16 @@ const CAMPAIGN_CONFIG = {
   scanCooldownMinutes: 5,
   totalLocations: 15,
 
-  // 달성 기준 점수
-  // 브론즈 200pt / 실버 450pt / 골드 700pt
+  // 티어 기준:
+  // 브론즈: 200pt 이상
+  // 실버: 상위 50% (최대 60명 기준 상위 30명 — 골드 제외)
+  // 골드: 상위 10명
+  maxParticipants: 60,  // 최대 참가 인원
+  goldTopN: 10,         // 골드: 상위 N명
+  silverTopPercent: 50, // 실버: 상위 N%
   scoreThresholds: {
-    bronze: 200,  // 브론즈
-    silver: 450,  // 실버
-    gold: 700,  // 골드
+    bronze: 200,  // 브론즈 (점수 기준)
+    // silver, gold는 순위 기준 (goldTopN, silverTopPercent 참조)
   },
 
   // 기본 희귀도 설정 (4단계)
