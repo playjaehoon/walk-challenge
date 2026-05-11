@@ -233,13 +233,21 @@
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
-          
-          <div class="glass-panel" style="border: 1px dashed rgba(205,127,50,0.5); padding: 2.5rem 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-            <div style="position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:radial-gradient(circle, rgba(205,127,50,0.2) 0%, transparent 70%);"></div>
-            <div style="font-size: 3.5rem; margin-bottom: 1rem; filter: grayscale(1) opacity(0.4);">&#x1F4E6;</div>
-            <h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">브론즈 기념품</h4>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">추후 공개 예정</p>
-            <p style="font-size: 0.78rem; color: #cd7f32; margin-top: 0.5rem; font-weight: 600;">🎁 5월 12일 공개</p>
+
+          <!-- 브론즈: 쉐이커 보틀 실물 이미지 + 라이트박스 -->
+          <div class="glass-panel" style="border: 1px solid rgba(205,127,50,0.5); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: pointer;"
+            onclick="openLightbox('assets/shaker.png', '쉐이커 보틀 — 브론즈 기념품')" title="클릭하여 크게 보기">
+            <div style="position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:radial-gradient(circle, rgba(205,127,50,0.25) 0%, transparent 70%);"></div>
+            <div style="position:relative;width:100%;margin-bottom:0.75rem;">
+              <img src="assets/shaker.png" alt="쉐이커 보틀 브론즈 기념품"
+                style="width:100%;max-height:180px;object-fit:contain;border-radius:10px;transition:transform 0.25s,filter 0.25s;"
+                onmouseover="this.style.transform='scale(1.04)';this.style.filter='brightness(1.08)'"
+                onmouseout="this.style.transform='scale(1)';this.style.filter='none'">
+              <div style="position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,0.55);border-radius:6px;padding:3px 6px;font-size:0.7rem;color:#fff;pointer-events:none;">🔍 클릭하여 확대</div>
+            </div>
+            <h4 style="margin-bottom:0.3rem;color:var(--text-primary);">브론즈 기념품</h4>
+            <p style="font-size:0.82rem;color:#cd7f32;font-weight:600;margin:0;">쉐이커 보틀</p>
+            <p style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.25rem;">🎁 5월 12일 지급</p>
           </div>
 
           <div class="glass-panel" style="border: 1px dashed rgba(192,192,192,0.5); padding: 2.5rem 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden;">
@@ -259,6 +267,29 @@
           </div>
 
         </div>
+
+        <!-- 라이트박스 오버레이 -->
+        <div id="lightbox-overlay" onclick="closeLightbox()" style="
+          display:none;position:fixed;inset:0;z-index:9999;
+          background:rgba(0,0,0,0.88);
+          align-items:center;justify-content:center;
+          cursor:zoom-out;backdrop-filter:blur(6px);">
+          <div style="position:relative;max-width:90vw;max-height:90vh;" onclick="event.stopPropagation()">
+            <img id="lightbox-img" src="" alt=""
+              style="max-width:90vw;max-height:82vh;object-fit:contain;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.6);animation:lbFadeIn 0.25s ease;">
+            <p id="lightbox-caption" style="text-align:center;color:rgba(255,255,255,0.75);font-size:0.9rem;margin-top:0.75rem;"></p>
+            <button onclick="closeLightbox()" style="
+              position:absolute;top:-14px;right:-14px;
+              width:32px;height:32px;border-radius:50%;
+              background:#333;border:2px solid rgba(255,255,255,0.2);
+              color:#fff;font-size:1rem;cursor:pointer;
+              display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
+          </div>
+        </div>
+        <style>
+          @keyframes lbFadeIn { from { opacity:0; transform:scale(0.92); } to { opacity:1; transform:scale(1); } }
+        </style>
+
       </div>
     </div>
   </section>
@@ -367,6 +398,22 @@
     }
     updateCountdown();
     setInterval(updateCountdown, 1000);
+
+    // ── 라이트박스 ──
+    function openLightbox(src, caption) {
+      const overlay = document.getElementById('lightbox-overlay');
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-caption').textContent = caption || '';
+      overlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox-overlay').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeLightbox();
+    });
   </script>
 </body>
 
