@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>연구 설문 참가 신청 — Walk &amp; Point 캠페인</title>
+  <meta name="description" content="Walk &amp; Point 대조군 연구 설문 참가자 신청">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="assets/logo.png" alt="Walk &amp; Point" class="nav-logo-img">
+    <span>Walk &amp; Point</span>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">홈</a></li>
+    <li><a href="dashboard.html">내 기록</a></li>
+    <li><a href="proof.html">걷기 인증</a></li>
+    <li><a href="participants.html">달성 현황</a></li>
+    <li><a href="about.html">학부 소개</a></li>
+    <li><a href="health.html">신체건강 증진</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div id="nav-guest" style="display:flex;gap:0.5rem;align-items:center;"><a href="login.html" class="btn btn-secondary btn-sm">로그인</a><a href="register.html" class="btn btn-primary btn-sm">참가 신청</a></div>
+    <div id="nav-user" class="hidden" style="display:flex;align-items:center;gap:0.75rem">
+      <span class="nav-score-badge" id="nav-score">0pt</span>
+      <span style="font-size:0.875rem;color:var(--text-secondary)" id="nav-name"></span>
+      <button onclick="logout()" class="btn btn-secondary btn-sm">로그아웃</button>
+    </div>
+  </div>
+  <button class="nav-toggle" id="nav-toggle">☰</button>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-card" style="max-width:520px;border:1px solid rgba(155,89,255,0.3);background:linear-gradient(135deg,rgba(155,89,255,0.05),var(--bg-card));">
+    <div class="auth-logo">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔬</div>
+      <h1 style="font-size:1.5rem;">연구 설문 참가 신청</h1>
+      <p>대조군 — 캠페인 미참여 설문 대상자</p>
+    </div>
+
+    <div style="background:rgba(155,89,255,0.08);border:1px solid rgba(155,89,255,0.3);border-radius:var(--radius-md);padding:0.875rem 1rem;margin-bottom:1.25rem;display:flex;gap:0.75rem;align-items:flex-start;">
+      <span>📋</span>
+      <span style="font-size:0.85rem;color:var(--text-secondary);">Walk &amp; Point 캠페인에 <strong>참여하지 않는</strong> 학생을 대상으로 한 연구 설문 참가자를 모집합니다. 사전·사후 설문에만 참여하시면 됩니다.</span>
+    </div>
+
+    <form id="control-form" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="ctrl-name">이름 *</label>
+          <input class="form-input" type="text" id="ctrl-name" placeholder="홍길동" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ctrl-student-id">학번 *</label>
+          <input class="form-input" type="text" id="ctrl-student-id" placeholder="2024012345" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">성별 *</label>
+        <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+            <input type="radio" name="ctrl-gender" value="male"
+              style="width:16px;height:16px;accent-color:#9b59ff;cursor:pointer;"> 남성
+          </label>
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text-primary);">
+            <input type="radio" name="ctrl-gender" value="female"
+              style="width:16px;height:16px;accent-color:#9b59ff;cursor:pointer;"> 여성
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ctrl-department">학과 *</label>
+        <input class="form-input" type="text" id="ctrl-department" placeholder="글로벌스포츠산업학부" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ctrl-phone">연락처 *</label>
+        <input class="form-input" type="tel" id="ctrl-phone" placeholder="010-1234-5678" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ctrl-email">이메일 *</label>
+        <input class="form-input" type="email" id="ctrl-email" placeholder="example@hufs.ac.kr" required>
+      </div>
+
+      <label for="ctrl-survey-consent" style="
+        display:flex;align-items:flex-start;gap:0.75rem;
+        background:rgba(155,89,255,0.05);
+        border:1px solid rgba(155,89,255,0.25);
+        border-radius:var(--radius-md);
+        padding:1rem;margin-bottom:1.25rem;cursor:pointer;">
+        <input type="checkbox" id="ctrl-survey-consent" style="
+          width:18px;height:18px;margin-top:2px;
+          accent-color:#9b59ff;flex-shrink:0;cursor:pointer;">
+        <span style="font-size:0.875rem;line-height:1.5;color:var(--text-primary)">
+          연구 목적의 <strong>사전 및 사후 설문조사</strong>에 성실히 참여할 것에 동의합니다. <span style="color:#ff6b6b">*</span>
+        </span>
+      </label>
+
+      <button type="submit" id="ctrl-register-btn" class="btn w-full btn-lg"
+        style="background:linear-gradient(135deg,#9b59ff,#7c3aed);color:#fff;border:none;">설문 참가 신청하기</button>
+    </form>
+
+    <div class="auth-footer">
+      캠페인 참가 신청은 <a href="register.html">여기</a>에서 하세요.
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script>
+document.getElementById('control-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('ctrl-register-btn');
+
+  const name       = document.getElementById('ctrl-name').value.trim();
+  const studentId  = document.getElementById('ctrl-student-id').value.trim();
+  const department = document.getElementById('ctrl-department').value.trim();
+  const phone      = document.getElementById('ctrl-phone').value.trim();
+  const email      = document.getElementById('ctrl-email').value.trim();
+  const genderEl   = document.querySelector("input[name='ctrl-gender']:checked");
+  const gender     = genderEl ? genderEl.value : '';
+  const consent    = document.getElementById('ctrl-survey-consent').checked;
+
+  if (!name || !studentId || !department || !phone || !email) {
+    showToast('모든 항목을 입력해주세요.', 'error'); return;
+  }
+  if (!gender) {
+    showToast('성별을 선택해주세요.', 'error'); return;
+  }
+  if (!consent) {
+    showToast('설문조사 참여에 동의해주세요.', 'error'); return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '신청 중...';
+
+  try {
+    const existing = await db.collection('control_group').where('email', '==', email).get();
+    if (!existing.empty) {
+      showToast('이미 등록된 이메일입니다.', 'error');
+      btn.disabled = false; btn.textContent = '설문 참가 신청하기';
+      return;
+    }
+
+    await db.collection('control_group').add({
+      name, studentId, department, phone, email, gender,
+      surveyConsent: true,
+      registeredAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    showToast('설문 참가 신청이 완료되었습니다! 🎉', 'success', 4000);
+    e.target.reset();
+    btn.textContent = '신청 완료 ✅';
+  } catch (err) {
+    console.error(err);
+    showToast('오류가 발생했습니다. 다시 시도해주세요.', 'error');
+    btn.disabled = false;
+    btn.textContent = '설문 참가 신청하기';
+  }
+});
+</script>
+</body>
+</html>
