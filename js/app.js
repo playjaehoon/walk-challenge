@@ -164,7 +164,15 @@ function checkEasterEgg(userData) {
   if (path.endsWith('/') || path.endsWith('index.html')) return;
 
   const now = new Date();
+
+  // 캠페인 종료 후 비활성
   if (now > CAMPAIGN_CONFIG.endDate) return;
+
+  // 캠페인 시작 전 — 관리자만 허용
+  const currentUser = auth.currentUser;
+  if (now < CAMPAIGN_CONFIG.startDate) {
+    if (!(currentUser && ADMIN_EMAILS.includes(currentUser.email))) return;
+  }
 
   const lastTime = userData.lastEasterEggTime?.toDate 
     ? userData.lastEasterEggTime.toDate().getTime() 
