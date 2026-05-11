@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신체건강 증진 — Walk & Point 챌린지</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .health-hero {
+      background: linear-gradient(135deg, rgba(57,211,83,0.12), rgba(29,78,216,0.06));
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .health-hero::after {
+      content: '🏃';
+      position: absolute;
+      right: -5%;
+      bottom: -10%;
+      font-size: 15rem;
+      opacity: 0.05;
+      transform: rotate(-15deg);
+    }
+    .article-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .article-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border-color: var(--green);
+    }
+    .article-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--green);
+      background: rgba(57,211,83,0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      align-self: flex-start;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/logo.png" alt="Walk & Point" class="nav-logo-img">
+      <span>Walk &amp; Point</span>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">홈</a></li>
+      <li><a href="dashboard.html">내 기록</a></li>
+      <li><a href="proof.html">걷기 인증</a></li>
+      <li><a href="participants.html">달성 현황</a></li>
+      <li><a href="about.html">학부 소개</a></li>
+      <li><a href="health.html">신체건강 증진</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div id="nav-guest"><a href="register.html" class="btn btn-primary btn-sm">참가 신청</a></div>
+      <div id="nav-user" class="hidden" style="display:flex;align-items:center;gap:0.75rem">
+        <span class="nav-score-badge" id="nav-score">0pt</span>
+        <span style="font-size:0.875rem;color:var(--text-secondary)" id="nav-name"></span>
+        <button onclick="logout()" class="btn btn-secondary btn-sm">로그아웃</button>
+      </div>
+    </div>
+    <button class="nav-toggle" id="nav-toggle">☰</button>
+  </nav>
+
+  <div class="page-wrapper">
+    <!-- Hero Section -->
+    <section class="health-hero">
+      <div class="container" style="text-align:center">
+        <div style="width:80px;height:80px;background:linear-gradient(135deg,#39d353,#1d4ed8);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1.5rem;box-shadow:0 8px 20px rgba(57,211,83,0.3)">
+          ❤️
+        </div>
+        <h1 style="font-size:clamp(1.5rem,4vw,2.5rem);margin-bottom:0.75rem">대학생 신체건강 증진</h1>
+        <p style="max-width:560px;margin:0 auto 1.5rem;font-size:1rem;color:var(--text-secondary)">
+          단순한 걷기를 넘어, 대학 생활의 질을 높이는<br>건강한 캠퍼스 라이프스타일을 제안합니다.
+        </p>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:3rem;padding-bottom:4rem">
+
+      <!-- 캠페인 기획 의도 -->
+      <div style="max-width:800px;margin:0 auto">
+        <div class="section-header">
+          <div class="section-tag">💡 기획 의도</div>
+          <h2>왜 '걷기' 인가요?</h2>
+          <p>
+            대학생의 신체활동 부족은 단순한 체력 저하를 넘어 학업 스트레스, 우울감, 수면 장애 등 전반적인 삶의 질 하락으로 이어집니다.
+            <strong>Walk &amp; Point 챌린지</strong>는 바쁜 대학 생활 속에서도 가장 쉽고 자연스럽게 실천할 수 있는 '걷기'를 통해 
+            학우들의 <strong>신체적, 정신적 건강을 증진</strong>시키고자 기획되었습니다.
+          </p>
+        </div>
+
+        <!-- 걷기의 효능 Grid -->
+        <div class="how-grid" style="margin-top:2.5rem; margin-bottom:4rem;">
+          <div class="how-card" style="border-top:4px solid #3b82f6;">
+            <div class="how-icon">🧠</div>
+            <h3>학업 집중력 향상</h3>
+            <p>걷기는 뇌의 혈류량을 증가시켜 해마를 자극합니다. 하루 30분의 걷기는 기억력과 인지 기능을 크게 향상시켜 학업 능률을 높여줍니다.</p>
+          </div>
+          <div class="how-card" style="border-top:4px solid #10b981;">
+            <div class="how-icon">🌿</div>
+            <h3>스트레스 완화</h3>
+            <p>규칙적인 걷기는 코르티솔(스트레스 호르몬) 수치를 낮추고 엔돌핀 분비를 촉진하여 과제와 시험으로 인한 우울감과 불안감을 해소합니다.</p>
+          </div>
+          <div class="how-card" style="border-top:4px solid #f59e0b;">
+            <div class="how-icon">🫀</div>
+            <h3>심혈관 건강 증진</h3>
+            <p>장시간 앉아있는 습관은 심혈관 질환의 위험을 높입니다. 걷기는 혈액순환을 돕고 심근을 강화하여 장기적인 대사증후군을 예방합니다.</p>
+          </div>
+          <div class="how-card" style="border-top:4px solid #8b5cf6;">
+            <div class="how-icon">💤</div>
+            <h3>수면 질 개선</h3>
+            <p>낮 시간대의 걷기는 멜라토닌 분비 주기를 정상화시켜, 불규칙한 생활을 하는 대학생들의 만성 피로를 줄이고 양질의 수면을 돕습니다.</p>
+          </div>
+        </div>
+
+        <!-- 전문가 소견 / 기사 아티클 -->
+        <div class="section-header" style="margin-bottom:2rem;">
+          <div class="section-tag" style="background:rgba(59,130,246,0.1);color:#3b82f6;border-color:rgba(59,130,246,0.3)">📰 관련 연구 및 기사</div>
+          <h2>걷기가 대학생에게 미치는 놀라운 효과</h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:4.5rem;">
+          
+          <!-- Article 1 -->
+          <div class="article-card">
+            <div class="article-tag">건강 연구</div>
+            <h3 style="font-size:1.2rem;margin-bottom:0.75rem;line-height:1.4">"하루 7천 보, 대학생 사망 위험 및 우울증 대폭 감소시켜"</h3>
+            <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.5;flex:1;">
+              하버드 의과대학의 연구에 따르면, 하루 7,000~10,000보를 걷는 청년층은 그렇지 않은 그룹에 비해 조기 사망 위험이 약 50%에서 70%까지 감소하며, 우울증 발병률이 현저히 낮아지는 것으로 나타났습니다.
+            </p>
+            <div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:0.5rem">
+              <span>출처: Harvard Health Publishing</span>
+            </div>
+          </div>
+
+          <!-- Article 2 -->
+          <div class="article-card">
+            <div class="article-tag">뇌과학</div>
+            <h3 style="font-size:1.2rem;margin-bottom:0.75rem;line-height:1.4">"걷는 동안 뇌는 새로운 신경망을 구축한다"</h3>
+            <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.5;flex:1;">
+              스탠퍼드 대학교의 연구 결과, 걷는 동안 사람의 창의적 사고력은 앉아있을 때보다 평균 60% 상승했습니다. 산책은 뇌의 휴식 네트워크(DMN)를 활성화하여 복잡한 과제 해결에 필수적인 영감을 제공합니다.
+            </p>
+            <div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:0.5rem">
+              <span>출처: Stanford University Research</span>
+            </div>
+          </div>
+
+          <!-- Article 3 -->
+          <div class="article-card">
+            <div class="article-tag">캠퍼스 라이프</div>
+            <h3 style="font-size:1.2rem;margin-bottom:0.75rem;line-height:1.4">"국내 대학생 10명 중 7명, 신체활동 턱없이 부족"</h3>
+            <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.5;flex:1;">
+              질병관리청 통계에 따르면 20대 대학생의 유산소 신체활동 실천율은 다른 연령대보다 낮은 수준입니다. 전문가들은 생활 속에서 엘리베이터 대신 계단 이용하기, 캠퍼스 걷기 등 '니트(NEAT)' 활동을 늘려야 한다고 권고합니다.
+            </p>
+            <div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:0.5rem">
+              <span>출처: 국내 보건통계청 요약</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 건강 팁 -->
+        <div class="glass-panel" style="padding:2rem;background:rgba(57,211,83,0.03);border:1px solid rgba(57,211,83,0.2);">
+          <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+            <span style="font-size:2rem">👟</span>
+            <h3 style="margin:0;font-size:1.3rem;color:var(--text-primary)">올바른 걷기 자세 가이드</h3>
+          </div>
+          <ul style="color:var(--text-secondary);font-size:0.95rem;line-height:1.8;padding-left:1.5rem;">
+            <li><strong>시선:</strong> 전방 10~15m를 자연스럽게 바라봅니다. 스마트폰을 보며 걷는 것은 거북목을 유발합니다.</li>
+            <li><strong>상체:</strong> 가슴을 펴고 허리를 꼿꼿하게 세웁니다. 어깨의 긴장은 풉니다.</li>
+            <li><strong>팔:</strong> 자연스럽게 구부리고, 걷는 리듬에 맞춰 가볍게 흔들어줍니다.</li>
+            <li><strong>발:</strong> 발뒤꿈치부터 땅에 닿고, 발바닥 전체를 굴리듯 지나 발가락으로 지면을 밀어냅니다.</li>
+          </ul>
+        </div>
+
+        <!-- CTA -->
+        <div style="margin-top:4rem;text-align:center;padding:3rem 2rem;background:linear-gradient(135deg, var(--bg-card), var(--bg-secondary));border:1px solid var(--border-active);border-radius:var(--radius-xl)">
+          <h3 style="margin-bottom:1rem;font-size:1.5rem">당신의 건강한 캠퍼스 라이프를 시작하세요</h3>
+          <p style="margin-bottom:2rem;color:var(--text-secondary)">지금 바로 Walk &amp; Point 챌린지에 참여하고, 걷기의 즐거움과 보상을 동시에 누리세요!</p>
+          <a href="register.html" class="btn btn-primary btn-lg" style="padding:0.8rem 2.5rem;font-size:1.1rem;box-shadow:0 8px 20px rgba(57,211,83,0.2)">참가 신청하러 가기 →</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>Copyright © 2026 한국외국어대학교 글로벌스포츠산업학부 · Walk &amp; Point 챌린지</p>
+      <p style="margin-top:0.375rem">지도교수: 이예훈 교수</p>
+      <p style="margin-top:0.25rem">기획: 스포츠비즈니스기획운영(캡스톤디자인) 수강생</p>
+      <p style="margin-top:0.25rem;font-size:0.75rem;color:var(--text-secondary)">제작자: 글로벌스포츠산업전공 23학번 최재훈</p>
+    </div>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

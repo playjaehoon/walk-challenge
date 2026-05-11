@@ -25,6 +25,7 @@
       <li><a href="proof.html">걷기 인증</a></li>
       <li><a href="participants.html">달성 현황</a></li>
       <li><a href="about.html">학부 소개</a></li>
+      <li><a href="health.html">신체건강 증진</a></li>
     </ul>
     <div class="nav-actions">
       <div id="nav-guest"><a href="register.html" class="btn btn-primary btn-sm">참가 신청</a></div>
@@ -125,39 +126,17 @@
 
           <!-- 가로 스크롤 카드 뉴스 컨테이너 -->
           <style>
-            .hide-scrollbar::-webkit-scrollbar {
-              display: none;
-            }
-            .hide-scrollbar {
-              -ms-overflow-style: none;
-              scrollbar-width: none;
-            }
             .snap-carousel>div {
               scroll-snap-align: center;
             }
 
             @media (max-width: 768px) {
               .snap-carousel>div {
-                min-width: 85% !important;
-                flex: 0 0 85% !important;
+                min-width: 100% !important;
+                flex: 0 0 100% !important;
               }
-              .swipe-indicator {
-                display: flex !important;
-              }
-            }
-
-            @keyframes swipe-pulse {
-              0% { transform: translateX(0); opacity: 0.8; }
-              50% { transform: translateX(5px); opacity: 1; }
-              100% { transform: translateX(0); opacity: 0.8; }
             }
           </style>
-          
-          <div class="swipe-indicator" style="display:none; justify-content:flex-end; align-items:center; gap:0.4rem; margin-bottom:0.75rem; padding-right:0.5rem;">
-            <span style="font-size:0.8rem; color:var(--text-secondary); font-weight:500;">옆으로 넘겨보세요</span>
-            <span style="font-size:1.1rem; animation: swipe-pulse 1.5s infinite ease-in-out;">👉</span>
-          </div>
-
           <div
             style="display:flex; gap:1.25rem; overflow-x:auto; padding-bottom:1.5rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;"
             class="hide-scrollbar snap-carousel">
@@ -181,7 +160,7 @@
               <div style="font-size:2.5rem; margin-bottom:1.25rem;">💡</div>
               <h3 style="color:var(--green); font-size:1.3rem; margin-bottom:1rem; font-weight:700">도입 배경 및 필요성</h3>
               <p style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6; margin:0;">
-                본 마이크로디그리는 현대 스포츠 산업은 단편적인 마케팅 실무를 넘어, <strong>조직과 자원을 거시적으로 통합 운영하는 기획형 인재</strong>를 요구하고 있습니다. 본 과정은
+                현대 스포츠 산업은 단편적인 마케팅 실무를 넘어, <strong>조직과 자원을 거시적으로 통합 운영하는 기획형 인재</strong>를 요구하고 있습니다. 본 과정은
                 이러한 산업 수요에 부응하여 비즈니스 구조를 폭넓게 이해하는 예비 전문가를 양성하고자 신설되었습니다.
               </p>
             </div>

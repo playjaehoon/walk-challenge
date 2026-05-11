@@ -41,15 +41,15 @@ const CAMPAIGN_CONFIG = {
   totalLocations: 15,
 
   // 달성 기준 점수
-  // 브론즈 200pt / 실버 450pt / 골드 800pt
+  // 브론즈 200pt / 실버 450pt / 골드 700pt
   scoreThresholds: {
     bronze: 200,  // 브론즈
     silver: 450,  // 실버
-    gold: 800,  // 골드
+    gold: 700,  // 골드
   },
 
   // 기본 희귀도 설정 (4단계)
-  // 평균 점수 계산: 10x55% + 20x30% + 35x10% + 50x5% = 5.5+6+3.5+2.5 = 약 17.5pt/회
+  // 평균 점수 계산: 10x55% + 15x30% + 25x10% + 50x5% = 5.5+4.5+2.5+2.5 = 약 15pt/회
   rarityConfig: [
     { name: "일반", nameEn: "common", emoji: "⬜", probability: 55, score: 10, color: "#9ca3af" },
     { name: "레어", nameEn: "rare", emoji: "🟩", probability: 30, score: 15, color: "#22c55e" },
@@ -58,9 +58,10 @@ const CAMPAIGN_CONFIG = {
   ],
 
   // 핫스팟 전용 희귀도 설정 (일반 등급 0%, 에픽/전설 확률 대폭 상승)
+  // 평균 점수 계산: 15x50% + 25x30% + 50x20% = 7.5+7.5+10 = 약 25pt/회
   hotspotRarityConfig: [
-    { name: "레어", nameEn: "rare", emoji: "🟩", probability: 50, score: 20, color: "#22c55e" },
-    { name: "에픽", nameEn: "epic", emoji: "🟪", probability: 30, score: 35, color: "#c084fc" },
+    { name: "레어", nameEn: "rare", emoji: "🟩", probability: 50, score: 15, color: "#22c55e" },
+    { name: "에픽", nameEn: "epic", emoji: "🟪", probability: 30, score: 25, color: "#c084fc" },
     { name: "전설", nameEn: "legendary", emoji: "🟨", probability: 20, score: 50, color: "#fbbf24" },
   ],
 
