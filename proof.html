@@ -41,10 +41,29 @@
       <p>이번 주 1만 보 달성 횟수에 따라 포인트가 달라집니다. 사진을 업로드하고 달성 횟수를 선택해 주세요.</p>
     </div>
 
-    <!-- 로딩 -->
-    <div id="proof-loading" class="loading-page" style="min-height:40vh">
-      <div class="loading-spinner"></div>
-    </div>
+    <!-- 캠페인 시작 전 안내 (비관리자용) -->
+  <div id="pre-campaign-notice" class="hidden" style="
+    text-align:center;
+    padding:4rem 2rem;
+    background:linear-gradient(135deg,rgba(57,211,83,0.04),rgba(29,78,216,0.04));
+    border:1px solid var(--border);
+    border-radius:var(--radius-xl);
+    margin-top:1.5rem;
+  ">
+    <div style="font-size:4rem;margin-bottom:1.5rem">⏳</div>
+    <h2 style="margin-bottom:0.75rem;font-size:1.8rem">캠페인 시작 전입니다</h2>
+    <p style="color:var(--text-secondary);max-width:480px;margin:0 auto 1rem;line-height:1.7">
+      걷기 인증 제출은 <strong style="color:var(--green)">2026년 5월 18일(월)</strong>부터 가능합니다.<br>
+      지금은 사전 등록 기간이에요. 등록 후 18일을 기다려 주세요!
+    </p>
+    <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:2rem">📅 캠페인 기간: 5월 18일 ~ 5월 31일</p>
+    <a href="index.html" class="btn btn-primary">홈으로 돌아가기</a>
+  </div>
+
+  <!-- 로딩 -->
+  <div id="proof-loading" class="loading-page" style="min-height:40vh">
+    <div class="loading-spinner"></div>
+  </div>
 
     <!-- 메인 -->
     <div id="proof-main" class="hidden">
@@ -175,6 +194,20 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
 <script src="js/proof.js"></script>
+<script>
+// 첨이월 18일 전이면 비관리자에게 안내화면 표시
+auth.onAuthStateChanged(function(user) {
+  const isAdmin = user && ADMIN_EMAILS.includes(user.email);
+  const campaignStart = new Date('2026-05-18T00:00:00+09:00');
+  const now = new Date();
+  if (!isAdmin && now < campaignStart) {
+    // 로딩 숨기고 안내화면 표시
+    document.getElementById('proof-loading').classList.add('hidden');
+    document.getElementById('proof-main').classList.add('hidden');
+    document.getElementById('pre-campaign-notice').classList.remove('hidden');
+  }
+});
+</script>
 </body>
 </html>
 

@@ -41,6 +41,28 @@
       <p>티어를 달성한 참가자들을 확인하세요. 우리 모두 함께 나아가요!</p>
     </div>
 
+    <!-- 캠페인 시작 전 안내 (비관리자용) -->
+    <div id="pre-campaign-notice" class="hidden" style="
+      text-align:center;
+      padding:4rem 2rem;
+      background:linear-gradient(135deg,rgba(57,211,83,0.04),rgba(29,78,216,0.04));
+      border:1px solid var(--border);
+      border-radius:var(--radius-xl);
+      margin-top:1.5rem;
+    ">
+      <div style="font-size:4rem;margin-bottom:1.5rem">&#x23F3;</div>
+      <h2 style="margin-bottom:0.75rem;font-size:1.8rem">캠페인 시작 전입니다</h2>
+      <p style="color:var(--text-secondary);max-width:480px;margin:0 auto 1rem;line-height:1.7">
+        달성 현황은 <strong style="color:var(--green)">2026년 5월 18일(월)</strong> 캠페인 시작 후부터 진짜 순위가 치열하게 보여질 예정이에요.<br>
+        지금은 사전 등록 기간입니다. 많은 참가 기대해 주세요!
+      </p>
+      <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:2rem">&#x1F4C5; 캠페인 기간: 5월 18일 ~ 5월 31일</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a href="index.html" class="btn btn-secondary">홈으로 돌아가기</a>
+        <a href="register.html" class="btn btn-primary">사전 등록하기 &#x2192;</a>
+      </div>
+    </div>
+
     <!-- 로딩 -->
     <div id="participants-loading" class="loading-page">
       <div class="loading-spinner"></div>
@@ -263,7 +285,21 @@ async function initParticipants() {
   document.getElementById("participants-content").classList.remove("hidden");
 }
 
-document.addEventListener("DOMContentLoaded", initParticipants);
+document.addEventListener("DOMContentLoaded", function() {
+  // 쳪페인 시작 전 비관리자에게 안내화면 표시
+  auth.onAuthStateChanged(function(user) {
+    const isAdmin = user && ADMIN_EMAILS.includes(user.email);
+    const campaignStart = new Date('2026-05-18T00:00:00+09:00');
+    const now = new Date();
+    if (!isAdmin && now < campaignStart) {
+      document.getElementById('participants-loading').classList.add('hidden');
+      document.getElementById('participants-content').classList.add('hidden');
+      document.getElementById('pre-campaign-notice').classList.remove('hidden');
+    } else {
+      initParticipants();
+    }
+  });
+});
 </script>
 </body>
 </html>
