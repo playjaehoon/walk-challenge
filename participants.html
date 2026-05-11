@@ -36,8 +36,8 @@
 
 <div class="page-wrapper">
   <div class="container">
-    <div class="page-header">
-      <h1>🏅 달성 현황</h1>
+    <div class="page-header" id="participants-page-header">
+      <h1>🎖️ 달성 현황</h1>
       <p>티어를 달성한 참가자들을 확인하세요. 우리 모두 함께 나아가요!</p>
     </div>
 
@@ -286,12 +286,13 @@ async function initParticipants() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  // 쳪페인 시작 전 비관리자에게 안내화면 표시
+  // 쳨페인 시작 전 비관리자에게 안내화면만 표시
   auth.onAuthStateChanged(function(user) {
     const isAdmin = user && ADMIN_EMAILS.includes(user.email);
     const campaignStart = new Date('2026-05-18T00:00:00+09:00');
     const now = new Date();
     if (!isAdmin && now < campaignStart) {
+      document.getElementById('participants-page-header').classList.add('hidden');
       document.getElementById('participants-loading').classList.add('hidden');
       document.getElementById('participants-content').classList.add('hidden');
       document.getElementById('pre-campaign-notice').classList.remove('hidden');
