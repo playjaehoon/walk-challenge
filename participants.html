@@ -252,7 +252,7 @@ async function initParticipants() {
       const rankEmoji = ['🥇 1위','🥈 2위','🥉 3위'];
       return list.map((u, i) => {
       const rank = i + 1;
-      const tier = getTier(u.totalScore || 0);
+      const tier = getTierByRank(i + 1, total, u.totalScore || 0);
       const rankLabel = rank <= 3 ? rankEmoji[i] : `<span style="opacity:0.6">${rank}위</span>`;
       
       let extraStyle = '';
@@ -292,7 +292,7 @@ async function initParticipants() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  // 쳨페인 시작 전 비관리자에게 안내화면만 표시
+  // 캠페인 시작 전 비관리자에게 안내화면만 표시
   auth.onAuthStateChanged(function(user) {
     const isAdmin = user && ADMIN_EMAILS.includes(user.email);
     const campaignStart = new Date('2026-05-18T00:00:00+09:00');
