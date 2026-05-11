@@ -35,11 +35,11 @@ async function initScanPage() {
   // 캠페인 기간 확인
   const now = new Date();
   if (now < CAMPAIGN_CONFIG.startDate) {
-    showScanMessage("📅", "아직 시작 전이에요!", "챌린지는 2026년 5월 18일부터 시작됩니다. 조금만 기다려주세요!", "info");
+    showScanMessage("📅", "아직 시작 전이에요!", "캠페인는 2026년 5월 18일부터 시작됩니다. 조금만 기다려주세요!", "info");
     return;
   }
   if (now > CAMPAIGN_CONFIG.endDate) {
-    showScanMessage("🏁", "챌린지 종료", "2주간의 Walk & Point이 마무리되었습니다. 수고하셨어요! 🎉", "info");
+    showScanMessage("🏁", "캠페인 종료", "2주간의 Walk & Point이 마무리되었습니다. 수고하셨어요! 🎉", "info");
     return;
   }
 
