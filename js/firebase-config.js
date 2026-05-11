@@ -34,7 +34,7 @@ const ADMIN_EMAILS = [
 // 캠페인 설정 — 여기서 모든 수치를 쉽게 조정할 수 있습니다
 // ============================================================
 const CAMPAIGN_CONFIG = {
-  startDate: new Date("2026-04-24T00:00:00+09:00"),
+  startDate: new Date("2026-05-18T00:00:00+09:00"),
   endDate: new Date("2026-05-31T23:59:59+09:00"),
   maxScansPerDay: 3,
   scanCooldownMinutes: 5,
