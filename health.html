@@ -140,40 +140,43 @@
         </div>
 
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:4.5rem;">
-          
+
           <!-- Article 1 -->
           <div class="article-card">
             <div class="article-tag">건강 연구</div>
             <h3 style="font-size:1.2rem;margin-bottom:0.75rem;line-height:1.4">"하루 7천 보, 대학생 사망 위험 및 우울증 대폭 감소시켜"</h3>
             <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.5;flex:1;">
-              하버드 의과대학의 연구에 따르면, 하루 7,000~10,000보를 걷는 청년층은 그렇지 않은 그룹에 비해 조기 사망 위험이 약 50%에서 70%까지 감소하며, 우울증 발병률이 현저히 낮아지는 것으로 나타났습니다.
+              하버드 의과대학의 연구에 따르면, 하루 7,000~10,000보를 걷는 청년층은 그렇지 않은 그룹에 비해 심장질환 위험이 현저히 감소하며, 꾸준한 걷기 습관이 건강 수명 연장에 직접적인 효과가 있는 것으로 나타났습니다.
             </p>
-            <div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:0.5rem">
-              <span>출처: Harvard Health Publishing</span>
+            <div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;justify-content:space-between;margin-top:auto;">
+              <span>📌 Harvard Health Publishing</span>
+              <button onclick="confirmOpen('https://www.health.harvard.edu/heart-health/just-7000-daily-steps-reduces-heart-disease-risk')" style="font-size:0.8rem;color:var(--green);background:rgba(57,211,83,0.1);border:1px solid rgba(57,211,83,0.3);border-radius:8px;padding:0.3rem 0.7rem;cursor:pointer;font-weight:600;">원문 보기 →</button>
             </div>
           </div>
 
           <!-- Article 2 -->
           <div class="article-card">
             <div class="article-tag">뇌과학</div>
-            <h3 style="font-size:1.2rem;margin-bottom:0.75rem;line-height:1.4">"걷는 동안 뇌는 새로운 신경망을 구축한다"</h3>
+            <h3 style="font-size:1.2rem;margin-bottom:0.75rem;line-height:1.4">"걷기는 창의력을 60% 높인다"</h3>
             <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.5;flex:1;">
-              스탠퍼드 대학교의 연구 결과, 걷는 동안 사람의 창의적 사고력은 앉아있을 때보다 평균 60% 상승했습니다. 산책은 뇌의 휴식 네트워크(DMN)를 활성화하여 복잡한 과제 해결에 필수적인 영감을 제공합니다.
+              스탠퍼드 대학교의 연구 결과, 걷는 동안 사람의 창의적 사고력은 앉아있을 때보다 평균 60% 상승했습니다. 산책은 뇌의 확산적 사고를 자극하여 복잡한 과제 해결에 필수적인 영감을 제공합니다.
             </p>
-            <div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:0.5rem">
-              <span>출처: Stanford University Research</span>
+            <div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;justify-content:space-between;margin-top:auto;">
+              <span>📌 Stanford University News</span>
+              <button onclick="confirmOpen('https://news.stanford.edu/stories/2014/04/walking-vs-sitting-042414')" style="font-size:0.8rem;color:var(--green);background:rgba(57,211,83,0.1);border:1px solid rgba(57,211,83,0.3);border-radius:8px;padding:0.3rem 0.7rem;cursor:pointer;font-weight:600;">원문 보기 →</button>
             </div>
           </div>
 
           <!-- Article 3 -->
           <div class="article-card">
             <div class="article-tag">캠퍼스 라이프</div>
-            <h3 style="font-size:1.2rem;margin-bottom:0.75rem;line-height:1.4">"국내 대학생 10명 중 7명, 신체활동 턱없이 부족"</h3>
+            <h3 style="font-size:1.2rem;margin-bottom:0.75rem;line-height:1.4">"국내 대학생 신체활동 실천율 현황"</h3>
             <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1.5rem;line-height:1.5;flex:1;">
-              질병관리청 통계에 따르면 20대 대학생의 유산소 신체활동 실천율은 다른 연령대보다 낮은 수준입니다. 전문가들은 생활 속에서 엘리베이터 대신 계단 이용하기, 캠퍼스 걷기 등 '니트(NEAT)' 활동을 늘려야 한다고 권고합니다.
+              질병관리청 국민건강영양조사에 따르면 19~29세 청년층의 유산소 신체활동 실천율은 다른 연령대에 비해 낮은 수준입니다. 일상 속 걷기 등 생활형 신체활동을 늘리는 것이 건강 증진에 핵심입니다.
             </p>
-            <div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:0.5rem">
-              <span>출처: 국내 보건통계청 요약</span>
+            <div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;justify-content:space-between;margin-top:auto;">
+              <span>📌 질병관리청 국민건강영양조사</span>
+              <button onclick="confirmOpen('https://knhanes.kdca.go.kr/')" style="font-size:0.8rem;color:var(--green);background:rgba(57,211,83,0.1);border:1px solid rgba(57,211,83,0.3);border-radius:8px;padding:0.3rem 0.7rem;cursor:pointer;font-weight:600;">원문 보기 →</button>
             </div>
           </div>
 
@@ -212,6 +215,40 @@
       <p style="margin-top:0.25rem;font-size:0.75rem;color:var(--text-secondary)">제작자: 글로벌스포츠산업전공 23학번 최재훈</p>
     </div>
   </footer>
+
+  <!-- 새 창 확인 모달 -->
+  <div id="link-confirm-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:2rem 2.5rem;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">🔗</div>
+      <h3 style="margin-bottom:0.5rem;font-size:1.2rem;">외부 사이트로 이동합니다</h3>
+      <p style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:1.75rem;line-height:1.5;" id="link-confirm-desc">새 창으로 원문 출처 페이지가 열립니다.<br>계속 진행하시겠습니까?</p>
+      <div style="display:flex;gap:0.75rem;justify-content:center;">
+        <button onclick="closeConfirmModal()" style="padding:0.6rem 1.5rem;border-radius:10px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-secondary);cursor:pointer;font-size:0.95rem;">취소</button>
+        <button id="link-confirm-btn" style="padding:0.6rem 1.5rem;border-radius:10px;border:none;background:var(--green);color:#000;cursor:pointer;font-size:0.95rem;font-weight:700;">새 창으로 열기 →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let _pendingUrl = '';
+    function confirmOpen(url) {
+      _pendingUrl = url;
+      const modal = document.getElementById('link-confirm-modal');
+      modal.style.display = 'flex';
+      document.getElementById('link-confirm-btn').onclick = function() {
+        window.open(_pendingUrl, '_blank', 'noopener,noreferrer');
+        closeConfirmModal();
+      };
+    }
+    function closeConfirmModal() {
+      document.getElementById('link-confirm-modal').style.display = 'none';
+      _pendingUrl = '';
+    }
+    // 모달 바깥 클릭 시 닫기
+    document.getElementById('link-confirm-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeConfirmModal();
+    });
+  </script>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
