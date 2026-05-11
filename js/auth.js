@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // auth.js — 회원가입 / 로그인 페이지 로직
 // ============================================================
 
@@ -16,9 +16,14 @@ async function handleRegister(e) {
   const password   = form.querySelector("#password").value;
   const password2  = form.querySelector("#password2").value;
 
+  const surveyConsent = form.querySelector("#survey-consent")?.checked;
+
   // 유효성 검사
   if (!name || !studentId || !department || !phone || !email || !password) {
     showToast("모든 항목을 입력해주세요.", "error"); return;
+  }
+  if (!surveyConsent) {
+    showToast("사전·사후 설문조사 참여에 동의해주세요.", "error"); return;
   }
   if (password !== password2) {
     showToast("비밀번호가 일치하지 않습니다.", "error"); return;

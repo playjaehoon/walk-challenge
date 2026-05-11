@@ -87,8 +87,35 @@
       </div>
 
       <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.25rem;font-size:0.8rem;color:var(--text-secondary)">
-        <p style="margin:0">✅ 등록 후 5월 18일 기준으로 QR 스캔 및 걷기 인증 기능이 활성화됩니다.</p>
+        <p style="margin:0">&#x2705; 등록 후 5월 18일 기준으로 QR 스캔 및 걷기 인증 기능이 활성화됩니다.</p>
       </div>
+
+      <!-- 설문조사 동의 체크박스 -->
+      <label id="survey-consent-label" for="survey-consent" style="
+        display:flex;
+        align-items:flex-start;
+        gap:0.75rem;
+        background:rgba(57,211,83,0.05);
+        border:1px solid rgba(57,211,83,0.25);
+        border-radius:var(--radius-md);
+        padding:1rem;
+        margin-bottom:1.25rem;
+        cursor:pointer;
+        transition:border-color 0.2s;
+      ">
+        <input type="checkbox" id="survey-consent" name="survey-consent" style="
+          width:18px;
+          height:18px;
+          margin-top:2px;
+          accent-color:var(--green);
+          flex-shrink:0;
+          cursor:pointer;
+        ">
+        <span style="font-size:0.875rem;line-height:1.5;color:var(--text-primary)">
+          <strong>&#xC0AC;&#xC804;&#xB07C;&#xC0AC;&#xD6C4; &#xC124;&#xBB38;&#xC870;&#xC0AC; &#xCC38;&#xC5EC;&#xC5D0; &#xB3D9;&#xC758;&#xD569;&#xB2C8;&#xB2E4;. <span style="color:#ff6b6b">*</span></strong><br>
+          <span style="color:var(--text-secondary);font-size:0.8rem">&#xCF54;&#xC2A4; &#xC6B4;&#xC601; &#xAC1C;&#xC120;&#xC744; &#xC704;&#xD55C; &#xC124;&#xBB38;&#xC5D0; &#xCC38;&#xC5EC;&#xD574; &#xC8FC;&#xC138;&#xC694;. (&#xD544;&#xC218;)</span>
+        </span>
+      </label>
 
       <button type="submit" id="register-btn" class="btn btn-primary w-full btn-lg">참가 신청하기</button>
     </form>
