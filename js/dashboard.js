@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // dashboard.js — 내 기록 페이지
 // ============================================================
 
@@ -24,6 +24,7 @@ function renderProfile(data) {
   const tier  = getTier(score);
 
   document.getElementById("dash-name").textContent      = data.name;
+  document.getElementById("dash-nickname").textContent  = data.nickname ? `(닉네임: ${data.nickname})` : '';
   document.getElementById("dash-student-id").textContent = data.studentId;
   document.getElementById("dash-dept").textContent      = data.department;
   document.getElementById("dash-score").textContent     = score;
@@ -126,6 +127,54 @@ function renderCollection(data) {
     </div>`;
   }).join("");
 }
+
+// ===== 개인정보 수정 =====
+window.openProfileEditModal = async function() {
+  const user = auth.currentUser;
+  if (!user) return;
+  const doc = await db.collection("users").doc(user.uid).get();
+  if (!doc.exists) return;
+  const data = doc.data();
+
+  document.getElementById('edit-profile-name').value = data.name || '';
+  document.getElementById('edit-profile-nickname').value = data.nickname || '';
+  document.getElementById('edit-profile-studentId').value = data.studentId || '';
+  document.getElementById('edit-profile-department').value = data.department || '';
+  
+  // 관리자 모달과 스타일 충돌이 있을 수 있으니 z-index 및 텍스트 색상 확인 (html에 반영됨)
+  document.getElementById('modal-profile-edit').classList.remove('hidden');
+};
+
+window.saveProfileEdit = async function() {
+  const user = auth.currentUser;
+  if (!user) return;
+  
+  const name = document.getElementById('edit-profile-name').value.trim();
+  const nickname = document.getElementById('edit-profile-nickname').value.trim();
+  const studentId = document.getElementById('edit-profile-studentId').value.trim();
+  const department = document.getElementById('edit-profile-department').value.trim();
+
+  if (!name || !studentId || !department) {
+    showToast("이름, 학번, 학과는 필수 입력 항목입니다.", "error");
+    return;
+  }
+
+  try {
+    await db.collection("users").doc(user.uid).update({
+      name: name,
+      nickname: nickname,
+      studentId: studentId,
+      department: department
+    });
+    
+    showToast("개인정보가 성공적으로 수정되었습니다.", "success");
+    document.getElementById('modal-profile-edit').classList.add('hidden');
+    initDashboard(); // 리로드
+  } catch (e) {
+    console.error("Profile update error:", e);
+    showToast("수정 중 오류가 발생했습니다.", "error");
+  }
+};
 
 document.addEventListener("DOMContentLoaded", initDashboard);
 
