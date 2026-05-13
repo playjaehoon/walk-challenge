@@ -309,9 +309,7 @@
           <span style="font-size:2.5rem">🥈</span>
           <div>
             <h3 style="color:#c0c0c0;margin-bottom:0.2rem">실버 달성</h3>
-            <p style="margin:0;font-size:0.875rem">상위 50% (11위~30위) · 달성 인증서 + 특별 기념품</p>
-            <p style="margin:0.25rem 0 0;font-size:0.78rem;color:var(--text-secondary)">🎁 보상 공개: <strong>5월
-                13일</strong></p>
+            <p style="margin:0;font-size:0.875rem">상위 50% (11위~30위) · 달성 인증서 + Boo 모니 텀블러</p>
           </div>
           <span
             style="margin-left:auto;font-family:'Outfit',sans-serif;font-weight:800;font-size:1.3rem;color:#c0c0c0">상위
@@ -375,16 +373,24 @@
             <p style="font-size:0.82rem;color:#cd7f32;font-weight:600;margin:0;">외대 스프링 노트</p>
           </div>
 
+          <!-- 실버: Boo 모니 텀블러 실물 이미지 + 라이트박스 -->
           <div class="glass-panel"
-            style="border: 1px dashed rgba(192,192,192,0.5); padding: 2.5rem 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            style="border: 1px solid rgba(192,192,192,0.5); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: pointer;"
+            onclick="openLightbox('assets/tumbler.jpg', 'Boo 모니 텀블러 — 실버 기념품')" title="클릭하여 크게 보기">
             <div
-              style="position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:radial-gradient(circle, rgba(192,192,192,0.2) 0%, transparent 70%);">
+              style="position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:radial-gradient(circle, rgba(192,192,192,0.25) 0%, transparent 70%);">
             </div>
-            <div style="font-size: 3.5rem; margin-bottom: 1rem; filter: grayscale(1) opacity(0.4);">&#x1F6CD;&#xFE0F;
+            <div style="position:relative;width:100%;margin-bottom:0.75rem;">
+              <img src="assets/tumbler.jpg" alt="Boo 모니 텀블러 실버 기념품"
+                style="width:100%;max-height:180px;object-fit:contain;border-radius:10px;transition:transform 0.25s,filter 0.25s;"
+                onmouseover="this.style.transform='scale(1.04)';this.style.filter='brightness(1.08)'"
+                onmouseout="this.style.transform='scale(1)';this.style.filter='none'">
+              <div
+                style="position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,0.55);border-radius:6px;padding:3px 6px;font-size:0.7rem;color:#fff;pointer-events:none;">
+                🔍 클릭하여 확대</div>
             </div>
-            <h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">실버 기념품</h4>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">특별한 굿즈 준비 중</p>
-            <p style="font-size: 0.78rem; color: #c0c0c0; margin-top: 0.5rem; font-weight: 600;">🎁 5월 13일 공개</p>
+            <h4 style="margin-bottom:0.3rem;color:var(--text-primary);">실버 기념품</h4>
+            <p style="font-size:0.82rem;color:#c0c0c0;font-weight:600;margin:0;">Boo 모니 텀블러</p>
           </div>
 
           <div class="glass-panel"
