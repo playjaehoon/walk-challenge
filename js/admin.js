@@ -63,11 +63,62 @@ async function loadUsers() {
       <td style="color:var(--green);font-weight:700;font-family:'Outfit',sans-serif">${u.totalScore || 0}pt</td>
       <td>${tier.emoji} ${tier.name}</td>
       <td>
-        <button onclick="showScoreModal('${u.id}','${u.name}',${u.totalScore || 0})" class="btn btn-secondary btn-sm">점수 조정</button>
+        <button onclick="openUserEdit('${u.id}', '${u.name}', '${u.studentId}', '${u.department}', ${u.totalScore || 0})" class="btn btn-secondary btn-sm">편집</button>
       </td>
     </tr>`;
   }).join("");
 }
+
+// ===== 사용자 편집/삭제 =====
+window.openUserEdit = function(id, name, studentId, department, score) {
+  document.getElementById('edit-user-id').value = id;
+  document.getElementById('edit-user-name').value = name;
+  document.getElementById('edit-user-studentId').value = studentId;
+  document.getElementById('edit-user-department').value = department;
+  document.getElementById('edit-user-score').value = score;
+  document.getElementById('modal-user-edit').classList.remove('hidden');
+};
+
+window.saveUserEdit = async function() {
+  const id = document.getElementById('edit-user-id').value;
+  const name = document.getElementById('edit-user-name').value;
+  const studentId = document.getElementById('edit-user-studentId').value;
+  const department = document.getElementById('edit-user-department').value;
+  const score = parseInt(document.getElementById('edit-user-score').value) || 0;
+
+  try {
+    await db.collection("users").doc(id).update({
+      name: name,
+      studentId: studentId,
+      department: department,
+      totalScore: score
+    });
+    showToast("사용자 정보가 수정되었습니다.", "success");
+    document.getElementById('modal-user-edit').classList.add('hidden');
+    loadUsers();
+    loadStats();
+  } catch (e) {
+    console.error("Error updating user:", e);
+    showToast("수정 중 오류가 발생했습니다.", "error");
+  }
+};
+
+window.deleteUser = async function() {
+  const id = document.getElementById('edit-user-id').value;
+  const name = document.getElementById('edit-user-name').value;
+  if (!confirm(`정말 [${name}] 참가자를 완전히 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) return;
+
+  try {
+    await db.collection("users").doc(id).delete();
+    showToast("참가자가 삭제되었습니다.", "success");
+    document.getElementById('modal-user-edit').classList.add('hidden');
+    loadUsers();
+    loadStats();
+  } catch (e) {
+    console.error("Error deleting user:", e);
+    showToast("삭제 중 오류가 발생했습니다.", "error");
+  }
+};
 
 // ===== 걷기 인증 대기 =====
 async function loadPendingProofs() {

@@ -7,6 +7,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .leaderboard-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); transition: all 0.2s;
+    }
+    .leaderboard-row:hover { background: var(--bg-secondary); }
+    
+    .rank-1 { background: linear-gradient(90deg, rgba(255,215,0,0.15), transparent); border-left: 4px solid #ffd700; transform: scale(1.02); margin-bottom: 0.5rem; }
+    .rank-1:hover { background: linear-gradient(90deg, rgba(255,215,0,0.25), transparent) !important; transform: scale(1.03); }
+    
+    .rank-2 { background: linear-gradient(90deg, rgba(192,192,192,0.15), transparent); border-left: 4px solid #c0c0c0; transform: scale(1.01); margin-bottom: 0.5rem; }
+    .rank-2:hover { background: linear-gradient(90deg, rgba(192,192,192,0.25), transparent) !important; transform: scale(1.02); }
+    
+    .rank-3 { background: linear-gradient(90deg, rgba(205,127,50,0.15), transparent); border-left: 4px solid #cd7f32; margin-bottom: 0.5rem; }
+    .rank-3:hover { background: linear-gradient(90deg, rgba(205,127,50,0.25), transparent) !important; transform: scale(1.01); }
+  </style>
 </head>
 <body>
 
@@ -255,14 +271,14 @@ async function initParticipants() {
       const tier = getTierByRank(i + 1, total, u.totalScore || 0);
       const rankLabel = rank <= 3 ? rankEmoji[i] : `<span style="opacity:0.6">${rank}위</span>`;
       
-      let extraStyle = '';
+      let rankClass = '';
       let rankColor = 'var(--text-secondary)';
-      if (rank === 1) { extraStyle = 'background: linear-gradient(90deg, rgba(255,215,0,0.15), transparent); border-left: 4px solid #ffd700; transform: scale(1.02); margin-bottom: 0.5rem;'; rankColor = '#ffd700'; }
-      else if (rank === 2) { extraStyle = 'background: linear-gradient(90deg, rgba(192,192,192,0.15), transparent); border-left: 4px solid #c0c0c0; transform: scale(1.01); margin-bottom: 0.5rem;'; rankColor = '#c0c0c0'; }
-      else if (rank === 3) { extraStyle = 'background: linear-gradient(90deg, rgba(205,127,50,0.15), transparent); border-left: 4px solid #cd7f32; margin-bottom: 0.5rem;'; rankColor = '#cd7f32'; }
+      if (rank === 1) { rankClass = 'rank-1'; rankColor = '#ffd700'; }
+      else if (rank === 2) { rankClass = 'rank-2'; rankColor = '#c0c0c0'; }
+      else if (rank === 3) { rankClass = 'rank-3'; rankColor = '#cd7f32'; }
       
       return `
-        <div class="leaderboard-row" style="${extraStyle}">
+        <div class="leaderboard-row ${rankClass}">
           <span style="font-weight:800; font-size: 1.1rem; color:${rankColor}; width:70px;">${rankLabel}</span>
           <span class="lb-name" style="${rank <= 3 ? 'font-weight:700;' : ''}">${u.name || '익명'}</span>
           <span class="lb-tier">${tier.emoji} ${tier.name}</span>
