@@ -73,16 +73,16 @@ const CAMPAIGN_CONFIG = {
   // * lat: 위도, lng: 경도, radius: 허용 반경(미터)
   // * 구글 지도 우클릭을 통해 각 위치의 위도/경도를 찾아 입력하세요. (기본값은 한국외대 글로벌캠퍼스 근방)
   locations: {
-    loc01: { name: "운동장 잔디구장", lat: 37.337366, lng: 127.265754, radius: 300 },
-    loc02: { name: "구기숙사 농구장", lat: 37.335252, lng: 127.262695, radius: 300 },
+    loc01: { name: "백년관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
+    loc02: { name: "구기숙사 농구장", lat: 37.3380, lng: 127.2660, radius: 300 },
     loc03: { name: "중앙도로 테니스장", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc04: { name: "글로벌스포츠산업학부 실습실", lat: 37.338370, lng: 127.273767, radius: 300 },
-    loc05: { name: "인경관 게시판", lat: 37.3380, lng: 127.2670, radius: 300 },
-    loc06: { name: "망각의 숲", lat: 37.3395, lng: 127.2685, radius: 300 },
-    loc07: { name: "후생관 게시판", lat: 37.3385, lng: 127.2675, radius: 300 },
-    loc08: { name: "도서관 농구장", lat: 37.3370, lng: 127.2660, radius: 300 },
-    loc09: { name: "공학관 게시판", lat: 37.3370, lng: 127.2660, radius: 300 },
-    loc10: { name: "자연과학관 게시판", lat: 37.3370, lng: 127.2660, radius: 300 },
+    loc04: { name: "글로벌스포츠산업학부 실습실", lat: 37.3380, lng: 127.2660, radius: 300 },
+    loc05: { name: "인경관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
+    loc06: { name: "망각의 숲", lat: 37.3380, lng: 127.2660, radius: 300 },
+    loc07: { name: "후생관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
+    loc08: { name: "도서관 농구장", lat: 37.3380, lng: 127.2660, radius: 300 },
+    loc09: { name: "공학관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
+    loc10: { name: "자연과학관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
     loc11: { name: "글스산 축제 부스", lat: 37.3380, lng: 127.2660, radius: 300, isHotspot: true },
     master: { name: "✅ 프리패스 마스터키", isMaster: true } // GPS 검사를 무시하는 특별 코드
   },
