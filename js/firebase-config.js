@@ -38,7 +38,7 @@ const CAMPAIGN_CONFIG = {
   endDate: new Date("2026-05-31T23:59:59+09:00"),
   maxScansPerDay: 3,
   scanCooldownMinutes: 5,
-  totalLocations: 15,
+  totalLocations: 11,
 
   // 티어 기준:
   // 브론즈: 200pt 이상
@@ -73,21 +73,17 @@ const CAMPAIGN_CONFIG = {
   // * lat: 위도, lng: 경도, radius: 허용 반경(미터)
   // * 구글 지도 우클릭을 통해 각 위치의 위도/경도를 찾아 입력하세요. (기본값은 한국외대 글로벌캠퍼스 근방)
   locations: {
-    loc01: { name: "글스산 과 사무실", lat: 37.338370, lng: 127.273767, radius: 300, isHotspot: true }, // 핫스팟 세팅
-    loc02: { name: "e스포츠 실습실", lat: 37.338370, lng: 127.273767, radius: 300 },
-    loc03: { name: "인문경상관", lat: 37.3380, lng: 127.2670, radius: 300 },
-    loc04: { name: "교양관", lat: 37.3390, lng: 127.2680, radius: 300 },
-    loc05: { name: "공학관", lat: 37.3370, lng: 127.2660, radius: 300 },
-    loc06: { name: "백년관", lat: 37.337366, lng: 127.265754, radius: 300 },
-    loc07: { name: "백년관 운동장", lat: 37.337366, lng: 127.265754, radius: 300 },
-    loc08: { name: "학생회관", lat: 37.3385, lng: 127.2675, radius: 300 },
-    loc09: { name: "기숙사", lat: 37.335252, lng: 127.262695, radius: 300 },
-    loc10: { name: "명수당", lat: 37.3395, lng: 127.2685, radius: 300 },
-    loc11: { name: "예비 1", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc12: { name: "예비 2", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc13: { name: "예비 3", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc14: { name: "예비 4", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc15: { name: "예비 5", lat: 37.3380, lng: 127.2660, radius: 300 },
+    loc01: { name: "백년관 운동장", lat: 37.337366, lng: 127.265754, radius: 300 },
+    loc02: { name: "구기숙사 농구장", lat: 37.335252, lng: 127.262695, radius: 300 },
+    loc03: { name: "중앙도로 테니스장", lat: 37.3380, lng: 127.2660, radius: 300 },
+    loc04: { name: "Philips Evnia Esports Lab", lat: 37.338370, lng: 127.273767, radius: 300 },
+    loc05: { name: "인경관 게시판", lat: 37.3380, lng: 127.2670, radius: 300 },
+    loc06: { name: "망각의 숲", lat: 37.3395, lng: 127.2685, radius: 300 },
+    loc07: { name: "후생관 게시판", lat: 37.3385, lng: 127.2675, radius: 300 },
+    loc08: { name: "도서관 농구장", lat: 37.3370, lng: 127.2660, radius: 300 },
+    loc09: { name: "공학관 게시판", lat: 37.3370, lng: 127.2660, radius: 300 },
+    loc10: { name: "자연과학관 게시판", lat: 37.3370, lng: 127.2660, radius: 300 },
+    loc11: { name: "축제 부스 게시판", lat: 37.3380, lng: 127.2660, radius: 300, isHotspot: true },
     master: { name: "✅ 프리패스 마스터키", isMaster: true } // GPS 검사를 무시하는 특별 코드
   },
 };
