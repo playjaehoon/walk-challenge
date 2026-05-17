@@ -81,6 +81,7 @@ async function loadUsers() {
       <td>${u.department}</td>
       <td style="color:var(--green);font-weight:700;font-family:'Outfit',sans-serif">${u.totalScore || 0}pt</td>
       <td>${tier.emoji} ${tier.name}</td>
+      <td style="font-size:0.85rem;color:var(--text-secondary)">${formatDate(u.registeredAt)}</td>
       <td>
         <button onclick="openUserEdit('${u.id}', '${u.name}', '${u.nickname || ''}', '${u.studentId}', '${u.department}', ${u.totalScore || 0})" class="btn btn-secondary btn-sm">편집</button>
       </td>
@@ -149,7 +150,7 @@ window.loadControls = async function() {
     const snap = await db.collection("control_group").orderBy("registeredAt", "desc").get();
     
     if (snap.empty) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-secondary)">신청자가 없습니다.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-secondary)">신청자가 없습니다.</td></tr>`;
       return;
     }
 
@@ -163,13 +164,14 @@ window.loadControls = async function() {
         <td>${data.department}</td>
         <td>${data.phone}</td>
         <td>${data.email}</td>
+        <td style="font-size:0.85rem;color:var(--text-secondary)">${formatDate(data.registeredAt)}</td>
       </tr>`;
     }).join('');
     
     tbody.innerHTML = html;
   } catch (error) {
     console.error("Error loading controls:", error);
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:red">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:red">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>`;
   }
 };
 
