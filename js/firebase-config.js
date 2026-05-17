@@ -76,7 +76,7 @@ const CAMPAIGN_CONFIG = {
     loc01: { name: "운동장 잔디구장", lat: 37.337366, lng: 127.265754, radius: 300 },
     loc02: { name: "구기숙사 농구장", lat: 37.335252, lng: 127.262695, radius: 300 },
     loc03: { name: "중앙도로 테니스장", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc04: { name: "Philips Evnia Esports Lab", lat: 37.338370, lng: 127.273767, radius: 300 },
+    loc04: { name: "글로벌스포츠산업학부 실습실", lat: 37.338370, lng: 127.273767, radius: 300 },
     loc05: { name: "인경관 게시판", lat: 37.3380, lng: 127.2670, radius: 300 },
     loc06: { name: "망각의 숲", lat: 37.3395, lng: 127.2685, radius: 300 },
     loc07: { name: "후생관 게시판", lat: 37.3385, lng: 127.2675, radius: 300 },
