@@ -101,8 +101,10 @@ function renderUsersTable() {
     return `<tr>
       <td>${u.rank}</td>
       <td>${u.name} ${u.nickname ? `<br><span style="font-size:0.8em;color:var(--text-secondary)">(${u.nickname})</span>` : ''}</td>
+      <td>${u.gender === 'male' ? '남성' : (u.gender === 'female' ? '여성' : '-')}</td>
       <td>${u.studentId}</td>
       <td>${u.department}</td>
+      <td>${u.phone || '-'}</td>
       <td style="color:var(--green);font-weight:700;font-family:'Outfit',sans-serif">${u.totalScore || 0}pt</td>
       <td>${tier.emoji} ${tier.name}</td>
       <td style="font-size:0.85rem;color:var(--text-secondary)">${formatDate(u.registeredAt)}</td>
