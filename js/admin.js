@@ -57,10 +57,19 @@ async function loadStats() {
   document.getElementById("stat-bronze").textContent  = counts.bronze;
 }
 
+// ===== 전역 상태 =====
+let adminUsersData = [];
+let adminUsersSortKey = 'rank';
+let adminUsersSortAsc = true;
+
+let adminControlsData = [];
+let adminControlsSortKey = 'registeredAt';
+let adminControlsSortAsc = false;
+
 // ===== 전체 사용자 =====
 async function loadUsers() {
   const snap = await db.collection("users").orderBy("totalScore", "desc").get();
-  const users = snap.docs
+  adminUsersData = snap.docs
     .map((d) => ({ id: d.id, ...d.data() }))
     .filter(u => {
       if (u.email && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(u.email)) return false;
@@ -70,9 +79,24 @@ async function loadUsers() {
       return true;
     })
     .map((u, i) => ({ rank: i + 1, ...u }));
+  renderUsersTable();
+}
+
+function renderUsersTable() {
+  const sorted = [...adminUsersData].sort((a, b) => {
+    let valA = a[adminUsersSortKey];
+    let valB = b[adminUsersSortKey];
+    if (valA && valA.toMillis) valA = valA.toMillis();
+    if (valB && valB.toMillis) valB = valB.toMillis();
+    if (typeof valA === 'string') valA = valA.toLowerCase();
+    if (typeof valB === 'string') valB = valB.toLowerCase();
+    if (valA < valB) return adminUsersSortAsc ? -1 : 1;
+    if (valA > valB) return adminUsersSortAsc ? 1 : -1;
+    return 0;
+  });
 
   const tbody = document.getElementById("users-tbody");
-  tbody.innerHTML = users.map((u) => {
+  tbody.innerHTML = sorted.map((u) => {
     const tier = getTier(u.totalScore || 0);
     return `<tr>
       <td>${u.rank}</td>
@@ -87,6 +111,16 @@ async function loadUsers() {
       </td>
     </tr>`;
   }).join("");
+}
+
+window.sortUsers = function(key) {
+  if (adminUsersSortKey === key) adminUsersSortAsc = !adminUsersSortAsc;
+  else { adminUsersSortKey = key; adminUsersSortAsc = true; }
+  
+  document.querySelectorAll('#tab-users th.sortable').forEach(th => th.classList.remove('asc', 'desc'));
+  const th = document.querySelector(`#tab-users th[data-sort="${key}"]`);
+  if (th) th.classList.add(adminUsersSortAsc ? 'asc' : 'desc');
+  renderUsersTable();
 }
 
 // ===== 사용자 편집/삭제 =====
@@ -145,35 +179,60 @@ window.deleteUser = async function() {
 
 // ===== 대조군(설문 참가자) 목록 =====
 window.loadControls = async function() {
-  const tbody = document.getElementById("controls-tbody");
   try {
     const snap = await db.collection("control_group").orderBy("registeredAt", "desc").get();
-    
-    if (snap.empty) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-secondary)">신청자가 없습니다.</td></tr>`;
-      return;
-    }
-
-    const html = snap.docs.map((d, i) => {
-      const data = d.data();
-      return `<tr>
-        <td>${i + 1}</td>
-        <td>${data.name}</td>
-        <td>${data.gender === 'male' ? '남성' : '여성'}</td>
-        <td>${data.studentId}</td>
-        <td>${data.department}</td>
-        <td>${data.phone}</td>
-        <td>${data.email}</td>
-        <td style="font-size:0.85rem;color:var(--text-secondary)">${formatDate(data.registeredAt)}</td>
-      </tr>`;
-    }).join('');
-    
-    tbody.innerHTML = html;
+    adminControlsData = snap.docs.map((d, i) => ({ index: snap.docs.length - i, id: d.id, ...d.data() }));
+    renderControlsTable();
   } catch (error) {
     console.error("Error loading controls:", error);
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:red">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>`;
+    document.getElementById("controls-tbody").innerHTML = `<tr><td colspan="8" style="text-align:center;color:red">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>`;
   }
 };
+
+function renderControlsTable() {
+  const tbody = document.getElementById("controls-tbody");
+  if (adminControlsData.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-secondary)">신청자가 없습니다.</td></tr>`;
+    return;
+  }
+
+  const sorted = [...adminControlsData].sort((a, b) => {
+    let valA = a[adminControlsSortKey];
+    let valB = b[adminControlsSortKey];
+    if (valA && valA.toMillis) valA = valA.toMillis();
+    if (valB && valB.toMillis) valB = valB.toMillis();
+    if (typeof valA === 'string') valA = valA.toLowerCase();
+    if (typeof valB === 'string') valB = valB.toLowerCase();
+    
+    // For registeredAt descending is usually preferred for newer first
+    if (valA < valB) return adminControlsSortAsc ? -1 : 1;
+    if (valA > valB) return adminControlsSortAsc ? 1 : -1;
+    return 0;
+  });
+
+  tbody.innerHTML = sorted.map((data, i) => {
+    return `<tr>
+      <td>${data.index}</td>
+      <td>${data.name}</td>
+      <td>${data.gender === 'male' ? '남성' : '여성'}</td>
+      <td>${data.studentId}</td>
+      <td>${data.department}</td>
+      <td>${data.phone}</td>
+      <td>${data.email}</td>
+      <td style="font-size:0.85rem;color:var(--text-secondary)">${formatDate(data.registeredAt)}</td>
+    </tr>`;
+  }).join('');
+}
+
+window.sortControls = function(key) {
+  if (adminControlsSortKey === key) adminControlsSortAsc = !adminControlsSortAsc;
+  else { adminControlsSortKey = key; adminControlsSortAsc = (key === 'registeredAt' ? false : true); }
+  
+  document.querySelectorAll('#tab-controls th.sortable').forEach(th => th.classList.remove('asc', 'desc'));
+  const th = document.querySelector(`#tab-controls th[data-sort="${key}"]`);
+  if (th) th.classList.add(adminControlsSortAsc ? 'asc' : 'desc');
+  renderControlsTable();
+}
 
 // ===== 걷기 인증 대기 =====
 async function loadPendingProofs() {
