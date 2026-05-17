@@ -217,7 +217,21 @@
 <script>
 async function initParticipants() {
   const snap  = await db.collection("users").orderBy("totalScore", "desc").get();
-  const users = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  
+  // 운영진 및 테스트 계정 제외 로직
+  const users = snap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .filter(u => {
+      // 1. ADMIN_EMAILS 배열에 있으면 제외
+      if (u.email && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(u.email)) return false;
+      
+      // 2. 이름이나 이메일에 'test'가 포함되면 제외
+      const n = (u.name || '').toLowerCase();
+      const e = (u.email || '').toLowerCase();
+      if (n.includes('test') || e.includes('test')) return false;
+      
+      return true;
+    });
 
   const gold = [], silver = [], bronze = [];
   let legendaryCount = 0;

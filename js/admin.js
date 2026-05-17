@@ -29,7 +29,17 @@ function setupTabs() {
 // ===== 통계 =====
 async function loadStats() {
   const snap  = await db.collection("users").get();
-  const users = snap.docs.map((d) => d.data());
+  
+  const users = snap.docs
+    .map((d) => d.data())
+    .filter(u => {
+      if (u.email && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(u.email)) return false;
+      const n = (u.name || '').toLowerCase();
+      const e = (u.email || '').toLowerCase();
+      if (n.includes('test') || e.includes('test')) return false;
+      return true;
+    });
+
   const counts = { bronze: 0, silver: 0, gold: 0 };
   let totalScore = 0;
 
@@ -50,7 +60,16 @@ async function loadStats() {
 // ===== 전체 사용자 =====
 async function loadUsers() {
   const snap = await db.collection("users").orderBy("totalScore", "desc").get();
-  const users = snap.docs.map((d, i) => ({ rank: i + 1, id: d.id, ...d.data() }));
+  const users = snap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .filter(u => {
+      if (u.email && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(u.email)) return false;
+      const n = (u.name || '').toLowerCase();
+      const e = (u.email || '').toLowerCase();
+      if (n.includes('test') || e.includes('test')) return false;
+      return true;
+    })
+    .map((u, i) => ({ rank: i + 1, ...u }));
 
   const tbody = document.getElementById("users-tbody");
   tbody.innerHTML = users.map((u) => {
