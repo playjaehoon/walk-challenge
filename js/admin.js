@@ -10,7 +10,7 @@ async function initAdmin() {
   document.getElementById("admin-content").classList.remove("hidden");
 
   setupTabs();
-  await Promise.all([loadStats(), loadUsers(), loadPendingProofs(), loadCompletedProofs(), loadNotices(), loadEvents()]);
+  await Promise.all([loadStats(), loadUsers(), loadControls(), loadPendingProofs(), loadCompletedProofs(), loadNotices(), loadEvents()]);
   generateQRCodes();
 }
 
@@ -139,6 +139,37 @@ window.deleteUser = async function() {
   } catch (e) {
     console.error("Error deleting user:", e);
     showToast("삭제 중 오류가 발생했습니다.", "error");
+  }
+};
+
+// ===== 대조군(설문 참가자) 목록 =====
+window.loadControls = async function() {
+  const tbody = document.getElementById("controls-tbody");
+  try {
+    const snap = await db.collection("control_group").orderBy("registeredAt", "desc").get();
+    
+    if (snap.empty) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-secondary)">신청자가 없습니다.</td></tr>`;
+      return;
+    }
+
+    const html = snap.docs.map((d, i) => {
+      const data = d.data();
+      return `<tr>
+        <td>${i + 1}</td>
+        <td>${data.name}</td>
+        <td>${data.gender === 'male' ? '남성' : '여성'}</td>
+        <td>${data.studentId}</td>
+        <td>${data.department}</td>
+        <td>${data.phone}</td>
+        <td>${data.email}</td>
+      </tr>`;
+    }).join('');
+    
+    tbody.innerHTML = html;
+  } catch (error) {
+    console.error("Error loading controls:", error);
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:red">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>`;
   }
 };
 

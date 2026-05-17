@@ -71,6 +71,7 @@
         <button class="admin-tab" data-target="tab-qr">📱 QR 코드</button>
         <button class="admin-tab" data-target="tab-notices">📢 학부 소식 관리</button>
         <button class="admin-tab" data-target="tab-events">📅 일정 관리</button>
+        <button class="admin-tab" data-target="tab-controls">🧪 대조군 관리</button>
       </div>
 
       <!-- 탭: 인증 대기 및 이력 -->
@@ -102,6 +103,32 @@
               </tr>
             </thead>
             <tbody id="users-tbody">
+              <tr><td colspan="7" style="text-align:center;color:var(--text-secondary)">로딩 중...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 탭: 대조군 관리 -->
+      <div id="tab-controls" class="admin-content">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem">
+          <h3>대조군 (연구 설문 참가자)</h3>
+          <button onclick="loadControls()" class="btn btn-secondary btn-sm">🔄 새로고침</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>순번</th>
+                <th>이름</th>
+                <th>성별</th>
+                <th>학번</th>
+                <th>학과</th>
+                <th>연락처</th>
+                <th>이메일</th>
+              </tr>
+            </thead>
+            <tbody id="controls-tbody">
               <tr><td colspan="7" style="text-align:center;color:var(--text-secondary)">로딩 중...</td></tr>
             </tbody>
           </table>
