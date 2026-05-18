@@ -45,6 +45,7 @@ const CAMPAIGN_CONFIG = {
   // 실버: 상위 50% (최대 60명 기준 상위 30명 — 골드 제외)
   // 골드: 상위 10명
   maxParticipants: 60,  // 최대 참가 인원
+  registrationDeadline: "2026-05-19T23:59:59+09:00", // 참가 신청 마감일 (내일 자정까지)
   goldTopN: 10,         // 골드: 상위 N명
   silverTopPercent: 50, // 실버: 상위 N%
   scoreThresholds: {

@@ -41,6 +41,16 @@ async function handleRegister(e) {
   submitBtn.textContent = "등록 중...";
 
   try {
+    // 마감 기한 체크
+    if (window.APP_CONFIG.registrationDeadline) {
+      const deadline = new Date(window.APP_CONFIG.registrationDeadline);
+      if (new Date() > deadline) {
+        alert("참가 신청 기한이 모두 마감되었습니다! 😭\n\n대신 '연구 설문 참가자(대조군)'으로 참여해 주시면 캠페인 운영에 큰 도움이 됩니다.");
+        window.location.href = "control-register.html";
+        return;
+      }
+    }
+
     // 정원 초과 여부 확인
     const usersSnap = await db.collection("users").get();
     if (usersSnap.size >= window.APP_CONFIG.maxParticipants) {
@@ -120,10 +130,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (regForm)   regForm.addEventListener("submit",   handleRegister);
   if (loginForm) loginForm.addEventListener("submit", handleLogin);
 
-  // 회원가입 페이지 진입 시 정원 체크
+  // 회원가입 페이지 진입 시 정원 및 기한 체크
   if (regForm) {
-    db.collection("users").get().then((snap) => {
-      if (snap.size >= window.APP_CONFIG.maxParticipants) {
+    let isClosed = false;
+    let closedMessage = "";
+
+    if (window.APP_CONFIG.registrationDeadline) {
+      const deadline = new Date(window.APP_CONFIG.registrationDeadline);
+      if (new Date() > deadline) {
+        isClosed = true;
+        closedMessage = "참가 신청 기한이 모두 마감되었습니다! 😭\n\n대조군(연구 설문 참가자)으로 신청해 주시면 감사하겠습니다.";
+      }
+    }
+
+    if (isClosed) {
+      const btn = document.getElementById("register-btn");
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "모집 마감 완료";
+        btn.style.background = "#9ca3af";
+      }
+      alert(closedMessage);
+      window.location.href = "control-register.html";
+    } else {
+      db.collection("users").get().then((snap) => {
+        if (snap.size >= window.APP_CONFIG.maxParticipants) {
         const btn = document.getElementById("register-btn");
         if (btn) {
           btn.disabled = true;
@@ -134,6 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "control-register.html";
       }
     }).catch(console.error);
+    }
   }
 });
 
