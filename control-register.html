@@ -120,6 +120,44 @@
 <script src="js/firebase-config.js"></script>
 <script src="js/app.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+  let isClosed = false;
+  let closedMessage = "";
+
+  if (window.APP_CONFIG.registrationDeadline) {
+    const deadline = new Date(window.APP_CONFIG.registrationDeadline);
+    if (new Date() > deadline) {
+      isClosed = true;
+      closedMessage = "연구 설문 참가 신청 기한이 모두 마감되었습니다! 😭";
+    }
+  }
+
+  if (isClosed) {
+    const btn = document.getElementById("ctrl-register-btn");
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "모집 마감 완료";
+      btn.style.background = "#9ca3af";
+    }
+    alert(closedMessage);
+    window.location.href = "index.html";
+  } else {
+    db.collection("control_group").get().then((snap) => {
+      const maxCtrl = window.APP_CONFIG.maxControlParticipants || 30;
+      if (snap.size >= maxCtrl) {
+        const btn = document.getElementById("ctrl-register-btn");
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "선착순 마감 완료";
+          btn.style.background = "#9ca3af";
+        }
+        alert("현재 대조군 선착순 " + maxCtrl + "명 모집이 모두 마감되었습니다! 😭\n관심 가져 주셔서 감사합니다.");
+        window.location.href = "index.html";
+      }
+    }).catch(console.error);
+  }
+});
+
 document.getElementById('control-form').addEventListener('submit', async function(e) {
   e.preventDefault();
   const btn = document.getElementById('ctrl-register-btn');
@@ -147,6 +185,23 @@ document.getElementById('control-form').addEventListener('submit', async functio
   btn.textContent = '신청 중...';
 
   try {
+    if (window.APP_CONFIG.registrationDeadline) {
+      const deadline = new Date(window.APP_CONFIG.registrationDeadline);
+      if (new Date() > deadline) {
+        alert("연구 설문 참가 신청 기한이 모두 마감되었습니다! 😭");
+        window.location.href = "index.html";
+        return;
+      }
+    }
+
+    const maxCtrl = window.APP_CONFIG.maxControlParticipants || 30;
+    const snap = await db.collection("control_group").get();
+    if (snap.size >= maxCtrl) {
+      alert("대조군 선착순 " + maxCtrl + "명 모집이 모두 마감되었습니다! 😭\n관심 가져 주셔서 감사합니다.");
+      window.location.href = "index.html";
+      return;
+    }
+
     const existing = await db.collection('control_group').where('email', '==', email).get();
     if (!existing.empty) {
       showToast('이미 등록된 이메일입니다.', 'error');
