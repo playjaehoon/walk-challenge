@@ -10,7 +10,19 @@ async function initAdmin() {
   document.getElementById("admin-content").classList.remove("hidden");
 
   setupTabs();
-  await Promise.all([loadStats(), loadUsers(), loadControls(), loadPendingProofs(), loadCompletedProofs(), loadNotices(), loadEvents()]);
+  try {
+    await Promise.all([
+      loadStats().catch(e => console.error("Error loadStats:", e)),
+      loadUsers().catch(e => console.error("Error loadUsers:", e)),
+      loadControls().catch(e => console.error("Error loadControls:", e)),
+      loadPendingProofs().catch(e => console.error("Error loadPending:", e)),
+      loadCompletedProofs().catch(e => console.error("Error loadCompleted:", e)),
+      loadNotices().catch(e => console.error("Error loadNotices:", e)),
+      loadEvents().catch(e => console.error("Error loadEvents:", e))
+    ]);
+  } catch (e) {
+    console.error("Error loading admin data:", e);
+  }
   generateQRCodes();
 }
 
