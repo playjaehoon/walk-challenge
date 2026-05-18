@@ -75,17 +75,17 @@ const CAMPAIGN_CONFIG = {
   // * lat: 위도, lng: 경도, radius: 허용 반경(미터)
   // * 구글 지도 우클릭을 통해 각 위치의 위도/경도를 찾아 입력하세요. (기본값은 한국외대 글로벌캠퍼스 근방)
   locations: {
-    loc01: { name: "백년관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc02: { name: "구기숙사 농구장", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc03: { name: "중앙도로 테니스장", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc04: { name: "글로벌스포츠산업학부 실습실", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc05: { name: "인경관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc06: { name: "망각의 숲", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc07: { name: "후생관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc08: { name: "도서관 농구장", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc09: { name: "공학관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc10: { name: "자연과학관 게시판", lat: 37.3380, lng: 127.2660, radius: 300 },
-    loc11: { name: "글스산 축제 부스", lat: 37.3380, lng: 127.2660, radius: 300, isHotspot: true },
+    loc01: { name: "백년관 게시판", lat: 37.336972, lng: 127.265547, radius: 400 },
+    loc02: { name: "구기숙사 농구장", lat: 37.334042, lng: 127.261608, radius: 400 },
+    loc03: { name: "중앙도로 테니스장", lat: 37.335631, lng: 127.261289, radius: 400 },
+    loc04: { name: "글로벌스포츠산업학부 실습실", lat: 37.338372, lng: 127.273367, radius: 400 },
+    loc05: { name: "교양관 정류장 게시판", lat: 37.339228, lng: 127.273611, radius: 400 },
+    loc06: { name: "망각의 숲", lat: 37.339478, lng: 127.270667, radius: 400 },
+    loc07: { name: "후생관 게시판", lat: 37.337839, lng: 127.268922, radius: 400 },
+    loc08: { name: "학생회관 게시판", lat: 37.337244, lng: 127.269881, radius: 400 },
+    loc09: { name: "공학관 게시판", lat: 37.337392, lng: 127.268103, radius: 400 },
+    loc10: { name: "자연과학관 게시판", lat: 37.338714, lng: 127.266194, radius: 400 },
+    loc11: { name: "글스산 축제 부스", lat: 37.337078, lng: 127.268131, radius: 400, isHotspot: true },
     master: { name: "✅ 프리패스 마스터키", isMaster: true } // GPS 검사를 무시하는 특별 코드
   },
 };
