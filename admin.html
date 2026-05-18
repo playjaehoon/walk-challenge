@@ -261,6 +261,34 @@ document.addEventListener("DOMContentLoaded", () => {
   </div>
 </div>
 
+<!-- 게시판 수정 모달 -->
+<div id="modal-notice-edit" class="modal hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div class="card" style="width:100%;max-width:400px;background:#fff;padding:2rem">
+    <h3 style="margin-bottom:1.5rem">소식 수정</h3>
+    <input type="hidden" id="edit-notice-id">
+    <div style="margin-bottom:1rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">분류 (공지, 특강, 안내 등)</label>
+      <input type="text" id="edit-notice-type" class="form-input" style="width:100%">
+    </div>
+    <div style="margin-bottom:1rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">제목</label>
+      <input type="text" id="edit-notice-title" class="form-input" style="width:100%">
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">날짜 (YYYY.MM.DD)</label>
+      <input type="text" id="edit-notice-date" class="form-input" style="width:100%">
+    </div>
+    <div style="margin-bottom:1.5rem">
+      <label class="form-label" style="display:block;margin-bottom:0.5rem">본문 내용</label>
+      <textarea id="edit-notice-content" class="form-input" style="width:100%;resize:vertical;min-height:100px;"></textarea>
+    </div>
+    <div style="display:flex;gap:0.5rem;justify-content:flex-end">
+      <button onclick="document.getElementById('modal-notice-edit').classList.add('hidden')" class="btn btn-secondary">취소</button>
+      <button onclick="saveNoticeEdit()" class="btn btn-primary">저장하기</button>
+    </div>
+  </div>
+</div>
+
 <!-- 일정 추가 모달 -->
 <div id="modal-event-add" class="modal hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;">
   <div class="card" style="width:100%;max-width:400px;background:#fff;padding:2rem">

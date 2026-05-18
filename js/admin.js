@@ -473,7 +473,12 @@ async function loadNotices() {
         <td><span style="display:inline-block;padding:0.2rem 0.5rem;background:rgba(57,211,83,0.1);color:var(--green);font-size:0.75rem;border-radius:4px;font-weight:600">${data.type || '공지'}</span></td>
         <td>${data.title}</td>
         <td>${data.date}</td>
-        <td><button onclick="deleteNotice('${doc.id}')" class="btn btn-danger btn-sm">삭제</button></td>
+        <td>
+          <div style="display:flex;gap:0.25rem;">
+            <button onclick="openEditNotice('${doc.id}')" class="btn btn-secondary btn-sm">수정</button>
+            <button onclick="deleteNotice('${doc.id}')" class="btn btn-danger btn-sm">삭제</button>
+          </div>
+        </td>
       </tr>`;
     }).join("");
   } catch (e) {
@@ -517,6 +522,47 @@ async function deleteNotice(id) {
     loadNotices();
   } catch (e) {
     console.error("Error deleting notice:", e);
+    showToast("오류가 발생했습니다.", "error");
+  }
+}
+
+async function openEditNotice(id) {
+  try {
+    const doc = await db.collection("notices").doc(id).get();
+    if (!doc.exists) return alert("해당 소식을 찾을 수 없습니다.");
+    const data = doc.data();
+    document.getElementById("edit-notice-id").value = id;
+    document.getElementById("edit-notice-type").value = data.type || "공지";
+    document.getElementById("edit-notice-title").value = data.title || "";
+    document.getElementById("edit-notice-date").value = data.date || "";
+    document.getElementById("edit-notice-content").value = data.content || "";
+    document.getElementById("modal-notice-edit").classList.remove("hidden");
+  } catch (e) {
+    console.error("Error fetching notice for edit:", e);
+    showToast("소식을 불러오는 중 오류가 발생했습니다.", "error");
+  }
+}
+
+async function saveNoticeEdit() {
+  const id = document.getElementById("edit-notice-id").value;
+  const type = document.getElementById("edit-notice-type").value.trim();
+  const title = document.getElementById("edit-notice-title").value.trim();
+  const date = document.getElementById("edit-notice-date").value.trim();
+  const content = document.getElementById("edit-notice-content").value.trim();
+  if (!title || !date) return alert("제목과 날짜를 입력해주세요.");
+
+  try {
+    await db.collection("notices").doc(id).update({
+      type: type || "공지",
+      title: title,
+      date: date,
+      content: content
+    });
+    document.getElementById("modal-notice-edit").classList.add("hidden");
+    showToast("소식이 수정되었습니다.", "success");
+    loadNotices();
+  } catch (e) {
+    console.error("Error updating notice:", e);
     showToast("오류가 발생했습니다.", "error");
   }
 }
