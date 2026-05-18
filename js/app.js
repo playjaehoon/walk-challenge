@@ -178,10 +178,11 @@ function checkEasterEgg(userData) {
   // 캠페인 종료 후 비활성
   if (now > CAMPAIGN_CONFIG.endDate) return;
 
-  // 캠페인 시작 전 — 관리자만 허용
+  // 이스터에그 이벤트 시작 전 — 관리자만 허용 (5월 19일 오전 9시부터)
   const currentUser = auth.currentUser;
-  if (now < CAMPAIGN_CONFIG.startDate) {
-    if (!(currentUser && ADMIN_EMAILS.includes(currentUser.email))) return;
+  const easterEggStart = new Date("2026-05-19T09:00:00+09:00");
+  if (now < easterEggStart) {
+    if (!(currentUser && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(currentUser.email))) return;
   }
 
   const lastTime = userData.lastEasterEggTime?.toDate 
