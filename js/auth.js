@@ -42,8 +42,8 @@ async function handleRegister(e) {
 
   try {
     // 마감 기한 체크
-    if (window.APP_CONFIG.registrationDeadline) {
-      const deadline = new Date(window.APP_CONFIG.registrationDeadline);
+    if (CAMPAIGN_CONFIG.registrationDeadline) {
+      const deadline = new Date(CAMPAIGN_CONFIG.registrationDeadline);
       if (new Date() > deadline) {
         alert("참가 신청 기한이 모두 마감되었습니다! 😭\n\n대신 '연구 설문 참가자(대조군)'으로 참여해 주시면 캠페인 운영에 큰 도움이 됩니다.");
         window.location.href = "control-register.html";
@@ -53,8 +53,8 @@ async function handleRegister(e) {
 
     // 정원 초과 여부 확인 (전체 읽기 허용으로 변경됨)
     const usersSnap = await db.collection("users").get();
-    if (usersSnap.size >= window.APP_CONFIG.maxParticipants) {
-      alert("선착순 " + window.APP_CONFIG.maxParticipants + "명 참가 신청이 모두 마감되었습니다! 😭\n\n대신 '연구 설문 참가자(대조군)'으로 참여해 주시면 캠페인 운영에 큰 도움이 됩니다. 대조군 신청 페이지로 이동합니다.");
+    if (usersSnap.size >= CAMPAIGN_CONFIG.maxParticipants) {
+      alert("선착순 " + CAMPAIGN_CONFIG.maxParticipants + "명 참가 신청이 모두 마감되었습니다! 😭\n\n대신 '연구 설문 참가자(대조군)'으로 참여해 주시면 캠페인 운영에 큰 도움이 됩니다. 대조군 신청 페이지로 이동합니다.");
       window.location.href = "control-register.html";
       return;
     }
@@ -137,8 +137,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     let isClosed = false;
     let closedMessage = "";
 
-    if (window.APP_CONFIG.registrationDeadline) {
-      const deadline = new Date(window.APP_CONFIG.registrationDeadline);
+    if (CAMPAIGN_CONFIG.registrationDeadline) {
+      const deadline = new Date(CAMPAIGN_CONFIG.registrationDeadline);
       if (new Date() > deadline) {
         isClosed = true;
         closedMessage = "참가 신청 기한이 모두 마감되었습니다! 😭\n\n대조군(연구 설문 참가자)으로 신청해 주시면 감사하겠습니다.";
@@ -156,14 +156,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.href = "control-register.html";
     } else {
       db.collection("users").get().then((snap) => {
-        if (snap.size >= window.APP_CONFIG.maxParticipants) {
+        if (snap.size >= CAMPAIGN_CONFIG.maxParticipants) {
         const btn = document.getElementById("register-btn");
         if (btn) {
           btn.disabled = true;
           btn.textContent = "선착순 마감 완료";
           btn.style.background = "#9ca3af";
         }
-        alert("현재 선착순 " + window.APP_CONFIG.maxParticipants + "명 모집이 모두 마감되었습니다! 😭\n\n대조군(연구 설문 참가자)으로 신청해 주시면 감사하겠습니다.");
+        alert("현재 선착순 " + CAMPAIGN_CONFIG.maxParticipants + "명 모집이 모두 마감되었습니다! 😭\n\n대조군(연구 설문 참가자)으로 신청해 주시면 감사하겠습니다.");
         window.location.href = "control-register.html";
       }
     }).catch(console.error);

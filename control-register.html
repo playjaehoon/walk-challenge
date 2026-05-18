@@ -124,8 +124,8 @@ document.addEventListener("DOMContentLoaded", function() {
   let isClosed = false;
   let closedMessage = "";
 
-  if (window.APP_CONFIG.registrationDeadline) {
-    const deadline = new Date(window.APP_CONFIG.registrationDeadline);
+  if (CAMPAIGN_CONFIG.registrationDeadline) {
+    const deadline = new Date(CAMPAIGN_CONFIG.registrationDeadline);
     if (new Date() > deadline) {
       isClosed = true;
       closedMessage = "연구 설문 참가 신청 기한이 모두 마감되었습니다! 😭";
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function() {
     window.location.href = "index.html";
   } else {
     db.collection("control_group").get().then((snap) => {
-      const maxCtrl = window.APP_CONFIG.maxControlParticipants || 30;
+      const maxCtrl = CAMPAIGN_CONFIG.maxControlParticipants || 30;
       if (snap.size >= maxCtrl) {
         const btn = document.getElementById("ctrl-register-btn");
         if (btn) {
@@ -185,8 +185,8 @@ document.getElementById('control-form').addEventListener('submit', async functio
   btn.textContent = '신청 중...';
 
   try {
-    if (window.APP_CONFIG.registrationDeadline) {
-      const deadline = new Date(window.APP_CONFIG.registrationDeadline);
+    if (CAMPAIGN_CONFIG.registrationDeadline) {
+      const deadline = new Date(CAMPAIGN_CONFIG.registrationDeadline);
       if (new Date() > deadline) {
         alert("연구 설문 참가 신청 기한이 모두 마감되었습니다! 😭");
         window.location.href = "index.html";
@@ -194,7 +194,7 @@ document.getElementById('control-form').addEventListener('submit', async functio
       }
     }
 
-    const maxCtrl = window.APP_CONFIG.maxControlParticipants || 30;
+    const maxCtrl = CAMPAIGN_CONFIG.maxControlParticipants || 30;
     const snap = await db.collection("control_group").get();
     if (snap.size >= maxCtrl) {
       alert("대조군 선착순 " + maxCtrl + "명 모집이 모두 마감되었습니다! 😭\n관심 가져 주셔서 감사합니다.");
