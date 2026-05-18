@@ -111,6 +111,7 @@ function getAuthErrMsg(code) {
     "auth/user-not-found":         "등록되지 않은 이메일입니다.",
     "auth/wrong-password":         "비밀번호가 올바르지 않습니다.",
     "auth/invalid-credential":     "이메일 또는 비밀번호가 올바르지 않습니다.",
+    "auth/operation-not-allowed":  "파이어베이스에서 이메일 로그인이 비활성화되어 있습니다.",
     "auth/too-many-requests":      "너무 많은 시도입니다. 잠시 후 다시 시도해주세요.",
   };
   return map[code] || "오류가 발생했습니다. 다시 시도해주세요.";
