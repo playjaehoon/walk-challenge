@@ -70,7 +70,8 @@ async function handleRegister(e) {
     showToast("신청이 완료되었습니다! 🎉", "success");
     setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
   } catch (err) {
-    showToast(getAuthErrMsg(err.code), "error");
+    console.error("Registration error:", err);
+    showToast(getAuthErrMsg(err.code) + "\n" + err.message, "error");
     submitBtn.disabled = false;
     submitBtn.textContent = "참가 신청하기";
   }
