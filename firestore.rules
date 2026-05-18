@@ -4,8 +4,7 @@ service cloud.firestore {
 
     // 사용자 문서
     match /users/{userId} {
-      // 로그인한 사용자 본인만 읽기 가능
-      allow read: if request.auth != null && request.auth.uid == userId;
+      allow read: if true;
       // 본인만 생성 (회원가입)
       allow create: if request.auth != null && request.auth.uid == userId;
       // 점수·컬렉션 업데이트는 본인만 (관리자 승인은 Functions에서 처리하는 것이 이상적이나, 간이 운영을 위해 허용)
