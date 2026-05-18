@@ -33,5 +33,12 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if request.auth != null;
     }
+
+    // 대조군 (연구 설문 참가자) - 비로그인 상태로 신청하므로 생성 허용.
+    // 인원 체크 및 중복 이메일 체크를 위해 읽기 허용.
+    match /control_group/{docId} {
+      allow create, read: if true;
+      allow update, delete: if request.auth != null; // 관리자용
+    }
   }
 }

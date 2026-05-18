@@ -51,15 +51,17 @@ async function handleRegister(e) {
       }
     }
 
-    // 정원 초과 여부 확인
+    const cred = await auth.createUserWithEmailAndPassword(email, password);
+
+    // 정원 초과 여부 확인 (계정 생성 후 로그인된 상태에서만 users 컬렉션 읽기 권한이 있음)
     const usersSnap = await db.collection("users").get();
     if (usersSnap.size >= window.APP_CONFIG.maxParticipants) {
+      await cred.user.delete(); // 정원 초과시 생성된 계정 즉시 삭제
+      await auth.signOut();
       alert("선착순 " + window.APP_CONFIG.maxParticipants + "명 참가 신청이 모두 마감되었습니다! 😭\n\n대신 '연구 설문 참가자(대조군)'으로 참여해 주시면 캠페인 운영에 큰 도움이 됩니다. 대조군 신청 페이지로 이동합니다.");
       window.location.href = "control-register.html";
       return;
     }
-
-    const cred = await auth.createUserWithEmailAndPassword(email, password);
     await db.collection("users").doc(cred.user.uid).set({
       name, studentId, department, phone, email, gender,
       totalScore: 0,
