@@ -189,9 +189,9 @@ function checkEasterEgg(userData) {
     ? userData.lastEasterEggTime.toDate().getTime() 
     : (userData.lastEasterEggTime || 0);
 
-  const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+  const COOLDOWN_MS = 3 * 24 * 60 * 60 * 1000; // 3일 쿨타임
   
-  if (!lastTime || (now.getTime() - lastTime) >= ONE_WEEK_MS) {
+  if (!lastTime || (now.getTime() - lastTime) >= COOLDOWN_MS) {
     // 30% 확률로 등장
     if (Math.random() > 0.3) return;
 
