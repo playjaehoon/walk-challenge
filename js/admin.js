@@ -406,7 +406,10 @@ function showScoreModal(userId, userName, currentScore) {
 
 // ===== QR 코드 생성 =====
 function generateQRCodes() {
-  const base = window.location.origin + window.location.pathname.replace("admin.html", "") + "scan.html";
+  let path = window.location.pathname;
+  path = path.replace(/\/admin(\.html)?\/?$/, '/');
+  if (!path.endsWith('/')) path += '/';
+  const base = window.location.origin + path + "scan.html";
   const grid = document.getElementById("qr-grid");
   grid.innerHTML = "";
 
