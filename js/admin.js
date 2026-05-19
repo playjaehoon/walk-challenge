@@ -507,7 +507,8 @@ async function addNotice() {
     document.getElementById("notice-date").value = "";
     if(document.getElementById("notice-content")) document.getElementById("notice-content").value = "";
     showToast("소식이 등록되었습니다.", "success");
-    loadNotices();\n    loadDeptNotices();
+    loadNotices();
+    loadDeptNotices();
   } catch (e) {
     console.error("Error adding notice:", e);
     showToast("오류가 발생했습니다.", "error");
@@ -519,7 +520,8 @@ async function deleteNotice(id) {
   try {
     await db.collection("notices").doc(id).delete();
     showToast("삭제되었습니다.", "info");
-    loadNotices();\n    loadDeptNotices();
+    loadNotices();
+    loadDeptNotices();
   } catch (e) {
     console.error("Error deleting notice:", e);
     showToast("오류가 발생했습니다.", "error");
@@ -560,7 +562,8 @@ async function saveNoticeEdit() {
     });
     document.getElementById("modal-notice-edit").classList.add("hidden");
     showToast("소식이 수정되었습니다.", "success");
-    loadNotices();\n    loadDeptNotices();
+    loadNotices();
+    loadDeptNotices();
   } catch (e) {
     console.error("Error updating notice:", e);
     showToast("오류가 발생했습니다.", "error");
