@@ -67,6 +67,69 @@ async function loadStats() {
   document.getElementById("stat-gold").textContent    = counts.gold;
   document.getElementById("stat-silver").textContent  = counts.silver;
   document.getElementById("stat-bronze").textContent  = counts.bronze;
+
+  // 일자별 QR 스캔 통계 추출 (비동기로 병렬 처리)
+  try {
+    const dailyScanners = {}; // { '2026.05.18': Set(uid) }
+    const scansPromises = users.map(u => db.collection("users").doc(u.uid).collection("scans").get());
+    const scansSnaps = await Promise.all(scansPromises);
+
+    scansSnaps.forEach((userScansSnap, idx) => {
+      const uid = users[idx].uid || users[idx].id;
+      userScansSnap.forEach(doc => {
+        const scan = doc.data();
+        const dateStr = scan.dateStr; // e.g. "2026.05.18"
+        if (dateStr) {
+          if (!dailyScanners[dateStr]) dailyScanners[dateStr] = new Set();
+          dailyScanners[dateStr].add(uid);
+        }
+      });
+    });
+
+    const totalUsers = users.length;
+    let statsHtml = `<div class="table-wrapper"><table style="width:100%; border-collapse: collapse; text-align:center;">
+      <thead>
+        <tr>
+          <th>일자</th>
+          <th>QR스캔 참가자 수</th>
+          <th>참여 비율 (%)</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    const sortedDates = Object.keys(dailyScanners).sort().reverse(); // 최신순
+    if (sortedDates.length === 0) {
+      statsHtml += `<tr><td colspan="3" style="padding:1.5rem; color:var(--text-secondary)">스캔 기록이 없습니다.</td></tr>`;
+    } else {
+      sortedDates.forEach(date => {
+        const cnt = dailyScanners[date].size;
+        const pct = totalUsers > 0 ? Math.round((cnt / totalUsers) * 100) : 0;
+        statsHtml += `
+          <tr>
+            <td>${date}</td>
+            <td style="font-weight:bold; color:var(--green)">${cnt}명</td>
+            <td>
+              <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem">
+                <div style="width:100px; height:8px; background:var(--bg-secondary); border-radius:4px; overflow:hidden;">
+                  <div style="width:${pct}%; height:100%; background:var(--green); border-radius:4px;"></div>
+                </div>
+                <span>${pct}%</span>
+              </div>
+            </td>
+          </tr>`;
+      });
+    }
+    statsHtml += `</tbody></table></div>`;
+
+    const statsContainer = document.getElementById("daily-scan-stats");
+    if (statsContainer) {
+      statsContainer.innerHTML = statsHtml;
+    }
+  } catch (err) {
+    console.error("일자별 스캔 통계 로드 중 오류:", err);
+    const statsContainer = document.getElementById("daily-scan-stats");
+    if (statsContainer) statsContainer.innerHTML = `<div style="text-align:center; padding: 1rem; color: var(--red);">통계 데이터를 불러오는 중 오류가 발생했습니다.</div>`;
+  }
 }
 
 // ===== 전역 상태 =====
