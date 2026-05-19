@@ -507,7 +507,7 @@ async function addNotice() {
     document.getElementById("notice-date").value = "";
     if(document.getElementById("notice-content")) document.getElementById("notice-content").value = "";
     showToast("소식이 등록되었습니다.", "success");
-    loadNotices();
+    loadNotices();\n    loadDeptNotices();
   } catch (e) {
     console.error("Error adding notice:", e);
     showToast("오류가 발생했습니다.", "error");
@@ -519,7 +519,7 @@ async function deleteNotice(id) {
   try {
     await db.collection("notices").doc(id).delete();
     showToast("삭제되었습니다.", "info");
-    loadNotices();
+    loadNotices();\n    loadDeptNotices();
   } catch (e) {
     console.error("Error deleting notice:", e);
     showToast("오류가 발생했습니다.", "error");
@@ -560,7 +560,7 @@ async function saveNoticeEdit() {
     });
     document.getElementById("modal-notice-edit").classList.add("hidden");
     showToast("소식이 수정되었습니다.", "success");
-    loadNotices();
+    loadNotices();\n    loadDeptNotices();
   } catch (e) {
     console.error("Error updating notice:", e);
     showToast("오류가 발생했습니다.", "error");
@@ -638,3 +638,102 @@ async function deleteEvent(id) {
 
 document.addEventListener("DOMContentLoaded", initAdmin);
 
+
+
+// ===== 학부 소식 (Dept Notice) 관리 =====
+async function loadDeptNotices() {
+  const tbody = document.getElementById("dept-notices-tbody");
+  if(!tbody) return;
+  try {
+    const snap = await db.collection("dept_notices").orderBy("createdAt", "desc").get();
+    if(snap.empty) {
+      tbody.innerHTML = <tr><td colspan="4" style="text-align:center;color:var(--text-secondary)">등록된 학부 소식이 없습니다.</td></tr>;
+      return;
+    }
+    tbody.innerHTML = snap.docs.map(doc => {
+      const d = doc.data();
+      const safeTitle = (d.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      const encodedContent = encodeURIComponent(d.content || '');
+      return 
+        <tr>
+          <td><span style="background:rgba(57,211,83,0.1);color:var(--green);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:600"></span></td>
+          <td></td>
+          <td></td>
+          <td>
+            <button onclick="editDeptNotice('', '', '', '', '')" class="btn btn-secondary btn-sm" style="padding:0.25rem 0.5rem;margin-right:0.25rem">수정</button>
+            <button onclick="deleteDeptNotice('')" class="btn btn-secondary btn-sm" style="padding:0.25rem 0.5rem;color:red;border-color:red">삭제</button>
+          </td>
+        </tr>
+      ;
+    }).join("");
+  } catch(e) {
+    console.error(e);
+    tbody.innerHTML = <tr><td colspan="4" style="text-align:center;color:red">불러오기 오류</td></tr>;
+  }
+}
+
+window.addDeptNotice = async function() {
+  const type = document.getElementById("new-dept-notice-type").value.trim() || '안내';
+  const title = document.getElementById("new-dept-notice-title").value.trim();
+  const content = document.getElementById("new-dept-notice-content").value.trim();
+  
+  if(!title) {
+    alert("제목을 입력해주세요.");
+    return;
+  }
+  
+  const today = new Date();
+  const dateStr = ${today.getFullYear()}..;
+  
+  try {
+    await db.collection("dept_notices").add({
+      type, title, content, date: dateStr, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    document.getElementById("new-dept-notice-title").value = '';
+    document.getElementById("new-dept-notice-content").value = '';
+    document.getElementById("modal-dept-notice-add").classList.add("hidden");
+    loadDeptNotices();
+  } catch(e) {
+    alert("오류 발생");
+    console.error(e);
+  }
+}
+
+window.editDeptNotice = function(id, type, title, date, encodedContent) {
+  document.getElementById("edit-dept-notice-id").value = id;
+  document.getElementById("edit-dept-notice-type").value = type;
+  document.getElementById("edit-dept-notice-title").value = title;
+  document.getElementById("edit-dept-notice-date").value = date;
+  document.getElementById("edit-dept-notice-content").value = decodeURIComponent(encodedContent);
+  document.getElementById("modal-dept-notice-edit").classList.remove("hidden");
+};
+
+window.saveEditDeptNotice = async function() {
+  const id = document.getElementById("edit-dept-notice-id").value;
+  const type = document.getElementById("edit-dept-notice-type").value.trim();
+  const title = document.getElementById("edit-dept-notice-title").value.trim();
+  const date = document.getElementById("edit-dept-notice-date").value.trim();
+  const content = document.getElementById("edit-dept-notice-content").value.trim();
+
+  if(!title) return alert("제목을 입력해주세요.");
+
+  try {
+    await db.collection("dept_notices").doc(id).update({ type, title, date, content });
+    document.getElementById("modal-dept-notice-edit").classList.add("hidden");
+    loadDeptNotices();
+  } catch(e) {
+    console.error(e);
+    alert("수정 오류");
+  }
+}
+
+window.deleteDeptNotice = async function(id) {
+  if(!confirm("정말 삭제하시겠습니까?")) return;
+  try {
+    await db.collection("dept_notices").doc(id).delete();
+    loadDeptNotices();
+  } catch(e) {
+    alert("삭제 오류");
+    console.error(e);
+  }
+}

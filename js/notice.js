@@ -4,6 +4,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   loadNotices();
+  loadDeptNotices();
   initCalendar();
 });
 
@@ -41,6 +42,42 @@ async function loadNotices() {
     }
   } catch (e) {
     console.error("Error loading notices:", e);
+    container.innerHTML = `<div style="padding:1.5rem;text-align:center;color:red">소식을 불러오는 중 오류가 발생했습니다.</div>`;
+  }
+}
+
+async function loadDeptNotices() {
+  const container = document.getElementById("dept-notices");
+  if (!container) return;
+
+  try {
+    const snap = await db.collection("dept_notices").orderBy("createdAt", "desc").limit(5).get();
+    
+    if (snap.empty) {
+      container.innerHTML = `<div style="padding:1.5rem;text-align:center;color:var(--text-secondary)">등록된 소식이 없습니다.</div>`;
+      return;
+    }
+
+    container.innerHTML = snap.docs.map(doc => {
+      const data = doc.data();
+      const safeTitle = (data.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      const encodedContent = encodeURIComponent(data.content || '내용이 없습니다.');
+      return `
+        <div onclick="showNoticeContent('${safeTitle}', '${encodedContent}')" style="padding:1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='var(--bg-secondary)'" onmouseout="this.style.background='transparent'">
+          <div>
+            <span style="display:inline-block;padding:0.2rem 0.5rem;background:rgba(57,211,83,0.1);color:var(--green);font-size:0.75rem;border-radius:4px;margin-bottom:0.4rem;font-weight:600">${data.type || '안내'}</span>
+            <h4 style="margin:0;font-size:1.05rem;font-weight:500">${data.title}</h4>
+          </div>
+          <span style="color:var(--text-secondary);font-size:0.875rem;flex-shrink:0;margin-left:1rem">${data.date}</span>
+        </div>
+      `;
+    }).join("");
+    
+    if (container.lastElementChild) {
+      container.lastElementChild.style.borderBottom = "none";
+    }
+  } catch (e) {
+    console.error("Error loading dept notices:", e);
     container.innerHTML = `<div style="padding:1.5rem;text-align:center;color:red">소식을 불러오는 중 오류가 발생했습니다.</div>`;
   }
 }

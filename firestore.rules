@@ -46,6 +46,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // 학부 소식 (dept_notices)
+    match /dept_notices/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // 학부 일정 (events)
     match /events/{docId} {
       allow read: if true;
