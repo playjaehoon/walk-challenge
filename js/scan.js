@@ -104,7 +104,11 @@ async function validateAndShowCard(locName) {
   }
 
   const isHotspotScan = CAMPAIGN_CONFIG.locations[scanLocationId]?.isHotspot === true;
-  const regularScansCount = todayScans.filter((s) => !CAMPAIGN_CONFIG.locations[s.locationId]?.isHotspot).length;
+  const regularScansCount = todayScans.filter((s) => {
+    if (s.locationId === 'easter_egg' || s.locationId === 'master') return false;
+    if (CAMPAIGN_CONFIG.locations[s.locationId]?.isHotspot) return false;
+    return true;
+  }).length;
 
   if (!isHotspotScan && regularScansCount >= CAMPAIGN_CONFIG.maxScansPerDay) {
     showScanMessage("⏰", "오늘 스캔 완료!", `오늘 ${CAMPAIGN_CONFIG.maxScansPerDay}회 일반 스캔을 모두 사용했어요.\n내일 다시 도전해주세요! (핫스팟은 예외)`, "warning");
