@@ -67,7 +67,10 @@
       <!-- 일자별 QR 스캔 통계 -->
       <div style="margin-bottom:2rem; padding: 1.5rem; background: var(--bg-secondary); border-radius: 12px;">
         <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
-          📅 일자별 QR 스캔 참여 통계
+          <div style="display:flex; align-items:center; gap:1rem;">
+            📅 일자별 QR 스캔 참여 통계
+            <button onclick="exportScansCSV()" class="btn btn-primary btn-sm" style="padding: 0.25rem 0.75rem; font-size: 0.8rem; background: var(--green); border-color: var(--green);">📥 전체 스캔 기록 엑셀 다운로드</button>
+          </div>
           <span style="font-size: 0.875rem; color: var(--text-secondary); font-weight: normal;">* 관리자 및 테스트 계정 제외</span>
         </h3>
         <div id="daily-scan-stats">

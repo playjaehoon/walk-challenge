@@ -73,6 +73,8 @@ async function loadStats() {
     const dailyScanners = {}; // { '2026.05.18': Set(uid) }
     const locationStats = {}; // { 'loc01': { count: 0, uniqueUsers: Set(uid), name: '...' } }
     let totalScansAcrossAll = 0;
+    
+    window.allScansDataForExport = []; // CSV 내보내기용 전역 데이터
 
     const scansPromises = users.map(u => db.collection("users").doc(u.uid).collection("scans").get());
     const scansSnaps = await Promise.all(scansPromises);
@@ -95,6 +97,16 @@ async function loadStats() {
           locationStats[locId].count++;
           locationStats[locId].uniqueUsers.add(uid);
           totalScansAcrossAll++;
+          
+          window.allScansDataForExport.push({
+            date: dateStr,
+            time: scan.createdAt ? (scan.createdAt.toDate ? scan.createdAt.toDate() : new Date(scan.createdAt)).toLocaleTimeString('ko-KR') : '',
+            userName: users[idx].name,
+            userDept: users[idx].department,
+            locationName: scan.locationName || locId,
+            rarity: scan.rarity || '',
+            score: scan.score || 0
+          });
         }
       });
     });
@@ -241,6 +253,38 @@ window.sortUsers = function(key) {
   const th = document.querySelector(`#tab-users th[data-sort="${key}"]`);
   if (th) th.classList.add(adminUsersSortAsc ? 'asc' : 'desc');
   renderUsersTable();
+}
+
+// ===== 스캔 기록 CSV 다운로드 =====
+window.exportScansCSV = function() {
+  const data = window.allScansDataForExport;
+  if (!data || data.length === 0) {
+    alert("다운로드할 스캔 기록이 없습니다.");
+    return;
+  }
+  
+  // 최신순 정렬
+  data.sort((a, b) => {
+    if (a.date !== b.date) return b.date.localeCompare(a.date);
+    return b.time.localeCompare(a.time);
+  });
+
+  const headers = ["일자", "시간", "이름", "학과", "스캔 장소", "희귀도", "획득 점수"];
+  const rows = data.map(d => [
+    d.date, d.time, 
+    `"${d.userName}"`, `"${d.userDept}"`, 
+    `"${d.locationName}"`, d.rarity, d.score
+  ].join(","));
+  
+  const csvContent = "\uFEFF" + headers.join(",") + "\n" + rows.join("\n");
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `walk_challenge_scans_${new Date().toISOString().split('T')[0]}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 // ===== 사용자 편집/삭제 =====
