@@ -111,7 +111,7 @@ async function validateAndShowCard(locName) {
   }).length;
 
   if (!isHotspotScan && regularScansCount >= CAMPAIGN_CONFIG.maxScansPerDay) {
-    showScanMessage("⏰", "오늘 일반 스캔 완료!", `오늘 일반 스캔을 모두 완료했습니다!\n내일 다시 도전해주세요.\n(🔥 핫스팟 QR은 횟수 제한 없이 스캔 가능합니다)`, "warning");
+    showScanMessage("⏰", "오늘 일반 스캔 완료!", `오늘 일반 스캔을 모두 완료했습니다!\n내일 다시 도전해주세요.\n(🔥 스페셜 로케이션 QR은 횟수 차감 없이 스캔 가능합니다)`, "warning");
     return;
   }
 
@@ -137,13 +137,13 @@ async function validateAndShowCard(locName) {
   document.getElementById("scan-loading").classList.add("hidden");
   
   if (isHotspotScan) {
-    document.getElementById("scan-count-display").textContent = `🔥 핫스팟 보너스 스캔! (일일 횟수 제외)`;
+    document.getElementById("scan-count-display").textContent = `🔥 스페셜 로케이션 보너스 스캔! (일일 횟수 차감 없음)`;
   } else {
     const leftCount = CAMPAIGN_CONFIG.maxScansPerDay - (regularScansCount + 1);
     if (leftCount > 0) {
-      document.getElementById("scan-count-display").textContent = `오늘 일반 스캔 ${regularScansCount + 1}회 완료! (앞으로 ${leftCount}회 남음 / 핫스팟은 무제한)`;
+      document.getElementById("scan-count-display").textContent = `오늘 일반 스캔 ${regularScansCount + 1}회 완료! (앞으로 ${leftCount}회 남음 / 스페셜 로케이션은 횟수 차감 없음)`;
     } else {
-      document.getElementById("scan-count-display").textContent = `오늘 일반 스캔 모두 완료! (내일 봬요 👋 단, 핫스팟은 계속 가능!)`;
+      document.getElementById("scan-count-display").textContent = `오늘 일반 스캔 모두 완료! (내일 봬요 👋 단, 스페셜 로케이션은 횟수 차감 없음!)`;
     }
   }
   
