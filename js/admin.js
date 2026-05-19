@@ -121,14 +121,7 @@ async function loadStats() {
           <tr>
             <td>${date}</td>
             <td style="font-weight:bold; color:var(--green)">${cnt}명</td>
-            <td>
-              <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem">
-                <div style="width:100px; height:8px; background:var(--bg-secondary); border-radius:4px; overflow:hidden;">
-                  <div style="width:${pct}%; height:100%; background:var(--green); border-radius:4px;"></div>
-                </div>
-                <span>${pct}%</span>
-              </div>
-            </td>
+            <td style="color:var(--text-secondary)">${pct}%</td>
           </tr>`;
       });
     }
@@ -163,14 +156,7 @@ async function loadStats() {
           <tr>
             <td style="font-weight:500;">${data.name}</td>
             <td style="font-weight:bold; color:var(--blue)">${data.count}회</td>
-            <td>
-              <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem">
-                <div style="width:100px; height:8px; background:var(--bg-secondary); border-radius:4px; overflow:hidden;">
-                  <div style="width:${pct}%; height:100%; background:var(--blue); border-radius:4px;"></div>
-                </div>
-                <span>${pct}%</span>
-              </div>
-            </td>
+            <td style="color:var(--text-secondary)">${pct}%</td>
             <td style="color:var(--text-secondary)">${data.uniqueUsers.size}명</td>
           </tr>`;
       });
