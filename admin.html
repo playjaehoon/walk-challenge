@@ -75,6 +75,17 @@
         </div>
       </div>
 
+      <!-- 장소(QR)별 스캔 통계 -->
+      <div class="card" style="margin-bottom:2rem; padding: 1.5rem; background: #fff;">
+        <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+          📍 장소(QR)별 스캔 통계
+          <span style="font-size: 0.875rem; color: var(--text-secondary); font-weight: normal;">* 관리자 제외 순수 스캔 횟수</span>
+        </h3>
+        <div id="qr-scan-stats">
+          <div style="text-align:center; padding: 1rem; color: var(--text-secondary);">로딩 중...</div>
+        </div>
+      </div>
+
       <!-- 탭 -->
       <div class="admin-tabs">
         <button class="admin-tab active" data-target="tab-proofs">📸 인증 대기 (<span id="proof-count">-</span>)</button>

@@ -71,6 +71,9 @@ async function loadStats() {
   // 일자별 QR 스캔 통계 추출 (비동기로 병렬 처리)
   try {
     const dailyScanners = {}; // { '2026.05.18': Set(uid) }
+    const locationStats = {}; // { 'loc01': { count: 0, uniqueUsers: Set(uid), name: '...' } }
+    let totalScansAcrossAll = 0;
+
     const scansPromises = users.map(u => db.collection("users").doc(u.uid).collection("scans").get());
     const scansSnaps = await Promise.all(scansPromises);
 
@@ -78,10 +81,20 @@ async function loadStats() {
       const uid = users[idx].uid || users[idx].id;
       userScansSnap.forEach(doc => {
         const scan = doc.data();
-        const dateStr = scan.dateStr; // e.g. "2026.05.18"
+        const dateStr = scan.dateStr;
         if (dateStr) {
           if (!dailyScanners[dateStr]) dailyScanners[dateStr] = new Set();
           dailyScanners[dateStr].add(uid);
+        }
+
+        const locId = scan.locationId;
+        if (locId) {
+          if (!locationStats[locId]) {
+            locationStats[locId] = { count: 0, uniqueUsers: new Set(), name: scan.locationName || locId };
+          }
+          locationStats[locId].count++;
+          locationStats[locId].uniqueUsers.add(uid);
+          totalScansAcrossAll++;
         }
       });
     });
@@ -124,6 +137,49 @@ async function loadStats() {
     const statsContainer = document.getElementById("daily-scan-stats");
     if (statsContainer) {
       statsContainer.innerHTML = statsHtml;
+    }
+
+    // 장소(QR)별 통계 HTML 생성
+    let qrStatsHtml = `<div class="table-wrapper"><table style="width:100%; border-collapse: collapse; text-align:center;">
+      <thead>
+        <tr>
+          <th>장소 (QR)</th>
+          <th>누적 스캔 횟수</th>
+          <th>스캔 비율 (%)</th>
+          <th>스캔한 참가자 수</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    const sortedLocs = Object.keys(locationStats).sort((a, b) => locationStats[b].count - locationStats[a].count);
+    
+    if (sortedLocs.length === 0) {
+      qrStatsHtml += `<tr><td colspan="4" style="padding:1.5rem; color:var(--text-secondary)">스캔 기록이 없습니다.</td></tr>`;
+    } else {
+      sortedLocs.forEach(locId => {
+        const data = locationStats[locId];
+        const pct = totalScansAcrossAll > 0 ? Math.round((data.count / totalScansAcrossAll) * 100) : 0;
+        qrStatsHtml += `
+          <tr>
+            <td style="font-weight:500;">${data.name}</td>
+            <td style="font-weight:bold; color:var(--blue)">${data.count}회</td>
+            <td>
+              <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem">
+                <div style="width:100px; height:8px; background:var(--bg-secondary); border-radius:4px; overflow:hidden;">
+                  <div style="width:${pct}%; height:100%; background:var(--blue); border-radius:4px;"></div>
+                </div>
+                <span>${pct}%</span>
+              </div>
+            </td>
+            <td style="color:var(--text-secondary)">${data.uniqueUsers.size}명</td>
+          </tr>`;
+      });
+    }
+    qrStatsHtml += `</tbody></table></div>`;
+
+    const qrStatsContainer = document.getElementById("qr-scan-stats");
+    if (qrStatsContainer) {
+      qrStatsContainer.innerHTML = qrStatsHtml;
     }
   } catch (err) {
     console.error("일자별 스캔 통계 로드 중 오류:", err);
