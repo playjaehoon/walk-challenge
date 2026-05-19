@@ -37,7 +37,19 @@ service cloud.firestore {
     // 인원 체크 및 중복 이메일 체크를 위해 읽기 허용.
     match /control_group/{docId} {
       allow create, read: if true;
-      allow update, delete: if request.auth != null; // 관리자용
+      allow update, delete: if isAdmin();
+    }
+
+    // 학부 소식 (notices)
+    match /notices/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 학부 일정 (events)
+    match /events/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
   }
 }
