@@ -103,8 +103,11 @@ async function validateAndShowCard(locName) {
     return;
   }
 
-  if (todayScans.length >= CAMPAIGN_CONFIG.maxScansPerDay) {
-    showScanMessage("⏰", "오늘 스캔 완료!", `오늘 ${CAMPAIGN_CONFIG.maxScansPerDay}회 스캔을 모두 사용했어요.\n내일 다시 도전해주세요!`, "warning");
+  const isHotspotScan = CAMPAIGN_CONFIG.locations[scanLocationId]?.isHotspot === true;
+  const regularScansCount = todayScans.filter((s) => !CAMPAIGN_CONFIG.locations[s.locationId]?.isHotspot).length;
+
+  if (!isHotspotScan && regularScansCount >= CAMPAIGN_CONFIG.maxScansPerDay) {
+    showScanMessage("⏰", "오늘 스캔 완료!", `오늘 ${CAMPAIGN_CONFIG.maxScansPerDay}회 일반 스캔을 모두 사용했어요.\n내일 다시 도전해주세요! (핫스팟은 예외)`, "warning");
     return;
   }
 
@@ -128,7 +131,13 @@ async function validateAndShowCard(locName) {
 
   // 유효 — 카드 표시
   document.getElementById("scan-loading").classList.add("hidden");
-  document.getElementById("scan-count-display").textContent = `오늘 ${todayScans.length + 1}/${CAMPAIGN_CONFIG.maxScansPerDay}번째 스캔`;
+  
+  if (isHotspotScan) {
+    document.getElementById("scan-count-display").textContent = `🔥 핫스팟 보너스 스캔! (일일 횟수 제외)`;
+  } else {
+    document.getElementById("scan-count-display").textContent = `오늘 ${regularScansCount + 1}/${CAMPAIGN_CONFIG.maxScansPerDay}번째 스캔`;
+  }
+  
   document.getElementById("scan-card-area").classList.remove("hidden");
 
   // 카드 클릭 이벤트
