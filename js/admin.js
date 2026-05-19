@@ -121,6 +121,7 @@ function renderUsersTable() {
       <td>${tier.emoji} ${tier.name}</td>
       <td style="font-size:0.85rem;color:var(--text-secondary)">${formatDate(u.registeredAt)}</td>
       <td>
+        <button onclick="window.open('dashboard.html?uid=${u.id}', '_blank')" class="btn btn-secondary btn-sm" style="margin-right:4px;">기록</button>
         <button onclick="openUserEdit('${u.id}', '${u.name}', '${u.nickname || ''}', '${u.studentId}', '${u.department}', ${u.totalScore || 0})" class="btn btn-secondary btn-sm">편집</button>
       </td>
     </tr>`;

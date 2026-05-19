@@ -6,16 +6,36 @@ async function initDashboard() {
   const user = await requireAuth();
   if (!user) return;
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const targetUid = urlParams.get('uid');
+  let viewUid = user.uid;
+
+  if (targetUid) {
+    if (typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(user.email)) {
+      viewUid = targetUid;
+    } else {
+      showToast("다른 사용자의 기록을 볼 권한이 없습니다.", "error");
+      return;
+    }
+  }
+
   document.getElementById("dashboard-loading").classList.add("hidden");
   document.getElementById("dashboard-content").classList.remove("hidden");
 
-  const data = await getUserData(user.uid);
+  const data = await getUserData(viewUid);
   if (!data) { showToast("사용자 정보를 불러올 수 없습니다.", "error"); return; }
 
+  // 관리자 모드인 경우 헤더에 표시
+  if (targetUid) {
+    document.getElementById("dash-name").innerHTML = `<span style="color:var(--red)">[관리자 모드]</span> ${data.name}`;
+  } else {
+    document.getElementById("dash-name").textContent = data.name;
+  }
+
   renderProfile(data);
-  await renderTodayStatus(user.uid);
-  await renderScanHistory(user.uid);
-  await renderProofStatus(user.uid);
+  await renderTodayStatus(viewUid);
+  await renderScanHistory(viewUid);
+  await renderProofStatus(viewUid);
   renderCollection(data);
 }
 
@@ -23,7 +43,7 @@ function renderProfile(data) {
   const score = data.totalScore || 0;
   const tier  = getTier(score);
 
-  document.getElementById("dash-name").textContent      = data.name;
+  // dash-name은 위에서 미리 처리했으므로 건너뜀 (관리자 모드 표시 유지 위해)
   document.getElementById("dash-nickname").textContent  = data.nickname ? `(닉네임: ${data.nickname})` : '';
   document.getElementById("dash-student-id").textContent = data.studentId;
   document.getElementById("dash-dept").textContent      = data.department;
