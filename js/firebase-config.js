@@ -37,7 +37,7 @@ const CAMPAIGN_CONFIG = {
   startDate: new Date("2026-05-18T00:00:00+09:00"),
   endDate: new Date("2026-05-31T23:59:59+09:00"),
   maxScansPerDay: 3,
-  scanCooldownMinutes: 5,
+  scanCooldownMinutes: 2,
   totalLocations: 11,
 
   // 티어 기준:
