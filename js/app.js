@@ -250,8 +250,22 @@ function checkEasterEgg(userData) {
       
       try {
         const userRef = db.collection("users").doc(userData.id);
+        const scanRef = userRef.collection("scans").doc();
+        const todayStr = getKSTDateString();
+
         await db.runTransaction(async (tx) => {
           const doc = await tx.get(userRef);
+          
+          tx.set(scanRef, {
+            locationId: "easter_egg",
+            locationName: "야생의 부 (이스터에그)",
+            rarity: "easter_egg",
+            rarityName: "스페셜 보너스",
+            score: earnedPts,
+            dateStr: todayStr,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+
           tx.update(userRef, {
             totalScore: (doc.data().totalScore || 0) + earnedPts,
             lastEasterEggTime: firebase.firestore.FieldValue.serverTimestamp()
