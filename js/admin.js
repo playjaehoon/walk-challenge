@@ -647,28 +647,28 @@ async function loadDeptNotices() {
   try {
     const snap = await db.collection("dept_notices").orderBy("createdAt", "desc").get();
     if(snap.empty) {
-      tbody.innerHTML = <tr><td colspan="4" style="text-align:center;color:var(--text-secondary)">등록된 학부 소식이 없습니다.</td></tr>;
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--text-secondary)">등록된 학부 소식이 없습니다.</td></tr>`;
       return;
     }
     tbody.innerHTML = snap.docs.map(doc => {
       const d = doc.data();
       const safeTitle = (d.title || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
       const encodedContent = encodeURIComponent(d.content || '');
-      return 
+      return `
         <tr>
-          <td><span style="background:rgba(57,211,83,0.1);color:var(--green);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:600"></span></td>
-          <td></td>
-          <td></td>
+          <td><span style="background:rgba(57,211,83,0.1);color:var(--green);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:600">${d.type||'안내'}</span></td>
+          <td>${d.title}</td>
+          <td>${d.date}</td>
           <td>
-            <button onclick="editDeptNotice('', '', '', '', '')" class="btn btn-secondary btn-sm" style="padding:0.25rem 0.5rem;margin-right:0.25rem">수정</button>
-            <button onclick="deleteDeptNotice('')" class="btn btn-secondary btn-sm" style="padding:0.25rem 0.5rem;color:red;border-color:red">삭제</button>
+            <button onclick="editDeptNotice('${doc.id}', '${d.type||'안내'}', '${safeTitle}', '${d.date}', '${encodedContent}')" class="btn btn-secondary btn-sm" style="padding:0.25rem 0.5rem;margin-right:0.25rem">수정</button>
+            <button onclick="deleteDeptNotice('${doc.id}')" class="btn btn-secondary btn-sm" style="padding:0.25rem 0.5rem;color:red;border-color:red">삭제</button>
           </td>
         </tr>
-      ;
+      `;
     }).join("");
   } catch(e) {
     console.error(e);
-    tbody.innerHTML = <tr><td colspan="4" style="text-align:center;color:red">불러오기 오류</td></tr>;
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:red">불러오기 오류</td></tr>`;
   }
 }
 
@@ -683,7 +683,7 @@ window.addDeptNotice = async function() {
   }
   
   const today = new Date();
-  const dateStr = ${today.getFullYear()}..;
+  const dateStr = `${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
   
   try {
     await db.collection("dept_notices").add({
