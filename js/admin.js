@@ -84,20 +84,10 @@ async function loadStats() {
       userScansSnap.forEach(doc => {
         const scan = doc.data();
         const dateStr = scan.dateStr;
-        if (dateStr) {
-          if (!dailyScanners[dateStr]) dailyScanners[dateStr] = new Set();
-          dailyScanners[dateStr].add(uid);
-        }
-
         const locId = scan.locationId;
+
+        // CSV 추출용 전체 데이터에는 이스터에그도 포함
         if (locId) {
-          if (!locationStats[locId]) {
-            locationStats[locId] = { count: 0, uniqueUsers: new Set(), name: scan.locationName || locId };
-          }
-          locationStats[locId].count++;
-          locationStats[locId].uniqueUsers.add(uid);
-          totalScansAcrossAll++;
-          
           window.allScansDataForExport.push({
             date: dateStr,
             time: scan.createdAt ? (scan.createdAt.toDate ? scan.createdAt.toDate() : new Date(scan.createdAt)).toLocaleTimeString('ko-KR') : '',
@@ -107,6 +97,23 @@ async function loadStats() {
             rarity: scan.rarity || '',
             score: scan.score || 0
           });
+        }
+
+        // 이스터에그는 물리적인 QR 코드가 아니므로 통계 테이블 집계에서는 제외
+        if (locId === 'easter_egg') return;
+
+        if (dateStr) {
+          if (!dailyScanners[dateStr]) dailyScanners[dateStr] = new Set();
+          dailyScanners[dateStr].add(uid);
+        }
+
+        if (locId) {
+          if (!locationStats[locId]) {
+            locationStats[locId] = { count: 0, uniqueUsers: new Set(), name: scan.locationName || locId };
+          }
+          locationStats[locId].count++;
+          locationStats[locId].uniqueUsers.add(uid);
+          totalScansAcrossAll++;
         }
       });
     });
