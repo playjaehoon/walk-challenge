@@ -43,7 +43,7 @@ async function loadStats() {
   const snap  = await db.collection("users").get();
   
   const users = snap.docs
-    .map((d) => d.data())
+    .map((d) => ({ ...d.data(), uid: d.id, id: d.id }))
     .filter(u => {
       if (u.email && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(u.email)) return false;
       const n = (u.name || '').toLowerCase();
