@@ -604,6 +604,10 @@
       const closeBtn = document.getElementById("rainy-day-modal-close");
       
       const closeModal = () => {
+        const checkbox = document.getElementById("rainy-day-dont-show-checkbox");
+        if (checkbox && checkbox.checked) {
+          localStorage.setItem("rainy_day_dismissed_20260520", "true");
+        }
         modalOverlay.style.display = "none";
         document.body.style.overflow = "";
       };
@@ -615,21 +619,26 @@
 
       // 사용자 로그인 및 조건 충족 상태 로직
       auth.onAuthStateChanged(async (user) => {
+        const isDismissed = localStorage.getItem("rainy_day_dismissed_20260520") === "true";
+
         if (!user) {
+          if (isDismissed) return; // 오늘 하루 보지 않기 상태이면 팝업 제외
+
           // 로그인하지 않은 경우: 정보 알림 팝업 및 로그인 유도
           actionArea.innerHTML = `
-            <a href="login.html?redirect=index.html" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem; text-align: center; display: block; box-sizing: border-box;">로그인하고 혜택 받기</a>
-            <button class="btn btn-outline" style="width: 100%;" id="rainy-day-close-action">닫기</button>
+            <a href="login.html?redirect=index.html" class="btn btn-primary" style="width: 100%; margin-bottom: 0.75rem; text-align: center; display: block; box-sizing: border-box;">로그인하고 혜택 받기</a>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; width: 100%;">
+              <label style="display: flex; align-items: center; gap: 0.375rem; font-size: 0.8rem; color: var(--text-secondary); cursor: pointer; user-select: none;">
+                <input type="checkbox" id="rainy-day-dont-show-checkbox" style="cursor: pointer; width: 14px; height: 14px; margin: 0;">
+                오늘 하루 보지 않기
+              </label>
+              <button class="btn btn-outline btn-sm" id="rainy-day-close-action" style="padding: 0.375rem 1rem; font-size: 0.8rem; margin: 0;">닫기</button>
+            </div>
           `;
           document.getElementById("rainy-day-close-action").addEventListener("click", closeModal);
           
-          // 오늘 첫 방문인 경우에만 비회원용 안내 팝업 노출 (원치 않는 피로도 방지)
-          const guestDismissed = localStorage.getItem("rainy_day_guest_dismissed_20260520");
-          if (!guestDismissed) {
-            modalOverlay.style.display = "flex";
-            document.body.style.overflow = "hidden";
-            localStorage.setItem("rainy_day_guest_dismissed_20260520", "true");
-          }
+          modalOverlay.style.display = "flex";
+          document.body.style.overflow = "hidden";
           return;
         }
 
@@ -643,7 +652,7 @@
           }
 
           if (status.hasScannedOutdoor) {
-            // 스캔 완료 상태: 보상받기 버튼 노출 및 모달 자동 팝업!
+            // 스캔 완료 상태: 보상받기 버튼 노출 및 모달 자동 팝업 (보상 수령은 "오늘 하루 보지 않기" 유무와 관계없이 노출)
             actionArea.innerHTML = `
               <div style="background: rgba(57,211,83,0.1); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid rgba(57,211,83,0.2); font-size: 0.85rem;">
                 <span style="font-size: 0.85rem; color: var(--green); font-weight: 600;">🎉 조건 달성! 오늘 야외 QR을 스캔하셨습니다.</span>
@@ -681,21 +690,24 @@
             });
           } else {
             // 로그인했고 보상 안 받았지만 스캔 안 한 상태: 안내 팝업 및 닫기 버튼
+            if (isDismissed) return;
+
             actionArea.innerHTML = `
               <div style="background: rgba(255,193,7,0.1); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid rgba(255,193,7,0.2); font-size: 0.85rem; color: #ffb300; line-height:1.4;">
                 야외 QR 중 한 곳 이상을 먼저 스캔하시면 보너스 획득이 가능합니다!
               </div>
-              <button class="btn btn-outline" style="width: 100%;" id="rainy-day-close-action">확인</button>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; width: 100%;">
+                <label style="display: flex; align-items: center; gap: 0.375rem; font-size: 0.8rem; color: var(--text-secondary); cursor: pointer; user-select: none;">
+                  <input type="checkbox" id="rainy-day-dont-show-checkbox" style="cursor: pointer; width: 14px; height: 14px; margin: 0;">
+                  오늘 하루 보지 않기
+                </label>
+                <button class="btn btn-outline btn-sm" id="rainy-day-close-action" style="padding: 0.375rem 1rem; font-size: 0.8rem; margin: 0;">확인</button>
+              </div>
             `;
             document.getElementById("rainy-day-close-action").addEventListener("click", closeModal);
             
-            // 오늘 첫 방문인 경우 안내 팝업 노출
-            const eventDismissed = localStorage.getItem("rainy_day_dismissed_20260520");
-            if (!eventDismissed) {
-              modalOverlay.style.display = "flex";
-              document.body.style.overflow = "hidden";
-              localStorage.setItem("rainy_day_dismissed_20260520", "true");
-            }
+            modalOverlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
           }
         } catch (err) {
           console.error(err);
