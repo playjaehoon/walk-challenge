@@ -26,6 +26,12 @@ async function initScanPage() {
   scanUser = await requireAuth();
   if (!scanUser) return;
 
+  // 축제 부스 운영 종료 체크
+  if (scanLocationId === 'loc11') {
+    showScanMessage("🏁", "운영 종료", "글스산 축제 부스 QR은 운영 기간이 종료되었습니다.\n다른 QR을 스캔해주세요!", "info");
+    return;
+  }
+
   // 마스터키 처리 (날짜 및 위치 무시)
   if (locObj.isMaster) {
     await validateAndShowCard(locName);
