@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -121,8 +121,43 @@
           <span class="scan-status-text" id="today-status-text"></span>
         </div>
         <p style="font-size:0.8rem;color:var(--text-secondary);margin:0.5rem 0 0">
-          💡 캠퍼스 15개 거점의 QR코드를 스캔하세요. 같은 장소는 당일 1회만 가능합니다.
+          💡 캠퍼스 11개 거점의 QR코드를 스캔하세요. 같은 장소는 당일 1회만 가능합니다.
         </p>
+      </div>
+
+      <!-- QR 스캔 및 이벤트 통계 -->
+      <div class="card" style="margin-bottom:1.25rem">
+        <h3 style="margin-bottom:1rem">📊 QR 스캔 및 이벤트 통계</h3>
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 0.75rem; border-radius: 12px; display: flex; align-items: center; gap: 0.75rem;">
+            <div style="font-size: 1.75rem;">📱</div>
+            <div style="text-align: left;">
+              <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.15rem;">일반 QR 스캔</div>
+              <div style="font-family:'Outfit',sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--text-primary);" id="stat-regular-count">0회</div>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 0.75rem; border-radius: 12px; display: flex; align-items: center; gap: 0.75rem;">
+            <div style="font-size: 1.75rem;">🔥</div>
+            <div style="text-align: left;">
+              <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.15rem;">Special QR</div>
+              <div style="font-family:'Outfit',sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--green);" id="stat-special-count">0회</div>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 0.75rem; border-radius: 12px; display: flex; align-items: center; gap: 0.75rem;">
+            <div style="font-size: 1.75rem;">🥚</div>
+            <div style="text-align: left;">
+              <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.15rem;">이스터에그 발견</div>
+              <div style="font-family:'Outfit',sans-serif; font-size: 1.15rem; font-weight: 800; color: #ffd700;" id="stat-egg-count">0회</div>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 0.75rem; border-radius: 12px; display: flex; align-items: center; gap: 0.75rem;">
+            <div style="font-size: 1.75rem;">🌧️</div>
+            <div style="text-align: left;">
+              <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.15rem;">우천 특별 보너스</div>
+              <div style="font-family:'Outfit',sans-serif; font-size: 1.15rem; font-weight: 800; color: #60a5fa;" id="stat-rain-count">0회</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- 등급 컬렉션 -->

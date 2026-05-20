@@ -34,6 +34,7 @@ async function initDashboard() {
 
   renderProfile(data);
   await renderTodayStatus(viewUid);
+  await renderScanStats(viewUid);
   await renderScanHistory(viewUid);
   await renderProofStatus(viewUid);
   renderCollection(data);
@@ -195,6 +196,37 @@ window.saveProfileEdit = async function() {
     showToast("수정 중 오류가 발생했습니다.", "error");
   }
 };
+
+async function renderScanStats(uid) {
+  try {
+    const scansSnap = await db.collection("users").doc(uid).collection("scans").get();
+    
+    let regularCount = 0;
+    let specialCount = 0;
+    let easterEggCount = 0;
+    let rainyBonusCount = 0;
+
+    scansSnap.forEach((doc) => {
+      const s = doc.data();
+      if (s.locationId === "easter_egg") {
+        easterEggCount++;
+      } else if (s.locationId === "rainy_day_bonus") {
+        rainyBonusCount++;
+      } else if (CAMPAIGN_CONFIG.locations[s.locationId]?.isHotspot) {
+        specialCount++;
+      } else {
+        regularCount++;
+      }
+    });
+
+    document.getElementById("stat-regular-count").textContent = `${regularCount}회`;
+    document.getElementById("stat-special-count").textContent = `${specialCount}회`;
+    document.getElementById("stat-egg-count").textContent = `${easterEggCount}회`;
+    document.getElementById("stat-rain-count").textContent = `${rainyBonusCount}회`;
+  } catch (err) {
+    console.error("Failed to render scan stats:", err);
+  }
+}
 
 document.addEventListener("DOMContentLoaded", initDashboard);
 
