@@ -25,6 +25,18 @@ async function initDashboard() {
   const data = await getUserData(viewUid);
   if (!data) { showToast("사용자 정보를 불러올 수 없습니다.", "error"); return; }
 
+  // 모든 참가자 리스트 가져와 순위 및 커트라인 점수 계산 (운영진/테스트 제외)
+  const usersSnap = await db.collection("users").orderBy("totalScore", "desc").get();
+  const users = usersSnap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .filter(u => {
+      if (u.email && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(u.email)) return false;
+      const n = (u.name || '').toLowerCase();
+      const e = (u.email || '').toLowerCase();
+      if (n.includes('test') || e.includes('test')) return false;
+      return true;
+    });
+
   // 관리자 모드인 경우 헤더에 표시
   if (targetUid) {
     document.getElementById("dash-name").innerHTML = `<span style="color:var(--red)">[관리자 모드]</span> ${data.name}`;
@@ -32,7 +44,7 @@ async function initDashboard() {
     document.getElementById("dash-name").textContent = data.name;
   }
 
-  renderProfile(data);
+  renderProfile(data, users, viewUid);
   await renderTodayStatus(viewUid);
   await renderScanStats(viewUid);
   await renderScanHistory(viewUid);
@@ -40,9 +52,12 @@ async function initDashboard() {
   renderCollection(data);
 }
 
-function renderProfile(data) {
+function renderProfile(data, users, viewUid) {
   const score = data.totalScore || 0;
-  const tier  = getTier(score);
+  const total = users.length;
+  const userIndex = users.findIndex(u => u.id === viewUid);
+  const rank = userIndex !== -1 ? userIndex + 1 : total + 1;
+  const tier = getTierByRank(rank, total, score);
 
   // dash-name은 위에서 미리 처리했으므로 건너뜀 (관리자 모드 표시 유지 위해)
   document.getElementById("dash-nickname").textContent  = data.nickname ? `(닉네임: ${data.nickname})` : '';
@@ -50,29 +65,49 @@ function renderProfile(data) {
   document.getElementById("dash-dept").textContent      = data.department;
   document.getElementById("dash-score").textContent     = score;
   document.getElementById("dash-scan-count").textContent = data.scanCount || 0;
-  document.getElementById("dash-tier-text").textContent  = `${tier.emoji} ${tier.name}`;
+  
+  // 등수와 티어 표시
+  document.getElementById("dash-tier-text").innerHTML = `${tier.emoji} ${tier.name} <span style="font-size:0.8rem;color:var(--text-secondary);font-weight:400;margin-left:4px;">(${rank}위 / 전체 ${total}명)</span>`;
 
-  // 티어 진행 바
-  const { bronze, silver, gold } = CAMPAIGN_CONFIG.scoreThresholds;
+  // 티어 진행 바 및 커트라인 점수 계산
+  const goldTop = CAMPAIGN_CONFIG.goldTopN || 10;
+  const silverTop = Math.ceil(total * (CAMPAIGN_CONFIG.silverTopPercent || 50) / 100);
+  const bronze = CAMPAIGN_CONFIG.scoreThresholds.bronze || 200;
+
+  // 골드 커트라인 (10위 점수)
+  const goldUser = users[Math.min(goldTop, total) - 1];
+  const goldCutline = goldUser ? (goldUser.totalScore || 0) : 0;
+
+  // 실버 커트라인 (30위 점수)
+  const silverUser = users[Math.min(silverTop, total) - 1];
+  const silverCutline = silverUser ? (silverUser.totalScore || 0) : 0;
+
   let progress = 0, nextLabel = "", nextScore = bronze;
 
-  if (score >= gold) {
-    progress = 100; nextLabel = "최고 등급 달성! 🏆";
-  } else if (score >= silver) {
-    progress = ((score - silver) / (gold   - silver)) * 100;
-    nextLabel = `골드까지 ${gold - score}pt`; nextScore = gold;
-  } else if (score >= bronze) {
-    progress = ((score - bronze) / (silver - bronze)) * 100;
-    nextLabel = `실버까지 ${silver - score}pt`; nextScore = silver;
+  if (tier.cls === "gold") {
+    progress = 100;
+    nextLabel = "최고 등급 달성! 🏆";
+    nextScore = score;
+  } else if (tier.cls === "silver") {
+    const diff = goldCutline - score;
+    nextLabel = `골드까지 ${diff > 0 ? diff : 0}pt 필요 (골드 커트라인: ${goldCutline}pt)`;
+    nextScore = goldCutline;
+    progress = goldCutline > silverCutline ? ((score - silverCutline) / (goldCutline - silverCutline)) * 100 : 0;
+  } else if (tier.cls === "bronze") {
+    const diff = silverCutline - score;
+    nextLabel = `실버까지 ${diff > 0 ? diff : 0}pt 필요 (실버 커트라인: ${silverCutline}pt)`;
+    nextScore = silverCutline;
+    progress = silverCutline > bronze ? ((score - bronze) / (silverCutline - bronze)) * 100 : 0;
   } else {
     progress = (score / bronze) * 100;
-    nextLabel = `브론즈까지 ${bronze - score}pt`;
+    nextLabel = `브론즈까지 ${bronze - score}pt 필요`;
+    nextScore = bronze;
   }
 
   document.getElementById("tier-next-label").textContent = nextLabel;
-  document.getElementById("progress-fill").style.width   = `${Math.min(100, progress)}%`;
+  document.getElementById("progress-fill").style.width   = `${Math.min(100, Math.max(0, progress))}%`;
   document.getElementById("tier-score-cur").textContent  = `${score}pt`;
-  document.getElementById("tier-score-max").textContent  = score >= gold ? "MAX" : `목표 ${nextScore}pt`;
+  document.getElementById("tier-score-max").textContent  = tier.cls === "gold" ? "MAX" : `목표 ${nextScore}pt`;
 }
 
 async function renderTodayStatus(uid) {
