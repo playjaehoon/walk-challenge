@@ -46,7 +46,7 @@ const CAMPAIGN_CONFIG = {
   // 골드: 상위 10명
   maxParticipants: 90,         // 캠페인 참가자 최대 인원
   maxControlParticipants: 30,  // 대조군 최대 인원
-  registrationDeadline: "2026-05-19T23:59:59+09:00", // 참가 신청 마감일 (내일 자정까지)
+  registrationDeadline: null, // 참가 신청 마감일 없음 (상시 신청 가능)
   goldTopN: 10,         // 골드: 상위 N명
   silverTopPercent: 50, // 실버: 상위 N%
   scoreThresholds: {
