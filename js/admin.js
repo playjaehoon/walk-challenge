@@ -99,8 +99,8 @@ async function loadStats() {
           });
         }
 
-        // 이스터에그는 물리적인 QR 코드가 아니므로 통계 테이블 집계에서는 제외
-        if (locId === 'easter_egg') return;
+        // 이스터에그 및 우천 보너스는 물리적인 QR 코드가 아니므로 통계 테이블 집계에서는 제외
+        if (locId === 'easter_egg' || locId === 'rainy_day_bonus') return;
 
         if (dateStr) {
           if (!dailyScanners[dateStr]) dailyScanners[dateStr] = new Set();

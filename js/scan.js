@@ -241,6 +241,11 @@ function animateCardReveal(rarity) {
         booImg.src = `assets/boo_png/${formattedNum}.png`;
         booContainer.classList.remove("hidden");
       }
+
+      // 우천 특별 이벤트 보너스 체크 및 팝업 (5월 20일 야외 QR인 경우)
+      setTimeout(() => {
+        triggerRainyDayBonusIfEligible();
+      }, 100);
     }, 950);
   }, 200);
 }
@@ -276,6 +281,90 @@ function spawnParticles() {
     s.id = "float-p-style";
     s.textContent = `@keyframes float-p{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-180px) scale(0);opacity:0}}`;
     document.head.appendChild(s);
+  }
+}
+
+async function triggerRainyDayBonusIfEligible() {
+  const todayStr = getKSTDateString();
+  if (todayStr !== "2026-05-20") return;
+
+  if (!OUTDOOR_LOCATIONS.includes(scanLocationId)) return;
+
+  const user = auth.currentUser;
+  if (!user) return;
+
+  try {
+    const userDoc = await db.collection("users").doc(user.uid).get();
+    if (!userDoc.exists) return;
+
+    const data = userDoc.data();
+    if (data.rainyDayClaimedDate === todayStr) return; // 이미 받음
+
+    // 보너스 수령 모달 띄우기
+    const modal = document.createElement("div");
+    modal.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;";
+    modal.innerHTML = `
+      <div style="background: var(--bg-card); border: 2px solid #34d399; border-radius: 16px; padding: 2rem; text-align: center; max-width: 340px; width: 90%; transform: scale(0.8); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 40px rgba(52,211,153,0.2);">
+        <h2 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.5rem;">🌧️ 우천 특별 보너스!</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.4;">비 오는 날 야외 스팟 QR을 스캔해주셔서 대단히 감사합니다. 추가 포인트 혜택을 받으세요!</p>
+        
+        <div style="font-size: 4rem; margin-bottom: 1.5rem; animation: rainy-bonus-float 3s infinite;">🎁</div>
+        
+        <button class="btn btn-primary" id="scan-claim-rainy-btn" style="width: 100%; font-weight: 700; background: linear-gradient(135deg, #10b981, #059669); border: none;">🎁 보너스 포인트 받기</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    if (!document.getElementById("rainy-bonus-styles")) {
+      const style = document.createElement("style");
+      style.id = "rainy-bonus-styles";
+      style.innerHTML = `
+        @keyframes rainy-bonus-float {
+          0% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-10px) scale(1.05); }
+          100% { transform: translateY(0) scale(1); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    requestAnimationFrame(() => {
+      modal.style.opacity = "1";
+      modal.firstElementChild.style.transform = "scale(1)";
+    });
+
+    document.getElementById("scan-claim-rainy-btn").addEventListener("click", async () => {
+      const btn = document.getElementById("scan-claim-rainy-btn");
+      btn.disabled = true;
+      btn.textContent = "적립 중...";
+
+      const res = await claimRainyDayBonus(user);
+      if (res.success) {
+        modal.firstElementChild.innerHTML = `
+          <h2 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.5rem;">🌧️ 보너스 적립 완료!</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">성공적으로 우천 특별 포인트가 추가 적립되었습니다.</p>
+          
+          <div style="background: rgba(57,211,83,0.1); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid rgba(57,211,83,0.2);">
+            <span style="font-size: 0.85rem; color: var(--green); font-weight: 600;">추가 보너스 포인트</span>
+            <div style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--green); margin-top: 0.25rem;">+${res.points}pt</div>
+          </div>
+          
+          <button class="btn btn-primary" style="width: 100%;" id="scan-rainy-success-close">확인</button>
+        `;
+        document.getElementById("scan-rainy-success-close").addEventListener("click", () => {
+          modal.style.opacity = "0";
+          setTimeout(() => modal.remove(), 300);
+          // 네비바 점수 갱신
+          updateNavState();
+        });
+      } else {
+        showToast("포인트 적립에 실패했습니다: " + res.error, "error");
+        btn.disabled = false;
+        btn.textContent = "🎁 보너스 포인트 받기";
+      }
+    });
+  } catch (err) {
+    console.error(err);
   }
 }
 

@@ -352,3 +352,75 @@ window.resetEgg = async () => {
   alert("이스터에그 쿨타임이 초기화되었습니다! 새로고침 후 다시 잡아보세요.");
 };
 
+// ===== 우천 특별 이벤트 관련 공통 함수 (2026-05-20) =====
+const OUTDOOR_LOCATIONS = ['loc01', 'loc02', 'loc03', 'loc05', 'loc06'];
+
+async function claimRainyDayBonus(user) {
+  const uid = user.uid;
+  const todayStr = "2026-05-20";
+  const userRef = db.collection("users").doc(uid);
+  const scanRef = userRef.collection("scans").doc();
+  const bonusPoints = Math.floor(Math.random() * 11) + 10; // 10~20p
+
+  try {
+    let earned = 0;
+    await db.runTransaction(async (tx) => {
+      const doc = await tx.get(userRef);
+      if (!doc.exists) throw new Error("사용자 문서가 존재하지 않습니다.");
+      
+      const data = doc.data();
+      if (data.rainyDayClaimedDate === todayStr) {
+        throw new Error("이미 오늘의 우천 특별 보너스를 받으셨습니다!");
+      }
+
+      tx.set(scanRef, {
+        locationId: "rainy_day_bonus",
+        locationName: "🌧️ 우천 특별 이벤트 추가 적립",
+        rarity: "rainy_day",
+        rarityName: "우천 특별 보너스",
+        score: bonusPoints,
+        dateStr: todayStr,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      tx.update(userRef, {
+        totalScore: (data.totalScore || 0) + bonusPoints,
+        rainyDayClaimedDate: todayStr
+      });
+      earned = bonusPoints;
+    });
+
+    return { success: true, points: earned };
+  } catch (err) {
+    console.error(err);
+    return { success: false, error: err.message };
+  }
+}
+
+async function checkRainyDayStatus(user) {
+  const uid = user.uid;
+  const todayStr = "2026-05-20";
+  
+  const userDoc = await db.collection("users").doc(uid).get();
+  if (!userDoc.exists) return { hasScannedOutdoor: false, claimed: false };
+  
+  const userData = userDoc.data();
+  const claimed = userData.rainyDayClaimedDate === todayStr;
+  
+  if (claimed) {
+    return { hasScannedOutdoor: true, claimed: true };
+  }
+
+  const scansSnap = await db.collection("users").doc(uid)
+    .collection("scans")
+    .where("dateStr", "==", todayStr)
+    .get();
+
+  const hasScannedOutdoor = scansSnap.docs.some(doc => {
+    const data = doc.data();
+    return OUTDOOR_LOCATIONS.includes(data.locationId);
+  });
+
+  return { hasScannedOutdoor, claimed: false };
+}
+

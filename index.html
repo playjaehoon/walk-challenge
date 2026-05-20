@@ -509,6 +509,38 @@
     </div>
   </footer>
 
+  <!-- 우천 특별 이벤트 모달 -->
+  <div class="modal-overlay" id="rainy-day-modal" style="display: none; z-index: 10000;">
+    <div class="modal" style="max-width: 440px;">
+      <button class="modal-close" id="rainy-day-modal-close">×</button>
+      <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 1.25rem; text-align: center; color: var(--text-primary);">🌧️ 우천 특별 QR 인증 이벤트</h2>
+      <div style="font-size: 0.875rem; line-height: 1.6; color: var(--text-secondary); margin-bottom: 1.5rem;">
+        <p style="margin-bottom: 1rem; font-weight: 500;">안녕하세요.<br>오늘처럼 비가 오는 날에도 건강을 위한 발걸음을 멈추지 않는 여러분을 위해 특별한 이벤트를 준비했습니다!</p>
+        
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+          <div style="margin-bottom: 0.5rem;"><strong style="color: var(--text-primary); font-weight: 600;">🌧️ 이벤트 일자:</strong> 당일 5mm 이상 우천 시</div>
+          <div><strong style="color: var(--text-primary); font-weight: 600;">🎁 이벤트 혜택:</strong> 야외 QR 1회 이상 스캔 시 10~20p 추가 적립</div>
+        </div>
+        
+        <p style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">스캔 가능한 야외 QR 위치 (총 5곳):</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.25rem; background: rgba(0,0,0,0.15); padding: 0.75rem; border-radius: 8px;">
+          <div>📍 백년관 게시판</div>
+          <div>📍 구기숙사 농구장</div>
+          <div>📍 중앙도로 테니스장</div>
+          <div>📍 망각의 숲</div>
+          <div style="grid-column: span 2;">📍 교양관 정류장 게시판</div>
+        </div>
+        
+        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.25rem; word-break: keep-all;">* 야외 QR을 한번 이상 스캔 시 추가 획득 기회를 제공합니다.</p>
+        <p style="font-size: 0.8rem; color: var(--text-secondary); word-break: keep-all;">* 이벤트 이전에 야외 QR을 스캔하신 분은 메인 페이지에서 추가 팝업을 통해 확인 가능하니 참고 바랍니다.</p>
+      </div>
+      
+      <div id="rainy-day-action-area" style="text-align: center;">
+        <button class="btn btn-outline" style="width: 100%;" id="rainy-day-modal-ok">확인</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
@@ -558,6 +590,120 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeLightbox();
     });
+
+    // ── 우천 특별 이벤트 모달 제어 ──
+    async function initRainyDayEvent() {
+      // 오늘이 이벤트 날짜인지 확인
+      const todayStr = getKSTDateString();
+      if (todayStr !== "2026-05-20") return;
+
+      const modalOverlay = document.getElementById("rainy-day-modal");
+      if (!modalOverlay) return;
+
+      const actionArea = document.getElementById("rainy-day-action-area");
+      const closeBtn = document.getElementById("rainy-day-modal-close");
+      
+      const closeModal = () => {
+        modalOverlay.style.display = "none";
+        document.body.style.overflow = "";
+      };
+      
+      closeBtn.addEventListener("click", closeModal);
+      modalOverlay.addEventListener("click", (e) => {
+        if (e.target === modalOverlay) closeModal();
+      });
+
+      // 사용자 로그인 및 조건 충족 상태 로직
+      auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+          // 로그인하지 않은 경우: 정보 알림 팝업 및 로그인 유도
+          actionArea.innerHTML = `
+            <a href="login.html?redirect=index.html" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem; text-align: center; display: block; box-sizing: border-box;">로그인하고 혜택 받기</a>
+            <button class="btn btn-outline" style="width: 100%;" id="rainy-day-close-action">닫기</button>
+          `;
+          document.getElementById("rainy-day-close-action").addEventListener("click", closeModal);
+          
+          // 오늘 첫 방문인 경우에만 비회원용 안내 팝업 노출 (원치 않는 피로도 방지)
+          const guestDismissed = localStorage.getItem("rainy_day_guest_dismissed_20260520");
+          if (!guestDismissed) {
+            modalOverlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
+            localStorage.setItem("rainy_day_guest_dismissed_20260520", "true");
+          }
+          return;
+        }
+
+        // 로그인한 경우: 우천 보너스 상태 체크
+        try {
+          const status = await checkRainyDayStatus(user);
+          
+          if (status.claimed) {
+            // 이미 보상을 받은 상태: 팝업을 띄우지 않음
+            return;
+          }
+
+          if (status.hasScannedOutdoor) {
+            // 스캔 완료 상태: 보상받기 버튼 노출 및 모달 자동 팝업!
+            actionArea.innerHTML = `
+              <div style="background: rgba(57,211,83,0.1); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid rgba(57,211,83,0.2); font-size: 0.85rem;">
+                <span style="font-size: 0.85rem; color: var(--green); font-weight: 600;">🎉 조건 달성! 오늘 야외 QR을 스캔하셨습니다.</span>
+              </div>
+              <button class="btn btn-primary" id="claim-rainy-btn" style="width: 100%; font-weight: 700; background: linear-gradient(135deg, #10b981, #059669); border: none; box-shadow: 0 4px 15px rgba(16,185,129,0.3);">🎁 추가 포인트 받기</button>
+            `;
+            
+            modalOverlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
+
+            document.getElementById("claim-rainy-btn").addEventListener("click", async () => {
+              const btn = document.getElementById("claim-rainy-btn");
+              btn.disabled = true;
+              btn.textContent = "적립 중...";
+              
+              const res = await claimRainyDayBonus(user);
+              if (res.success) {
+                actionArea.innerHTML = `
+                  <div style="background: rgba(57,211,83,0.1); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid rgba(57,211,83,0.2);">
+                    <span style="font-size: 0.85rem; color: var(--green); font-weight: 600;">🌧️ 우천 특별 보너스 적립 성공!</span>
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--green); margin-top: 0.5rem;">+${res.points}pt</div>
+                  </div>
+                  <button class="btn btn-primary" style="width: 100%;" id="rainy-day-success-ok">확인</button>
+                `;
+                document.getElementById("rainy-day-success-ok").addEventListener("click", () => {
+                  closeModal();
+                  // 네비바 점수 갱신
+                  updateNavState();
+                });
+              } else {
+                showToast("포인트 적립에 실패했습니다: " + res.error, "error");
+                btn.disabled = false;
+                btn.textContent = "🎁 추가 포인트 받기";
+              }
+            });
+          } else {
+            // 로그인했고 보상 안 받았지만 스캔 안 한 상태: 안내 팝업 및 닫기 버튼
+            actionArea.innerHTML = `
+              <div style="background: rgba(255,193,7,0.1); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid rgba(255,193,7,0.2); font-size: 0.85rem; color: #ffb300; line-height:1.4;">
+                야외 QR 중 한 곳 이상을 먼저 스캔하시면 보너스 획득이 가능합니다!
+              </div>
+              <button class="btn btn-outline" style="width: 100%;" id="rainy-day-close-action">확인</button>
+            `;
+            document.getElementById("rainy-day-close-action").addEventListener("click", closeModal);
+            
+            // 오늘 첫 방문인 경우 안내 팝업 노출
+            const eventDismissed = localStorage.getItem("rainy_day_dismissed_20260520");
+            if (!eventDismissed) {
+              modalOverlay.style.display = "flex";
+              document.body.style.overflow = "hidden";
+              localStorage.setItem("rainy_day_dismissed_20260520", "true");
+            }
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    }
+
+    initRainyDayEvent();
   </script>
 </body>
 
