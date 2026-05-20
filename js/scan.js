@@ -111,7 +111,7 @@ async function validateAndShowCard(locName) {
 
   const isHotspotScan = CAMPAIGN_CONFIG.locations[scanLocationId]?.isHotspot === true;
   const regularScansCount = todayScans.filter((s) => {
-    if (s.locationId === 'easter_egg' || s.locationId === 'master') return false;
+    if (s.locationId === 'easter_egg' || s.locationId === 'master' || s.locationId === 'rainy_day_bonus') return false;
     if (CAMPAIGN_CONFIG.locations[s.locationId]?.isHotspot) return false;
     return true;
   }).length;

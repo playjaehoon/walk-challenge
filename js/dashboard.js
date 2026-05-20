@@ -80,18 +80,34 @@ async function renderTodayStatus(uid) {
   const snap  = await db.collection("users").doc(uid).collection("scans")
     .where("dateStr", "==", today).get();
 
-  const count = snap.docs.length;
+  // 일반 스캔만 필터링 (이스터에그, 우천 보너스, Special QR 제외)
+  const regularScans = snap.docs.filter((doc) => {
+    const s = doc.data();
+    if (s.locationId === "easter_egg" || s.locationId === "rainy_day_bonus" || s.locationId === "master") return false;
+    if (CAMPAIGN_CONFIG.locations[s.locationId]?.isHotspot) return false;
+    return true;
+  });
+
+  const count = regularScans.length;
   const max   = CAMPAIGN_CONFIG.maxScansPerDay;
 
   document.getElementById("today-count").textContent = `${count}/${max}`;
+  
+  // 모든 도트 상태 초기화 후 색상 입히기
   for (let i = 1; i <= max; i++) {
     const dot = document.getElementById(`scan-dot-${i}`);
-    if (dot && i <= count) dot.classList.add("used");
+    if (dot) {
+      dot.classList.remove("used");
+      if (i <= count) {
+        dot.classList.add("used");
+      }
+    }
   }
+
   document.getElementById("today-status-text").textContent =
     count >= max
-      ? "오늘 스캔 완료! 내일 다시 도전하세요 🎉"
-      : `오늘 ${max - count}번 더 스캔할 수 있어요!`;
+      ? "오늘 일반 스캔 완료! 내일 다시 도전하세요 🎉"
+      : `오늘 ${max - count}번 더 일반 스캔할 수 있어요!`;
 }
 
 async function renderScanHistory(uid) {
