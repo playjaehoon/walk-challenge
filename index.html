@@ -595,7 +595,8 @@
     async function initRainyDayEvent() {
       // 오늘이 이벤트 날짜인지 확인
       const todayStr = getKSTDateString();
-      if (todayStr !== "2026-05-20") return;
+      const RAINY_DAY_DATES = ["2026-05-20", "2026-05-21"];
+      if (!RAINY_DAY_DATES.includes(todayStr)) return;
 
       const modalOverlay = document.getElementById("rainy-day-modal");
       if (!modalOverlay) return;
@@ -606,7 +607,7 @@
       const closeModal = () => {
         const checkbox = document.getElementById("rainy-day-dont-show-checkbox");
         if (checkbox && checkbox.checked) {
-          localStorage.setItem("rainy_day_dismissed_20260520", "true");
+          localStorage.setItem("rainy_day_dismissed_" + todayStr, "true");
         }
         modalOverlay.style.display = "none";
         document.body.style.overflow = "";
@@ -619,7 +620,7 @@
 
       // 사용자 로그인 및 조건 충족 상태 로직
       auth.onAuthStateChanged(async (user) => {
-        const isDismissed = localStorage.getItem("rainy_day_dismissed_20260520") === "true";
+        const isDismissed = localStorage.getItem("rainy_day_dismissed_" + todayStr) === "true";
 
         if (!user) {
           if (isDismissed) return; // 오늘 하루 보지 않기 상태이면 팝업 제외

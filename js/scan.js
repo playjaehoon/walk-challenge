@@ -286,7 +286,8 @@ function spawnParticles() {
 
 async function triggerRainyDayBonusIfEligible() {
   const todayStr = getKSTDateString();
-  if (todayStr !== "2026-05-20") return;
+  const RAINY_DAY_DATES = ["2026-05-20", "2026-05-21"];
+  if (!RAINY_DAY_DATES.includes(todayStr)) return;
 
   if (!OUTDOOR_LOCATIONS.includes(scanLocationId)) return;
 

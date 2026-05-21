@@ -357,7 +357,7 @@ const OUTDOOR_LOCATIONS = ['loc01', 'loc02', 'loc03', 'loc05', 'loc06'];
 
 async function claimRainyDayBonus(user) {
   const uid = user.uid;
-  const todayStr = "2026-05-20";
+  const todayStr = getKSTDateString();
   const userRef = db.collection("users").doc(uid);
   const scanRef = userRef.collection("scans").doc();
   const bonusPoints = Math.floor(Math.random() * 11) + 10; // 10~20p
@@ -399,7 +399,7 @@ async function claimRainyDayBonus(user) {
 
 async function checkRainyDayStatus(user) {
   const uid = user.uid;
-  const todayStr = "2026-05-20";
+  const todayStr = getKSTDateString();
   
   const userDoc = await db.collection("users").doc(uid).get();
   if (!userDoc.exists) return { hasScannedOutdoor: false, claimed: false };
