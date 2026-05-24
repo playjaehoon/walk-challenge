@@ -98,6 +98,7 @@
         <button class="admin-tab" data-target="tab-dept-notices">🏫 학부 소식 관리</button>
         <button class="admin-tab" data-target="tab-events">📅 일정 관리</button>
         <button class="admin-tab" data-target="tab-controls">🧪 대조군 관리</button>
+        <button class="admin-tab" data-target="tab-system">⚙️ 시스템 설정</button>
       </div>
 
       <!-- 탭: 인증 대기 및 이력 -->
@@ -245,6 +246,28 @@
               <tr><td colspan="5" style="text-align:center;color:var(--text-secondary)">로딩 중...</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      
+      <!-- 탭: 시스템 설정 -->
+      <div id="tab-system" class="admin-content">
+        <div style="margin-bottom:1.5rem">
+          <h3>⚙️ 시스템 설정 및 데이터 관리</h3>
+          <p style="font-size:0.875rem; color:var(--text-secondary)">캠페인 운영에 필요한 시스템 설정 및 데이터 초기화 기능을 제공합니다.</p>
+        </div>
+        
+        <div class="card" style="border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.05); padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem;">
+          <h4 style="color: #ef4444; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            ⚠️ 위험 구역 (Danger Zone)
+          </h4>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem; line-height: 1.6;">
+            모든 참가자의 걷기 인증 제출 기록(proofs)을 일괄적으로 삭제하고 초기화합니다.<br>
+            이미 승인 완료(approved)된 기록으로 지급되었던 걷기 인증 점수(100pt / 150pt)는 각 유저의 총점(totalScore)에서 자동으로 차감되어 복구됩니다.<br>
+            <strong>주의: 이 작업은 데이터베이스를 직접 수정하며 되돌릴 수 없습니다.</strong>
+          </p>
+          <button onclick="resetAllProofs()" class="btn btn-danger" style="background: #ef4444; border-color: #ef4444; font-weight: 700; padding: 0.6rem 1.2rem;">
+            걷기 인증 제출 데이터 전체 초기화
+          </button>
         </div>
       </div>
 

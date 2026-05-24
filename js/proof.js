@@ -11,37 +11,50 @@ async function initProofPage() {
 
   document.getElementById("proof-loading").classList.add("hidden");
 
-  if (!isCampaignActive()) {
-    const now = new Date();
-    // 캠페인 시작 전이고 관리자가 아닌 경우 → 예쁜 안내화면 표시
-    if (now < CAMPAIGN_CONFIG.startDate && !ADMIN_EMAILS.includes(proofUser.email)) {
-      document.getElementById("proof-page-header").classList.add("hidden");
-      document.getElementById("pre-campaign-notice").classList.remove("hidden");
-      return;
-    }
-    // 캠페인 종료 후 또는 관리자인 경우 → 기존 메시지
+  const now = new Date();
+  const weeks = getAvailableWeeks();
+
+  // 캠페인 시작 전이고 관리자가 아닌 경우 → 예쁜 안내화면 표시
+  const preTestEnd = new Date("2026-05-18T00:00:00+09:00");
+  if (now < preTestEnd && !ADMIN_EMAILS.includes(proofUser.email)) {
+    document.getElementById("proof-page-header").classList.add("hidden");
+    document.getElementById("pre-campaign-notice").classList.remove("hidden");
+    return;
+  }
+
+  if (weeks.length === 0) {
     const msg = now < CAMPAIGN_CONFIG.startDate
       ? "캠페인 기간(5월 18일~31일)에만 걷기 인증을 제출할 수 있습니다."
-      : "캠페인이 종료되었습니다.";
+      : "걷기 인증 제출 기간이 종료되었습니다.";
     document.getElementById("proof-main").innerHTML = `
       <div class="alert alert-info"><span>📅</span><span>${msg}</span></div>`;
     document.getElementById("proof-main").classList.remove("hidden");
     return;
   }
 
-  const week = getCurrentWeek();
-  if (!week) {
-    document.getElementById("proof-main").innerHTML = `
-      <div class="alert alert-warning"><span>⚠️</span><span>현재 인증 제출 기간이 아닙니다.</span></div>`;
-    document.getElementById("proof-main").classList.remove("hidden");
-    return;
+  // 주차 선택 드롭다운 옵션 추가
+  const selectEl = document.getElementById("proof-week-select");
+  if (selectEl) {
+    selectEl.innerHTML = weeks.map(w => `<option value="${w.value}">${w.text}</option>`).join("");
+    
+    // URL 파라미터로 주차가 지정되어 있는지 확인
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetWeek = urlParams.get('week');
+    if (targetWeek && weeks.some(w => String(w.value) === targetWeek)) {
+      selectEl.value = targetWeek;
+    }
+
+    // 주차 변경 시 중복 검사 리로드
+    selectEl.addEventListener("change", () => {
+      checkExisting(getCurrentWeek());
+    });
   }
 
-  document.getElementById("current-week-badge").textContent = `${week}주차`;
+  const activeWeek = getCurrentWeek();
   document.getElementById("proof-main").classList.remove("hidden");
   setupFileUpload();
   setupRadioHighlight();
-  await checkExisting(week);
+  await checkExisting(activeWeek);
 }
 
 function setupRadioHighlight() {
@@ -60,30 +73,53 @@ function setupRadioHighlight() {
   });
 }
 
-function getCurrentWeek() {
+function getAvailableWeeks() {
   const now = new Date();
-  const preTestEnd = new Date("2026-05-18T00:00:00+09:00");
-
-  if (now >= CAMPAIGN_CONFIG.startDate && now < preTestEnd) {
-    return "사전 테스트";
+  const weeks = [];
+  
+  // 1주차: 5/18 00:00:00 ~ 5/25 23:59:59 KST
+  const w1Start = new Date("2026-05-18T00:00:00+09:00");
+  const w1End = new Date("2026-05-25T23:59:59+09:00");
+  if (now >= w1Start && now <= w1End) {
+    weeks.push({ value: 1, text: "1주차" });
   }
 
-  const start = preTestEnd;
-  const diff  = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-  if (diff >= 0 && diff < 7)  return 1;
-  if (diff >= 7 && diff < 14) return 2;
-  return null;
+  // 2주차: 5/25 00:00:00 ~ 6/1 23:59:59 KST
+  const w2Start = new Date("2026-05-25T00:00:00+09:00");
+  const w2End = new Date("2026-06-01T23:59:59+09:00");
+  if (now >= w2Start && now <= w2End) {
+    weeks.push({ value: 2, text: "2주차" });
+  }
+
+  // 사전 테스트: 5/18 이전 (또는 관리자용)
+  if (now < w1Start) {
+    weeks.push({ value: "사전 테스트", text: "사전 테스트" });
+  }
+
+  return weeks;
+}
+
+function getCurrentWeek() {
+  const selectEl = document.getElementById("proof-week-select");
+  if (!selectEl) return null;
+  const val = selectEl.value;
+  return val === "사전 테스트" ? "사전 테스트" : parseInt(val);
 }
 
 async function checkExisting(week) {
+  const msgEl  = document.getElementById("already-submitted-msg");
+  const formEl = document.getElementById("proof-form");
+  
+  // 상태 초기화
+  msgEl.innerHTML = "";
+  formEl.classList.remove("hidden");
+
   const snap = await db.collection("users").doc(proofUser.uid)
     .collection("proofs").where("week", "==", week).get();
 
   if (!snap.empty) {
     const proof  = snap.docs[0].data();
     const labels = { pending: "검토 중 ⏳", approved: "승인 완료 ✅", rejected: "반려됨 ❌" };
-    const msgEl  = document.getElementById("already-submitted-msg");
-    const formEl = document.getElementById("proof-form");
 
     if (proof.status === "rejected") {
       showToast("이전 제출이 반려되었습니다. 다시 제출해주세요.", "warning");
@@ -91,7 +127,7 @@ async function checkExisting(week) {
       msgEl.innerHTML = `
         <div class="alert alert-info">
           <span>📋</span>
-          <div>${week}주차 인증을 이미 제출했습니다. 현재 상태: <strong>${labels[proof.status]}</strong></div>
+          <div>${week === "사전 테스트" ? "사전 테스트" : week + "주차"} 인증을 이미 제출했습니다. 현재 상태: <strong>${labels[proof.status]}</strong></div>
         </div>`;
       formEl.classList.add("hidden");
     }
@@ -187,7 +223,7 @@ async function submitProof() {
     showToast(`인증이 제출되었습니다! 검토 후 ${score}pt가 반영됩니다. ✅`, "success", 4000);
     document.getElementById("proof-form").classList.add("hidden");
     document.getElementById("already-submitted-msg").innerHTML = `
-      <div class="alert alert-success"><span>✅</span><span>${week}주차 인증 제출 완료! 검토 중입니다.</span></div>`;
+      <div class="alert alert-success"><span>✅</span><span>${week === "사전 테스트" ? "사전 테스트" : week + "주차"} 인증 제출 완료! 검토 중입니다.</span></div>`;
   } catch (err) {
     console.error(err);
     showToast("제출 중 오류가 발생했습니다.", "error");

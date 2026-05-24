@@ -897,3 +897,80 @@ window.deleteDeptNotice = async function(id) {
     console.error(e);
   }
 }
+
+// ===== 걷기 인증 제출 기록 전체 초기화 =====
+window.resetAllProofs = async function() {
+  const check = prompt("이 작업을 계속하려면 '초기화'를 입력하고 확인을 누르세요.");
+  if (check !== "초기화") {
+    alert("입력값이 올바르지 않아 작업이 취소되었습니다.");
+    return;
+  }
+
+  const btn = document.querySelector("#tab-system button[onclick='resetAllProofs()']");
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "초기화 진행 중...";
+  }
+
+  try {
+    showToast("초기화 작업을 시작합니다. 페이지를 새로고침하거나 종료하지 마세요.", "info", 5000);
+    
+    // 1. 전체 사용자 정보 가져오기
+    const usersSnap = await db.collection("users").get();
+    let totalDeletedProofs = 0;
+    
+    for (const userDoc of usersSnap.docs) {
+      const uid = userDoc.id;
+      const userData = userDoc.data();
+      
+      // 사용자 아래의 모든 proofs 서브컬렉션 문서 조회
+      const proofsSnap = await db.collection("users").doc(uid).collection("proofs").get();
+      
+      if (!proofsSnap.empty) {
+        let deductScore = 0;
+        const batch = db.batch();
+        
+        proofsSnap.forEach((proofDoc) => {
+          const proof = proofDoc.data();
+          // 승인된 내역인 경우, 지급된 점수 차감액 계산
+          if (proof.status === "approved") {
+            deductScore += (proof.score || 0);
+          }
+          // 삭제 대상 문서 일괄 추가
+          batch.delete(proofDoc.ref);
+          totalDeletedProofs++;
+        });
+
+        // batch 실행으로 proofs 문서 일괄 삭제
+        await batch.commit();
+
+        // 점수 차감이 필요한 경우 유저 totalScore 업데이트
+        if (deductScore > 0) {
+          const newScore = Math.max(0, (userData.totalScore || 0) - deductScore);
+          await db.collection("users").doc(uid).update({
+            totalScore: newScore
+          });
+        }
+      }
+    }
+
+    showToast(`초기화 완료! 총 ${totalDeletedProofs}건의 기록이 삭제되었고 점수가 조정되었습니다.`, "success", 5000);
+    
+    // 데이터 및 테이블 다시 부르기
+    await Promise.all([
+      loadStats().catch(e => console.error(e)),
+      loadUsers().catch(e => console.error(e)),
+      loadPendingProofs().catch(e => console.error(e)),
+      loadCompletedProofs().catch(e => console.error(e))
+    ]);
+
+  } catch (err) {
+    console.error("초기화 오류:", err);
+    showToast("초기화 처리 도중 오류가 발생했습니다.", "error");
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "걷기 인증 제출 데이터 전체 초기화";
+    }
+  }
+};

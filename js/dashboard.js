@@ -178,7 +178,7 @@ async function renderProofStatus(uid) {
 
     if (!proof) {
       el.innerHTML = `<span class="proof-status-badge status-none">미제출</span>
-        <a href="proof.html" class="btn btn-outline btn-sm" style="margin-left:0.75rem">제출하기</a>`;
+        <a href="proof.html?week=${week}" class="btn btn-outline btn-sm" style="margin-left:0.75rem">제출하기</a>`;
     } else {
       const cls = `status-${proof.status}`;
       const scoreStr = proof.status === "approved" ? `<span style="color:var(--green);margin-left:0.5rem;font-size:0.85rem">+${proof.score}pt</span>` : "";

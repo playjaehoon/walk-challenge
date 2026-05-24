@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -101,9 +101,12 @@
         </div>
       </div>
 
-      <!-- 현재 주차 표시 -->
+      <!-- 현재 주차 표시 및 주차 선택 -->
       <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem">
-        <span style="background:var(--green-glow);border:1px solid var(--border-active);color:var(--green);padding:0.4rem 1rem;border-radius:var(--radius-full);font-family:'Outfit',sans-serif;font-weight:700" id="current-week-badge"></span>
+        <span style="background:var(--green-glow);border:1px solid var(--border-active);color:var(--green);padding:0.4rem 1rem;border-radius:var(--radius-full);font-family:'Outfit',sans-serif;font-weight:700;display:none" id="current-week-badge"></span>
+        <select id="proof-week-select" style="padding:0.4rem 1rem;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-weight:600;outline:none;cursor:pointer;">
+          <!-- js/proof.js에서 동적으로 주차 옵션 렌더링 -->
+        </select>
         <span style="color:var(--text-secondary);font-size:0.875rem">인증 제출</span>
       </div>
 

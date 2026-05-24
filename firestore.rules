@@ -21,11 +21,11 @@ service cloud.firestore {
 
     // 걷기 인증
     match /users/{userId}/proofs/{proofId} {
-      allow read:   if request.auth != null && request.auth.uid == userId;
+      allow read:   if request.auth != null && (request.auth.uid == userId || isAdmin());
       allow create: if request.auth != null && request.auth.uid == userId;
       // 관리자가 상태를 변경해야 하므로 업데이트 허용 (보안 강화 시 Functions 사용 권장)
-      allow update: if request.auth != null;
-      allow delete: if false;
+      allow update: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
     }
 
     // 달성 현황 페이지용 — 로그인한 사용자라면 모든 유저의 이름/점수 읽기 허용
@@ -56,6 +56,14 @@ service cloud.firestore {
     match /events/{docId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.email == 'playjaehoon@gmail.com' ||
+        request.auth.token.email == 'aay0909@hufs.ac.kr' ||
+        request.auth.token.email == 'ddaltwo9@gmail.com'
+      );
     }
   }
 }
