@@ -2,68 +2,59 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // 관리자 이메일 체크 함수
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email in [
+        'playjaehoon@gmail.com',
+        'aay0909@hufs.ac.kr',
+        'ddaltwo9@gmail.com'
+      ];
+    }
+
     // 사용자 문서
     match /users/{userId} {
       allow read: if true;
-      // 본인만 생성 (회원가입)
       allow create: if request.auth != null && request.auth.uid == userId;
-      // 점수·컬렉션 업데이트는 본인만 (관리자 승인은 Functions에서 처리하는 것이 이상적이나, 간이 운영을 위해 허용)
-      allow update: if request.auth != null && request.auth.uid == userId;
+      allow update: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow delete: if isAdmin(); // 관리자만 삭제 가능
     }
 
     // 스캔 기록
     match /users/{userId}/scans/{scanId} {
       allow read:   if request.auth != null;
       allow create: if request.auth != null && request.auth.uid == userId;
-      // 수정·삭제 불가 (부정 방지)
       allow update, delete: if false;
     }
 
-    // 걷기 인증
+    // 걷기 인증 (관리자 3명만 읽기, 업데이트, 삭제가 가능하도록 수정)
     match /users/{userId}/proofs/{proofId} {
       allow read:   if request.auth != null && (request.auth.uid == userId || isAdmin());
       allow create: if request.auth != null && request.auth.uid == userId;
-      // 관리자가 상태를 변경해야 하므로 업데이트 허용 (보안 강화 시 Functions 사용 권장)
       allow update: if request.auth != null && (request.auth.uid == userId || isAdmin());
-      allow delete: if isAdmin();
+      allow delete: if isAdmin(); // 관리자 3명만 삭제(취소/초기화) 가능
     }
 
-    // 달성 현황 페이지용 — 로그인한 사용자라면 모든 유저의 이름/점수 읽기 허용
+    // 달성 현황 페이지용
     match /users/{userId} {
       allow read: if request.auth != null;
     }
 
-    // 대조군 (연구 설문 참가자) - 비로그인 상태로 신청하므로 생성 허용.
-    // 인원 체크 및 중복 이메일 체크를 위해 읽기 허용.
+    // 대조군
     match /control_group/{docId} {
       allow create, read: if true;
       allow update, delete: if isAdmin();
     }
 
-    // 학부 소식 (notices)
+    // 학부 소식 (notices) 추가!
     match /notices/{docId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // 학부 소식 (dept_notices)
-    match /dept_notices/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // 학부 일정 (events)
+    // 학부 일정 (events) 추가!
     match /events/{docId} {
       allow read: if true;
       allow write: if isAdmin();
-    }
-
-    function isAdmin() {
-      return request.auth != null && (
-        request.auth.token.email == 'playjaehoon@gmail.com' ||
-        request.auth.token.email == 'aay0909@hufs.ac.kr' ||
-        request.auth.token.email == 'ddaltwo9@gmail.com'
-      );
     }
   }
 }
