@@ -460,14 +460,26 @@ async function approveProof(userId, proofId, score) {
 }
 
 async function rejectProof(userId, proofId) {
-  if (!confirm("이 인증을 반려하시겠습니까?")) return;
+  const reason = prompt("이 인증을 반려하시겠습니까?\n반려 사유를 입력해 주세요 (필수):");
+  if (reason === null) return; // 취소 시
+  const trimmedReason = reason.trim();
+  if (!trimmedReason) {
+    showToast("반려 사유를 입력해야 반려 처리가 가능합니다.", "warning");
+    return;
+  }
   try {
     await db.collection("users").doc(userId).collection("proofs").doc(proofId)
-      .update({ status: "rejected" });
+      .update({ 
+        status: "rejected",
+        rejectionReason: trimmedReason
+      });
     document.getElementById(`proof-card-${proofId}`)?.remove();
     showToast("반려되었습니다.", "info");
     loadCompletedProofs();
-  } catch { showToast("오류가 발생했습니다.", "error"); }
+  } catch (err) {
+    console.error(err);
+    showToast("오류가 발생했습니다.", "error");
+  }
 }
 
 // ===== 완료된 인증 내역 =====
@@ -498,7 +510,7 @@ async function loadCompletedProofs() {
     const isApproved = p.status === "approved";
     const statusBadge = isApproved 
       ? `<span style="display:inline-block;padding:0.2rem 0.5rem;background:rgba(57,211,83,0.15);color:var(--green);border-radius:4px;font-size:0.75rem;font-weight:700;margin-bottom:0.25rem">✅ 승인됨 (+${p.score}pt)</span>`
-      : `<span style="display:inline-block;padding:0.2rem 0.5rem;background:rgba(255,100,100,0.15);color:#ff6b6b;border-radius:4px;font-size:0.75rem;font-weight:700;margin-bottom:0.25rem">❌ 반려됨</span>`;
+      : `<span style="display:inline-block;padding:0.2rem 0.5rem;background:rgba(255,100,100,0.15);color:#ff6b6b;border-radius:4px;font-size:0.75rem;font-weight:700;margin-bottom:0.25rem">❌ 반려됨</span> <span style="font-size:0.8rem;color:#ff6b6b;margin-left:0.25rem;">(사유: ${p.rejectionReason || "없음"})</span>`;
 
     return `
     <div class="card" style="margin-bottom:1rem;opacity:0.8" id="history-card-${p.proofId}">

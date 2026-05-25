@@ -182,7 +182,11 @@ async function renderProofStatus(uid) {
     } else {
       const cls = `status-${proof.status}`;
       const scoreStr = proof.status === "approved" ? `<span style="color:var(--green);margin-left:0.5rem;font-size:0.85rem">+${proof.score}pt</span>` : "";
-      el.innerHTML = `<span class="proof-status-badge ${cls}">${labels[proof.status]}</span>${scoreStr}`;
+      let reasonStr = "";
+      if (proof.status === "rejected") {
+        reasonStr = `<span style="color:#ff6b6b;font-size:0.8rem;margin-left:0.5rem;display:block;margin-top:0.25rem;">(사유: ${proof.rejectionReason || "기타 사유"})</span>`;
+      }
+      el.innerHTML = `<span class="proof-status-badge ${cls}">${labels[proof.status]}</span>${scoreStr}${reasonStr}`;
     }
   });
 }

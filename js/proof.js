@@ -12,7 +12,22 @@ async function initProofPage() {
   document.getElementById("proof-loading").classList.add("hidden");
 
   const now = new Date();
-  const weeks = getAvailableWeeks();
+  
+  // 사용자의 반려(rejected)된 제출 주차 조회
+  const rejectedWeeks = [];
+  try {
+    const proofsSnap = await db.collection("users").doc(proofUser.uid).collection("proofs").get();
+    proofsSnap.forEach(doc => {
+      const d = doc.data();
+      if (d.status === "rejected") {
+        rejectedWeeks.push(d.week);
+      }
+    });
+  } catch (err) {
+    console.error("제출 기록 조회 실패:", err);
+  }
+
+  const weeks = getAvailableWeeks(rejectedWeeks);
 
   // 캠페인 시작 전이고 관리자가 아닌 경우 → 예쁜 안내화면 표시
   const preTestEnd = new Date("2026-05-18T00:00:00+09:00");
@@ -73,27 +88,27 @@ function setupRadioHighlight() {
   });
 }
 
-function getAvailableWeeks() {
+function getAvailableWeeks(rejectedWeeks = []) {
   const now = new Date();
   const weeks = [];
   
   // 1주차: 5/18 00:00:00 ~ 5/25 23:59:59 KST
   const w1Start = new Date("2026-05-18T00:00:00+09:00");
   const w1End = new Date("2026-05-25T23:59:59+09:00");
-  if (now >= w1Start && now <= w1End) {
-    weeks.push({ value: 1, text: "1주차" });
+  if ((now >= w1Start && now <= w1End) || rejectedWeeks.includes(1)) {
+    weeks.push({ value: 1, text: "1주차" + (rejectedWeeks.includes(1) ? " (반려됨 - 재제출)" : "") });
   }
 
   // 2주차: 5/25 00:00:00 ~ 6/1 23:59:59 KST
   const w2Start = new Date("2026-05-25T00:00:00+09:00");
   const w2End = new Date("2026-06-01T23:59:59+09:00");
-  if (now >= w2Start && now <= w2End) {
-    weeks.push({ value: 2, text: "2주차" });
+  if ((now >= w2Start && now <= w2End) || rejectedWeeks.includes(2)) {
+    weeks.push({ value: 2, text: "2주차" + (rejectedWeeks.includes(2) ? " (반려됨 - 재제출)" : "") });
   }
 
   // 사전 테스트: 5/18 이전 (또는 관리자용)
-  if (now < w1Start) {
-    weeks.push({ value: "사전 테스트", text: "사전 테스트" });
+  if (now < w1Start || rejectedWeeks.includes("사전 테스트")) {
+    weeks.push({ value: "사전 테스트", text: "사전 테스트" + (rejectedWeeks.includes("사전 테스트") ? " (반려됨 - 재제출)" : "") });
   }
 
   return weeks;
@@ -122,7 +137,11 @@ async function checkExisting(week) {
     const labels = { pending: "검토 중 ⏳", approved: "승인 완료 ✅", rejected: "반려됨 ❌" };
 
     if (proof.status === "rejected") {
-      showToast("이전 제출이 반려되었습니다. 다시 제출해주세요.", "warning");
+      msgEl.innerHTML = `
+        <div class="alert alert-warning">
+          <span>⚠️</span>
+          <div>${week === "사전 테스트" ? "사전 테스트" : week + "주차"} 인증이 반려되었습니다.<br><strong>반려 사유: ${proof.rejectionReason || "기타 사유"}</strong><br>내용을 보완하여 아래에서 다시 제출해 주세요.</div>
+        </div>`;
     } else {
       msgEl.innerHTML = `
         <div class="alert alert-info">
@@ -214,11 +233,29 @@ async function submitProof() {
     const uid      = proofUser.uid;
     const imageUrl = selectedBase64Image;
 
-    await db.collection("users").doc(uid).collection("proofs").add({
-      week, steps: stepsKey, stepsLabel, score,
-      imageUrl, status: "pending",
-      submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    // 기존에 해당 주차의 proofs 문서가 존재하는지 먼저 체크
+    const existingSnap = await db.collection("users").doc(uid).collection("proofs").where("week", "==", week).get();
+    
+    if (!existingSnap.empty) {
+      // 기존 문서가 있으면 (특히 rejected 상태였던 경우) 문서를 업데이트
+      const docId = existingSnap.docs[0].id;
+      await db.collection("users").doc(uid).collection("proofs").doc(docId).update({
+        steps: stepsKey,
+        stepsLabel,
+        score,
+        imageUrl,
+        status: "pending",
+        rejectionReason: firebase.firestore.FieldValue.delete(), // 기존 반려 사유 필드는 제거
+        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } else {
+      // 신규 추가
+      await db.collection("users").doc(uid).collection("proofs").add({
+        week, steps: stepsKey, stepsLabel, score,
+        imageUrl, status: "pending",
+        submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    }
 
     showToast(`인증이 제출되었습니다! 검토 후 ${score}pt가 반영됩니다. ✅`, "success", 4000);
     document.getElementById("proof-form").classList.add("hidden");
