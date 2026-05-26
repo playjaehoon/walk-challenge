@@ -114,7 +114,10 @@
       <div id="tab-users" class="admin-content">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:0.75rem">
           <h3>전체 참가자</h3>
-          <button onclick="loadUsers()" class="btn btn-secondary btn-sm">🔄 새로고침</button>
+          <div style="display:flex;gap:0.5rem">
+            <button onclick="exportUsersCSV()" class="btn btn-primary btn-sm" style="background:var(--green);border-color:var(--green)">📥 참가자 명단 엑셀 다운로드</button>
+            <button onclick="loadUsers()" class="btn btn-secondary btn-sm">🔄 새로고침</button>
+          </div>
         </div>
         <div class="table-wrapper">
           <table>

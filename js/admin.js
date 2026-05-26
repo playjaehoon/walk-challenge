@@ -294,6 +294,45 @@ window.exportScansCSV = function() {
   document.body.removeChild(link);
 }
 
+// ===== 참가자 명단 CSV 다운로드 =====
+window.exportUsersCSV = function() {
+  const data = adminUsersData;
+  if (!data || data.length === 0) {
+    alert("다운로드할 참가자 데이터가 없습니다.");
+    return;
+  }
+
+  const headers = ["순위", "이름", "닉네임", "성별", "학번", "학과", "연락처", "이메일", "점수", "티어", "신청일"];
+  const rows = data.map(u => {
+    const tier = getTierByRank(u.rank, data.length, u.totalScore || 0);
+    const date = u.registeredAt ? (u.registeredAt.toDate ? u.registeredAt.toDate() : new Date(u.registeredAt)).toLocaleDateString('ko-KR') : '';
+    const genderText = u.gender === 'male' ? '남성' : (u.gender === 'female' ? '여성' : '-');
+    return [
+      u.rank,
+      `"${u.name || ''}"`,
+      `"${u.nickname || ''}"`,
+      genderText,
+      `"${u.studentId || ''}"`,
+      `"${u.department || ''}"`,
+      `"${u.phone || ''}"`,
+      `"${u.email || ''}"`,
+      u.totalScore || 0,
+      `"${tier.name}"`,
+      `"${date}"`
+    ].join(",");
+  });
+
+  const csvContent = "\uFEFF" + headers.join(",") + "\n" + rows.join("\n");
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `walk_challenge_participants_${new Date().toISOString().split('T')[0]}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
 // ===== 사용자 편집/삭제 =====
 window.openUserEdit = function(id, name, nickname, studentId, department, score) {
   document.getElementById('edit-user-id').value = id;
