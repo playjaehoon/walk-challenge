@@ -78,12 +78,14 @@ function getTier(score) {
 // rank: 1위부터 시작하는 순위, total: 전체 참가자 수
 function getTierByRank(rank, total, score) {
   const { bronze } = CAMPAIGN_CONFIG.scoreThresholds;
-  const goldTop    = CAMPAIGN_CONFIG.goldTopN || 10;
-  const silverTop  = Math.ceil(total * (CAMPAIGN_CONFIG.silverTopPercent || 50) / 100);
+  // 200pt 미만은 순위 불문하고 무조건 도전 중
+  if (score < bronze) {
+    return { name: "도전 중", emoji: "🚶", cls: "none", threshold: bronze };
+  }
+  const goldTop = CAMPAIGN_CONFIG.goldTopN || 10;
   if (rank <= goldTop)   return { name: "골드",   emoji: "🏆", cls: "gold",   threshold: 0 };
-  if (rank <= silverTop) return { name: "실버",   emoji: "🥈", cls: "silver", threshold: 0 };
-  if (score >= bronze)   return { name: "브론즈", emoji: "🥉", cls: "bronze", threshold: bronze };
-  return                        { name: "도전 중",  emoji: "🚶", cls: "none",   threshold: bronze };
+  if (rank <= 30)        return { name: "실버",   emoji: "🥈", cls: "silver", threshold: 0 };
+  return                 { name: "브론즈", emoji: "🥉", cls: "bronze", threshold: bronze };
 }
 
 // ===== 네비게이션 활성 표시 =====

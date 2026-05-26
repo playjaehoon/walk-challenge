@@ -233,7 +233,7 @@ function renderUsersTable() {
 
   const tbody = document.getElementById("users-tbody");
   tbody.innerHTML = sorted.map((u) => {
-    const tier = getTier(u.totalScore || 0);
+    const tier = getTierByRank(u.rank, sorted.length, u.totalScore || 0);
     return `<tr>
       <td>${u.rank}</td>
       <td>${u.name} ${u.nickname ? `<br><span style="font-size:0.8em;color:var(--text-secondary)">(${u.nickname})</span>` : ''}</td>

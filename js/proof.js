@@ -92,9 +92,9 @@ function getAvailableWeeks(rejectedWeeks = []) {
   const now = new Date();
   const weeks = [];
   
-  // 1주차: 5/18 00:00:00 ~ 5/25 23:59:59 KST
+  // 1주차: 5/18 00:00:00 ~ 6/1 23:59:59 KST
   const w1Start = new Date("2026-05-18T00:00:00+09:00");
-  const w1End = new Date("2026-05-25T23:59:59+09:00");
+  const w1End = new Date("2026-06-01T23:59:59+09:00");
   if ((now >= w1Start && now <= w1End) || rejectedWeeks.includes(1)) {
     weeks.push({ value: 1, text: "1주차" + (rejectedWeeks.includes(1) ? " (반려됨 - 재제출)" : "") });
   }
