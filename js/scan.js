@@ -26,10 +26,20 @@ async function initScanPage() {
   scanUser = await requireAuth();
   if (!scanUser) return;
 
-  // 축제 부스 운영 종료 체크
+  // 교양관 특별 QR 운영 시간 체크 (금일 5/27 11:00 ~ 18:00)
   if (scanLocationId === 'loc11') {
-    showScanMessage("🏁", "운영 종료", "글스산 축제 부스 QR은 운영 기간이 종료되었습니다.\n다른 QR을 스캔해주세요!", "info");
-    return;
+    const now = new Date();
+    const openTime = new Date("2026-05-27T11:00:00+09:00");
+    const closeTime = new Date("2026-05-27T18:00:00+09:00");
+
+    if (now < openTime) {
+      showScanMessage("⏳", "운영 예정", "교양관 특별 QR은 금일(5월 27일) 오전 11시부터 운영될 예정입니다.\n시작 시간에 맞춰 다시 스캔해주세요!", "info");
+      return;
+    }
+    if (now > closeTime) {
+      showScanMessage("🏁", "운영 종료", "교양관 특별 QR은 금일(5월 27일) 오후 6시에 운영이 종료되었습니다.\n다른 QR을 스캔해주세요!", "info");
+      return;
+    }
   }
 
   // 마스터키 처리 (날짜 및 위치 무시)
