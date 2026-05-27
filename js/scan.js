@@ -26,18 +26,18 @@ async function initScanPage() {
   scanUser = await requireAuth();
   if (!scanUser) return;
 
-  // 교양관 특별 QR 운영 시간 체크 (금일 5/27 11:00 ~ 18:00)
+  // 어문학관 특별 QR 운영 시간 체크 (5/27 11:00 ~ 5/28 22:00)
   if (scanLocationId === 'loc11') {
     const now = new Date();
     const openTime = new Date("2026-05-27T11:00:00+09:00");
-    const closeTime = new Date("2026-05-27T18:00:00+09:00");
+    const closeTime = new Date("2026-05-28T22:00:00+09:00");
 
     if (now < openTime) {
-      showScanMessage("⏳", "운영 예정", "교양관 특별 QR은 금일(5월 27일) 오전 11시부터 운영될 예정입니다.\n시작 시간에 맞춰 다시 스캔해주세요!", "info");
+      showScanMessage("⏳", "운영 예정", "어문학관 특별 QR은 5월 27일 오전 11시부터 운영될 예정입니다.\n시작 시간에 맞춰 다시 스캔해주세요!", "info");
       return;
     }
     if (now > closeTime) {
-      showScanMessage("🏁", "운영 종료", "교양관 특별 QR은 금일(5월 27일) 오후 6시에 운영이 종료되었습니다.\n다른 QR을 스캔해주세요!", "info");
+      showScanMessage("🏁", "운영 종료", "어문학관 특별 QR은 5월 28일 오후 10시에 운영이 종료되었습니다.\n다른 QR을 스캔해주세요!", "info");
       return;
     }
   }
@@ -56,6 +56,12 @@ async function initScanPage() {
   }
   if (now > CAMPAIGN_CONFIG.endDate) {
     showScanMessage("🏁", "캠페인 종료", "2주간의 Walk & Point이 마무리되었습니다. 수고하셨어요! 🎉", "info");
+    return;
+  }
+
+  // 위치 검증 변수(위도/경도)가 지정되지 않은 경우 GPS 검사 생략
+  if (locObj.lat === undefined || locObj.lng === undefined) {
+    await validateAndShowCard(locName);
     return;
   }
 

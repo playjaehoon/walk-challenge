@@ -85,7 +85,7 @@ const CAMPAIGN_CONFIG = {
     loc08: { name: "학생회관 게시판", lat: 37.337244, lng: 127.269881, radius: 400 },
     loc09: { name: "공학관 게시판", lat: 37.337392, lng: 127.268103, radius: 400 },
     loc10: { name: "자연과학관 게시판", lat: 37.338714, lng: 127.266194, radius: 400 },
-    loc11: { name: "교양관 특별 QR", lat: 37.339747, lng: 127.272063, radius: 400, isHotspot: true },
+    loc11: { name: "어문학관 특별 QR", isHotspot: true },
     master: { name: "✅ 프리패스 마스터키", isMaster: true } // GPS 검사를 무시하는 특별 코드
   },
 };

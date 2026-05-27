@@ -257,12 +257,12 @@
           <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); line-height: 1.3;">자연과학관 게시판</div>
           <div style="font-size: 0.75rem; color: var(--green); margin-top: 0.4rem; word-break: keep-all;">1층 로비</div>
         </div>
-        <!-- Spot 11 (Special QR - 교양관 특별 QR) -->
+        <!-- Spot 11 (Special QR - 어문학관 특별 QR) -->
         <div class="glass-panel" id="spot-11-card"
           style="position: relative; width: 140px; padding: 1.5rem 1rem; text-align: center; border: 1px dashed rgba(255,255,255,0.15); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 130px; background: rgba(0,0,0,0.2); overflow: hidden; transition: all 0.3s ease;">
           <div id="spot-11-bg-x" style="position: absolute; font-size: 8rem; font-weight: 200; color: rgba(255,71,87,0.15); line-height: 1; pointer-events: none; user-select: none; display: none;">X</div>
           <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));" id="spot-11-emoji">🔥</div>
-          <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); line-height: 1.3; position: relative; z-index: 1;" id="spot-11-name">교양관 특별 QR</div>
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); line-height: 1.3; position: relative; z-index: 1;" id="spot-11-name">어문학관 특별 QR</div>
           <div style="font-size: 0.75rem; color: var(--green); font-weight: bold; margin-top: 0.4rem; word-break: keep-all; position: relative; z-index: 1;" id="spot-11-status">로딩 중...</div>
         </div>
 
@@ -718,7 +718,7 @@
 
     initRainyDayEvent();
 
-    // ── 교양관 특별 QR 홈화면 실시간 상태 표시 ──
+    // ── 어문학관 특별 QR 홈화면 실시간 상태 표시 ──
     function updateSpecialQRCardStatus() {
       const card = document.getElementById("spot-11-card");
       const bgX = document.getElementById("spot-11-bg-x");
@@ -728,7 +728,7 @@
 
       const now = new Date();
       const openTime = new Date("2026-05-27T11:00:00+09:00");
-      const closeTime = new Date("2026-05-27T18:00:00+09:00");
+      const closeTime = new Date("2026-05-28T22:00:00+09:00");
 
       if (now < openTime) {
         card.style.border = "1px dashed rgba(251,191,36,0.5)";
