@@ -260,6 +260,8 @@ async function renderScanStats(uid) {
     let specialCount = 0;
     let easterEggCount = 0;
     let rainyBonusCount = 0;
+    let quizSolved = false;
+    let quizPoints = 0;
 
     scansSnap.forEach((doc) => {
       const s = doc.data();
@@ -267,6 +269,9 @@ async function renderScanStats(uid) {
         easterEggCount++;
       } else if (s.locationId === "rainy_day_bonus") {
         rainyBonusCount++;
+      } else if (s.locationId === "birthday_quiz") {
+        quizSolved = true;
+        quizPoints = s.score;
       } else if (CAMPAIGN_CONFIG.locations[s.locationId]?.isHotspot) {
         specialCount++;
       } else {
@@ -278,6 +283,46 @@ async function renderScanStats(uid) {
     document.getElementById("stat-special-count").textContent = `${specialCount}회`;
     document.getElementById("stat-egg-count").textContent = `${easterEggCount}회`;
     document.getElementById("stat-rain-count").textContent = `${rainyBonusCount}회`;
+
+    // 퀴즈 배너 동적 렌더링
+    const bannerArea = document.getElementById("quiz-banner-area");
+    if (bannerArea) {
+      if (quizSolved) {
+        bannerArea.innerHTML = `
+          <div class="card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.04)); border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <h3 style="margin: 0 0 0.25rem 0; color: var(--green); font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem;">
+                  🎂 5.28 개발자 생일 기념 특별 퀴즈 완료!
+                </h3>
+                <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">
+                  퀴즈를 모두 맞추고 보너스 포인트를 획득하셨습니다. 참여해 주셔서 감사합니다!
+                </p>
+              </div>
+              <div style="text-align:right; font-family:'Outfit', sans-serif; font-size:1.8rem; font-weight:800; color:var(--green)">
+                +${quizPoints}pt
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        bannerArea.innerHTML = `
+          <div class="card" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(155, 89, 255, 0.12)); border: 1px solid rgba(255, 215, 0, 0.35); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);">
+            <div style="flex: 1; min-width: 250px;">
+              <h3 style="margin: 0 0 0.35rem 0; color: #ffd700; font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                🎂 5.28 개발자 생일 기념 특별 퀴즈 이벤트!
+              </h3>
+              <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45;">
+                우리 홈페이지 내용을 바탕으로 출제된 5문제를 모두 맞추면 <strong>20~50pt 랜덤 보너스 포인트</strong>를 획득할 수 있습니다! (인당 1회 참여 가능)
+              </p>
+            </div>
+            <a href="quiz.html" class="btn btn-primary" style="font-weight: 700; background: linear-gradient(135deg, #ffd700, #fbbf24); border: none; color: #000; padding: 0.55rem 1.2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+              퀴즈 풀기 ➡️
+            </a>
+          </div>
+        `;
+      }
+    }
   } catch (err) {
     console.error("Failed to render scan stats:", err);
   }

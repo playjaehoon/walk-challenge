@@ -424,6 +424,12 @@ a {
   border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
+.rarity-special {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
 /* === Scan Card (flip animation) === */
 .scan-container {
   display: flex;
