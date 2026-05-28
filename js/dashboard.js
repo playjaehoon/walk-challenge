@@ -115,10 +115,10 @@ async function renderTodayStatus(uid) {
   const snap  = await db.collection("users").doc(uid).collection("scans")
     .where("dateStr", "==", today).get();
 
-  // 일반 스캔만 필터링 (이스터에그, 우천 보너스, Special QR 제외)
+  // 일반 스캔만 필터링 (이스터에그, 우천 보너스, Special QR, 퀴즈 제외)
   const regularScans = snap.docs.filter((doc) => {
     const s = doc.data();
-    if (s.locationId === "easter_egg" || s.locationId === "rainy_day_bonus" || s.locationId === "master") return false;
+    if (s.locationId === "easter_egg" || s.locationId === "rainy_day_bonus" || s.locationId === "master" || s.locationId === "birthday_quiz") return false;
     if (CAMPAIGN_CONFIG.locations[s.locationId]?.isHotspot) return false;
     return true;
   });

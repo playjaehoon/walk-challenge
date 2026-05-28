@@ -127,7 +127,7 @@ async function validateAndShowCard(locName) {
 
   const isHotspotScan = CAMPAIGN_CONFIG.locations[scanLocationId]?.isHotspot === true;
   const regularScansCount = todayScans.filter((s) => {
-    if (s.locationId === 'easter_egg' || s.locationId === 'master' || s.locationId === 'rainy_day_bonus') return false;
+    if (s.locationId === 'easter_egg' || s.locationId === 'master' || s.locationId === 'rainy_day_bonus' || s.locationId === 'birthday_quiz') return false;
     if (CAMPAIGN_CONFIG.locations[s.locationId]?.isHotspot) return false;
     return true;
   }).length;
@@ -137,9 +137,14 @@ async function validateAndShowCard(locName) {
     return;
   }
 
-  // 5분 쿨다운 체크
-  if (todayScans.length > 0) {
-    const lastScan = todayScans.reduce((latest, scan) => {
+  // 5분 쿨다운 체크 (실제 물리적 QR 스캔에 대해서만 적용)
+  const physicalScans = todayScans.filter((s) => {
+    if (s.locationId === 'birthday_quiz' || s.locationId === 'easter_egg' || s.locationId === 'rainy_day_bonus' || s.locationId === 'master') return false;
+    return true;
+  });
+
+  if (physicalScans.length > 0) {
+    const lastScan = physicalScans.reduce((latest, scan) => {
       if (!scan.createdAt) return latest;
       const scanTime = scan.createdAt.toDate ? scan.createdAt.toDate().getTime() : new Date(scan.createdAt).getTime();
       return scanTime > latest ? scanTime : latest;
