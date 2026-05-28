@@ -4,13 +4,13 @@
 
 const QUIZ_QUESTIONS = [
   {
-    question: "1. Walk & Point 캠페인은 어떤 수업의 캡스톤 디자인 실습 프로젝트로 기획되었을까요?",
-    options: ["스포츠미디어론", "스포츠비즈니스기획운영", "국제스포츠산업론", "스포츠재무관리와 회계"],
+    question: "1. Walk & Point 캠페인은 어떤 수업의 프로젝트로 기획되었을까요?",
+    options: ["스포츠경영학개론", "스포츠비즈니스기획운영(캡스톤디자인)", "국제스포츠산업론", "스포츠재무관리와 회계"],
     correctIndex: 1
   },
   {
-    question: "2. 본 캡스톤 프로젝트의 지도교수님 성함은 무엇일까요?",
-    options: ["최재훈 교수", "이예훈 교수", "김외대 교수", "글로벌 교수"],
+    question: "2. 본 프로젝트의 지도교수님 성함은 무엇일까요?",
+    options: ["박성희 교수", "이예훈 교수", "이승필 교수", "류윤지 교수"],
     correctIndex: 1
   },
   {
@@ -19,18 +19,18 @@ const QUIZ_QUESTIONS = [
     correctIndex: 2
   },
   {
-    question: "4. 글로벌스포츠산업학부에서 운영 중인 마이크로디그리(Microdegree)의 공식 명칭은 무엇일까요?",
+    question: "4. 본 수업이 포함된 이예훈 교수님 트랙인 마이크로디그리(Microdegree)의 공식 명칭은 무엇일까요?",
     options: [
-      "글로벌 스포츠 창업 전문가 마이크로디그리",
-      "스포츠마케팅 분석가 마이크로디그리",
-      "스포츠비즈니스 전략기획 및 운영 마이크로디그리",
-      "스포츠 이벤트 관리 마이크로디그리"
+      "글로벌스포츠경영컨설팅",
+      "데이터기반스포츠비즈니스",
+      "E스포츠이벤트및비즈니스운영",
+      "스포츠비즈니스 전략기획 및 운영"
     ],
-    correctIndex: 2
+    correctIndex: 3
   },
   {
-    question: "5. 이 캠페인 웹사이트를 제작한 글로벌스포츠산업전공 23학번 개발자(최재훈)의 생일은 언제일까요?",
-    options: ["5월 18일 (캠페인 시작일)", "5월 27일 (어문학관 특별 QR 시작일)", "5월 28일 (오늘)", "5월 31일 (캠페인 마감일)"],
+    question: "5. 이 캠페인 웹사이트를 제작한 개발자의 생일은 언제일까요?",
+    options: ["5월 8일", "5월 18일", "5월 28일", "6월 1일"],
     correctIndex: 2
   }
 ];
@@ -141,9 +141,12 @@ function renderQuestion() {
 function selectOption(index) {
   userAnswers[currentQuestionIndex] = index;
   
-  // UI 갱신 (선택된 것 하이라이트)
+  // UI 갱신 (선택된 것 하이라이트 및 오답 디자인 초기화)
   const buttons = document.querySelectorAll(".quiz-option");
   buttons.forEach((btn, idx) => {
+    btn.style.borderColor = "";
+    btn.style.background = "";
+    btn.classList.remove("shake-animation");
     if (idx === index) {
       btn.classList.add("selected");
     } else {
@@ -155,8 +158,30 @@ function selectOption(index) {
 }
 
 async function nextQuestion() {
-  if (userAnswers[currentQuestionIndex] === null) return;
+  const selectedIdx = userAnswers[currentQuestionIndex];
+  if (selectedIdx === null) return;
 
+  const q = QUIZ_QUESTIONS[currentQuestionIndex];
+  
+  // 선택한 보기가 오답인 경우 바로 오류 표시 및 진행 정지
+  if (selectedIdx !== q.correctIndex) {
+    showToast("❌ 오답입니다! 다시 생각해보세요.", "warning");
+    
+    // 오답 버튼 스타일 적용 및 흔들기 효과
+    const buttons = document.querySelectorAll(".quiz-option");
+    const wrongBtn = buttons[selectedIdx];
+    if (wrongBtn) {
+      wrongBtn.style.borderColor = "#ff4757";
+      wrongBtn.style.background = "rgba(255, 71, 87, 0.1)";
+      wrongBtn.classList.add("shake-animation");
+      setTimeout(() => {
+        wrongBtn.classList.remove("shake-animation");
+      }, 500);
+    }
+    return;
+  }
+
+  // 정답인 경우 다음 문제 진행
   if (currentQuestionIndex < QUIZ_QUESTIONS.length - 1) {
     currentQuestionIndex++;
     renderQuestion();
