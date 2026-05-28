@@ -313,7 +313,7 @@ async function renderScanStats(uid) {
                 🎂 5.28 개발자 생일 기념 특별 퀴즈 이벤트!
               </h3>
               <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45;">
-                우리 홈페이지 내용을 바탕으로 출제된 5문제를 모두 맞추면 <strong>10 ~ 50pt 랜덤 보너스 포인트</strong>를 획득할 수 있습니다! (인당 1회 참여 가능)
+                우리 홈페이지 내용을 바탕으로 출제된 5문제를 모두 맞추면 <strong>20 ~ 50pt 랜덤 보너스 포인트</strong>를 획득할 수 있습니다! (인당 1회 참여 가능)
               </p>
             </div>
             <a href="quiz.html" class="btn btn-primary" style="font-weight: 700; background: linear-gradient(135deg, #ffd700, #fbbf24); border: none; color: #000; padding: 0.55rem 1.2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
