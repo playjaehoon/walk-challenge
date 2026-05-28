@@ -287,7 +287,26 @@ async function renderScanStats(uid) {
     // 퀴즈 배너 동적 렌더링
     const bannerArea = document.getElementById("quiz-banner-area");
     if (bannerArea) {
-      if (quizSolved) {
+      const loggedInUser = auth.currentUser;
+      const userIsAdmin = loggedInUser && typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(loggedInUser.email);
+
+      if (userIsAdmin) {
+        bannerArea.innerHTML = `
+          <div class="card" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(155, 89, 255, 0.12)); border: 1px solid rgba(255, 215, 0, 0.35); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; box-shadow: 0 4px 20px rgba(255, 215, 0, 0.08);">
+            <div style="flex: 1; min-width: 250px;">
+              <h3 style="margin: 0 0 0.35rem 0; color: #ffd700; font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                🎂 5.28 개발자 생일 기념 특별 퀴즈 (관리자 테스트)
+              </h3>
+              <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45;">
+                관리자 계정입니다. 언제든지 무제한으로 퀴즈를 다시 풀고 테스트할 수 있습니다. ${quizSolved ? `(이전 퀴즈 보상: +${quizPoints}pt)` : ""}
+              </p>
+            </div>
+            <a href="quiz.html" class="btn btn-primary" style="font-weight: 700; background: linear-gradient(135deg, #ffd700, #fbbf24); border: none; color: #000; padding: 0.55rem 1.2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+              퀴즈 풀기 ➡️
+            </a>
+          </div>
+        `;
+      } else if (quizSolved) {
         bannerArea.innerHTML = `
           <div class="card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.04)); border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 1.25rem;">
             <div style="display:flex; justify-content:space-between; align-items:center;">

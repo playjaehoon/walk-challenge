@@ -51,7 +51,8 @@ async function initQuiz() {
       .where("locationId", "==", "birthday_quiz")
       .get();
 
-    if (!quizSnap.empty) {
+    const isAdmin = (typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(currentUser.email));
+    if (!quizSnap.empty && !isAdmin) {
       showToast("이미 이 퀴즈 이벤트를 완료하셨습니다!", "warning");
       setTimeout(() => {
         window.location.href = "dashboard.html";
@@ -231,9 +232,8 @@ async function submitQuiz() {
       // 트랜잭션 내부에서 중복 여부 최종 체크
       const scanRef = userRef.collection("scans").doc();
       
-      // 이미 해결된 것인지 확인하는 용도로 DB에 중복 체크 쿼리 대신 userDoc 정보에 Solved를 넣거나 collections checks
-      // userDoc.quizSolved 또는 collection 확인을 위해 user document의 quizSolved 확인
-      if (data.quizSolved) {
+      const isAdmin = (typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(currentUser.email));
+      if (data.quizSolved && !isAdmin) {
         throw new Error("이미 완료된 퀴즈입니다.");
       }
 
