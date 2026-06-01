@@ -112,17 +112,7 @@ async function validateAndShowCard(locName) {
   const today = getKSTDateString();
   const uid   = scanUser.uid;
 
-  // 인스타그램 인증 특별 QR(loc11)의 경우 이벤트 전체 기간 동안 1회만 참여 가능
-  if (scanLocationId === 'loc11') {
-    const loc11ScansSnap = await db.collection("users").doc(uid)
-      .collection("scans")
-      .where("locationId", "==", "loc11")
-      .get();
-    if (!loc11ScansSnap.empty) {
-      showScanMessage("🔄", "이미 참여하셨습니다", "인스타그램 인증 특별 QR은 이벤트 기간 동안 1회만 참여할 수 있습니다.", "warning");
-      return;
-    }
-  }
+
 
   const scansSnap = await db.collection("users").doc(uid)
     .collection("scans")
