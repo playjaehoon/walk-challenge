@@ -121,8 +121,9 @@ async function validateAndShowCard(locName) {
 
   const todayScans = scansSnap.docs.map((d) => d.data());
   const alreadyHere = todayScans.some((s) => s.locationId === scanLocationId);
+  const isAdmin = (typeof ADMIN_EMAILS !== 'undefined' && ADMIN_EMAILS.includes(scanUser.email));
 
-  if (alreadyHere) {
+  if (alreadyHere && !isAdmin) {
     showScanMessage("🔄", "이미 방문한 장소예요", `${locName}은(는) 오늘 이미 스캔했습니다.\n다른 장소 QR코드를 찾아보세요!`, "warning");
     return;
   }
@@ -134,7 +135,7 @@ async function validateAndShowCard(locName) {
     return true;
   }).length;
 
-  if (!isHotspotScan && regularScansCount >= CAMPAIGN_CONFIG.maxScansPerDay) {
+  if (!isHotspotScan && regularScansCount >= CAMPAIGN_CONFIG.maxScansPerDay && !isAdmin) {
     showScanMessage("⏰", "오늘 일반 스캔 완료!", `오늘 일반 스캔을 모두 완료했습니다!\n내일 다시 도전해주세요.\n(🔥 Special QR은 횟수 차감 없이 스캔 가능합니다)`, "warning");
     return;
   }
@@ -145,7 +146,7 @@ async function validateAndShowCard(locName) {
     return true;
   });
 
-  if (physicalScans.length > 0) {
+  if (physicalScans.length > 0 && !isAdmin) {
     const lastScan = physicalScans.reduce((latest, scan) => {
       if (!scan.createdAt) return latest;
       const scanTime = scan.createdAt.toDate ? scan.createdAt.toDate().getTime() : new Date(scan.createdAt).getTime();
