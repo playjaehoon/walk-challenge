@@ -192,10 +192,23 @@ function checkEasterEgg(userData) {
     : (userData.lastEasterEggTime || 0);
 
   const COOLDOWN_MS = 3 * 24 * 60 * 60 * 1000; // 3일 쿨타임
-  
-  if (!lastTime || (now.getTime() - lastTime) >= COOLDOWN_MS) {
-    // 30% 확률로 등장
+
+  // 2026-06-01 오늘 하루만 쿨타임 상관없이 참가자 전원 다 나오게 (오늘 1회 획득 제한은 유지)
+  const todayStr = getKSTDateString();
+  const isTodayEvent = todayStr === "2026-06-01";
+
+  if (isTodayEvent) {
+    const lastDateStr = userData.lastEasterEggTime?.toDate
+      ? getKSTDateString(userData.lastEasterEggTime.toDate())
+      : (userData.lastEasterEggTime ? getKSTDateString(new Date(userData.lastEasterEggTime)) : "");
+
+    if (lastDateStr === todayStr) {
+      return; // 오늘 이미 잡았으면 안 나오게 차단
+    }
+  } else {
+    if (lastTime && (now.getTime() - lastTime) < COOLDOWN_MS) return;
     if (Math.random() > 0.3) return;
+  }
 
     if (document.getElementById("easter-egg-btn")) return;
 
