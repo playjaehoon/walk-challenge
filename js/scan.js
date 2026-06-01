@@ -26,18 +26,18 @@ async function initScanPage() {
   scanUser = await requireAuth();
   if (!scanUser) return;
 
-  // 인스타그램 인증 특별 QR 운영 시간 체크 (5/27 11:00 ~ 6/1 23:59:59)
+  // 인스타그램 인증 특별 QR 운영 시간 체크 (5/27 11:00 ~ 6/2 23:59:59)
   if (scanLocationId === 'loc11') {
     const now = new Date();
     const openTime = new Date("2026-05-27T11:00:00+09:00");
-    const closeTime = new Date("2026-06-01T23:59:59+09:00");
+    const closeTime = new Date("2026-06-02T23:59:59+09:00");
 
     if (now < openTime) {
       showScanMessage("⏳", "운영 예정", "인스타그램 인증 특별 QR은 5월 27일 오전 11시부터 운영될 예정입니다.\n시작 시간에 맞춰 다시 스캔해주세요!", "info");
       return;
     }
     if (now > closeTime) {
-      showScanMessage("🏁", "운영 종료", "인스타그램 인증 특별 QR은 6월 1일 자정에 운영이 종료되었습니다.\n다른 QR을 스캔해주세요!", "info");
+      showScanMessage("🏁", "운영 종료", "인스타그램 인증 특별 QR은 6월 2일 자정에 운영이 종료되었습니다.\n다른 QR을 스캔해주세요!", "info");
       return;
     }
   }
@@ -111,6 +111,18 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 async function validateAndShowCard(locName) {
   const today = getKSTDateString();
   const uid   = scanUser.uid;
+
+  // 인스타그램 인증 특별 QR(loc11)의 경우 이벤트 전체 기간 동안 1회만 참여 가능
+  if (scanLocationId === 'loc11') {
+    const loc11ScansSnap = await db.collection("users").doc(uid)
+      .collection("scans")
+      .where("locationId", "==", "loc11")
+      .get();
+    if (!loc11ScansSnap.empty) {
+      showScanMessage("🔄", "이미 참여하셨습니다", "인스타그램 인증 특별 QR은 이벤트 기간 동안 1회만 참여할 수 있습니다.", "warning");
+      return;
+    }
+  }
 
   const scansSnap = await db.collection("users").doc(uid)
     .collection("scans")
