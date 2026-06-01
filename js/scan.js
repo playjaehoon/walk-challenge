@@ -26,18 +26,18 @@ async function initScanPage() {
   scanUser = await requireAuth();
   if (!scanUser) return;
 
-  // 인스타그램 인증 특별 QR 운영 시간 체크 (5/27 11:00 ~ 6/2 23:59:59)
+  // 인스타그램 인증 특별 QR 운영 시간 체크 (5/27 11:00 ~ 6/1 23:59:59)
   if (scanLocationId === 'loc11') {
     const now = new Date();
     const openTime = new Date("2026-05-27T11:00:00+09:00");
-    const closeTime = new Date("2026-06-02T23:59:59+09:00");
+    const closeTime = new Date("2026-06-01T23:59:59+09:00");
 
     if (now < openTime) {
       showScanMessage("⏳", "운영 예정", "인스타그램 인증 특별 QR은 5월 27일 오전 11시부터 운영될 예정입니다.\n시작 시간에 맞춰 다시 스캔해주세요!", "info");
       return;
     }
     if (now > closeTime) {
-      showScanMessage("🏁", "운영 종료", "인스타그램 인증 특별 QR은 6월 2일 자정에 운영이 종료되었습니다.\n다른 QR을 스캔해주세요!", "info");
+      showScanMessage("🏁", "운영 종료", "인스타그램 인증 특별 QR은 6월 1일 자정에 운영이 종료되었습니다.\n다른 QR을 스캔해주세요!", "info");
       return;
     }
   }
