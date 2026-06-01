@@ -349,10 +349,7 @@ function checkEasterEgg(userData) {
     };
 
     document.body.appendChild(egg);
-  }
-}
-
-// ===== 공통 초기화 =====
+}// ===== 공통 초기화 =====
 document.addEventListener("DOMContentLoaded", () => {
   setActiveNav();
   initMobileNav();
